@@ -1,11 +1,11 @@
 BarcodeScannerPlugin
 ====================
 
-Cross platform Phonegap/Cordova Plugin of the Scandit Barcode Scanner SDK
+Cross platform Phonegap/Cordova Plugin of the Scandit Barcode Scanner SDK for iOS and Android
 
 Follow the detailed instructions below to add a high-performance barcode scanner to your app in less than 30 minutes.
 
-
+If you don't have a Phonegap app yet, but want to try out our Phonegap Plugins anyway, [follow the instructions on phonegap.com](http://docs.phonegap.com/en/2.2.0/guide_getting-started_index.md.html) to generate a sample app. 
 
 How to integrate the Scandit SDK into your own iOS Phonegap App
 ------------------------
@@ -18,9 +18,12 @@ How to integrate the Scandit SDK into your own iOS Phonegap App
     * Choose the ScanditSDK folder you copied in the step above (make sure you select the option "create group for added folders")
 
 * Add this plugin to your Xcode Cordova Project:
-    * Copy the four files from this Github Plugin folder (ScanditSDK.h/m and ScanditSDKRotatingBarcodePicker.h/m) into the Plugins folder of your project.
+    * Download this project as a zip and copy the four files (ScanditSDK.h/m and ScanditSDKRotatingBarcodePicker.h/m) into the Plugins folder of your project.
     * Right-click on the "Plugins" Group in the Xcode navigation pane and select "Add Files to <name of your project>" 
     * Choose the four files you just copied
+
+![Xcode screenshot](http://www.scandit.com/wp-content/uploads/2012/07/XCODE_PROJECT_AFTER_ADDING_SCANDIT_SDK.png "Xcode Screenshot")
+
 
 * Add frameworks needed by Scandit Barcode Scanner SDK:
     * Click on your project in the navigation pane of Xcode, then select your target and the tab "Build Phases" 
