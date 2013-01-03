@@ -65,7 +65,7 @@ and the scanditsdk-barcodepicker-android-*.jar.
     * Refresh your eclipse project for the files to show up in Eclipse
 
 * Add ScanditSDK jar file to your build path:
-    * Right-click on the scanditsdk-barcodepicker-android-*.jar file in the libs folder and select `Add to Build Path`
+    * Right-click on the scanditsdk-barcodepicker-android-*.jar file in the libs folder and select "Add to Build Path"
    
 * Adjust the import statement in the ScanditSDKActivity class:
     * The ScanditSDKActivity class references the R.java-file of your app which is located in the `gen` directory. Adjust the import statement in the ScanditSDKActivity.java file accordingly.
@@ -73,23 +73,21 @@ and the scanditsdk-barcodepicker-android-*.jar.
 * Register the Plugin with your Cordova App:
     * Add ScanditSDK Activity to the "application" section of your app's AndroidManifest.xml file
 
-```
-<activity android:name="com.mirasense.scanditsdk.plugin.ScanditSDKActivity"/>
-```
-
+    ```
+     <activity android:name="com.mirasense.scanditsdk.plugin.ScanditSDKActivity"/>
+    ```
     * Make sure the following permissions are listed in your AndroidManifest.xml file 
-```
+
+    ```
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
-
-```
-
+    ```
     * Add the following line to the res/xml/config.xml resource
 
-```
-<plugin name="ScanditSDK" value="com.mirasense.scanditsdk.plugin.ScanditSDK"/>
-```
+    ```
+     <plugin name="ScanditSDK" value="com.mirasense.scanditsdk.plugin.ScanditSDK"/>
+    ```
 
 
 * Start using the Scandit SDK in your html code 
