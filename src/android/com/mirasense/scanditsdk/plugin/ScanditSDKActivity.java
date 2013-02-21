@@ -58,10 +58,6 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         if (ScanditSDKBarcodePicker.canRunPortraitPicker()) {
-            // The new GUI is able to run in portrait and landscape mode, the
-            // best use of space however is in portrait mode.
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            
             // create ScanditSDKBarcodePicker that takes care of the camera access and 
             // barcode recognition.
             ScanditSDKBarcodePicker picker = new ScanditSDKBarcodePicker(
