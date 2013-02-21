@@ -69,7 +69,7 @@
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
         orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
     } else {
-        orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations~ipad"];
+        orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
     }
     NSUInteger supportedOrientations = 0;
     
@@ -97,7 +97,7 @@
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
         orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
     } else {
-        orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations~ipad"];
+        orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
     }
     
     if ([orientations containsObject:@"UIInterfaceOrientationPortrait"]
