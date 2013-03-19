@@ -23,6 +23,7 @@
 
 @synthesize callbackId;
 @synthesize hasPendingOperation;
+@synthesize bufferedResult;
 
 
 - (void)scan:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
@@ -232,8 +233,24 @@
     // a barcode was successfully scanned, manually entered or the cancel button was pressed.
 	scanditSDKBarcodePicker.overlayController.delegate = self;
     
-	// present the barcode picker modally and start scanning
-    [self.viewController presentModalViewController:scanditSDKBarcodePicker animated:YES];
+	startAnimationDone = NO;
+	self.bufferedResult = nil;
+	
+	// Present the barcode picker modally and start scanning.
+	if ([self.viewController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+		[self.viewController presentViewController:scanditSDKBarcodePicker animated:YES completion:^{
+			startAnimationDone = YES;
+			if (self.bufferedResult != nil) {
+				[self scanditSDKOverlayController:scanditSDKBarcodePicker.overlayController
+								   didScanBarcode:self.bufferedResult];
+				self.bufferedResult = nil;
+			}
+		}];
+	} else {
+		[self.viewController presentModalViewController:scanditSDKBarcodePicker animated:NO];
+		startAnimationDone = YES;
+	}
+	
 	[scanditSDKBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
     [scanditSDKBarcodePicker release];
 }
@@ -249,6 +266,12 @@
  */
 - (void)scanditSDKOverlayController:(ScanditSDKOverlayController *)scanditSDKOverlayController1 
                      didScanBarcode:(NSDictionary *)barcodeResult {
+	if (!startAnimationDone) {
+		// If the initial animation hasn't finished yet we buffer the result and return it as soon
+		// as the animation finishes.
+		self.bufferedResult = barcodeResult;
+		return;
+	}
 	
     if (!wasStatusBarHidden) {
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
