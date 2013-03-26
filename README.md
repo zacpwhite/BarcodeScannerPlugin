@@ -134,7 +134,7 @@ cordova.exec(function(success), function(cancel), "ScanditSDK", "scan", ["YOUR A
         <title>Scandit SDK</title>
     </head>
     <body onload="onBodyLoad()" style="background: url(img/ScanditSDKDemo-Splash.png) no-repeat;background-size: 100%;background-color: #000000">
-        <script type="text/javascript" src="cordova-2.2.0.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
             function onBodyLoad()
