@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.mirasense.cordova.R;
 import com.mirasense.scanditsdk.LegacyPortraitScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.interfaces.ScanditSDK;
@@ -61,7 +60,7 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
             // create ScanditSDKBarcodePicker that takes care of the camera access and 
             // barcode recognition.
             ScanditSDKBarcodePicker picker = new ScanditSDKBarcodePicker(
-                    this, R.raw.class, extras.getString("appKey"));
+                    this, extras.getString("appKey"));
             
             // Add both views to activity, with the scan GUI on top.
             this.setContentView(picker);
@@ -74,7 +73,7 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
             // create ScanditSDKBarcodePicker that takes care of the camera access and 
             // barcode recognition.
             LegacyPortraitScanditSDKBarcodePicker picker = new LegacyPortraitScanditSDKBarcodePicker(
-                    this, R.raw.class, extras.getString("appKey"));
+                    this, extras.getString("appKey"));
             
             // Add both views to activity, with the scan GUI on top.
             this.setContentView(picker);
