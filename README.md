@@ -70,9 +70,6 @@ and the scanditsdk-barcodepicker-android-*.jar.
 * Add ScanditSDK jar file to your build path:
     * Right-click on the scanditsdk-barcodepicker-android-*.jar file in the libs folder and select "Add to Build Path"
    
-* Adjust the import statement in the ScanditSDKActivity class:
-    * The ScanditSDKActivity class references the R.java-file of your app which is located in the `gen` directory. Adjust the import statement in the ScanditSDKActivity.java file accordingly.
-
 * Register the Plugin with your Cordova App:
     * Add ScanditSDK Activity to the "application" section of your app's AndroidManifest.xml file
 
