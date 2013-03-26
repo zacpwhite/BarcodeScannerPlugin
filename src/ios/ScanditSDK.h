@@ -23,10 +23,14 @@
 @interface ScanditSDK : CDVPlugin <ScanditSDKOverlayControllerDelegate> {
     NSString *callbackId;
     BOOL wasStatusBarHidden;
+	
+	BOOL startAnimationDone;
+	NSDictionary *bufferedResult;
 }
 
 @property (nonatomic, copy) NSString *callbackId;
 @property (readwrite, assign) BOOL hasPendingOperation;
+@property (nonatomic, retain) NSDictionary *bufferedResult;
 
 /**
  * Start scanning. The available options to pass this function are as follows:
