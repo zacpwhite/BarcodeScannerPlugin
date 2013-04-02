@@ -3,27 +3,49 @@ BarcodeScannerPlugin
 
 Cross platform Phonegap/Cordova Plugin of the Scandit Barcode Scanner SDK for iOS and Android
 
-Follow the detailed instructions below to add a high-performance barcode scanner to your app in less than 30 minutes.
+Follow the detailed instructions below to add a high-performance barcode scanner to your app in 5 min using [Plugman](https://github.com/imhotep/plugman).
 
-If you don't have a Phonegap app yet, but want to try out our Phonegap Plugins anyway, [follow the instructions on phonegap.com](http://docs.phonegap.com/en/2.2.0/guide_getting-started_index.md.html) to generate a sample app. 
+If you don't have a Phonegap app yet, but want to try out our Phonegap Plugins anyway, [follow the instructions on phonegap.com](http://docs.phonegap.com/) to generate a sample app. 
 
-How to integrate the Scandit SDK into your own iOS Phonegap App
+
+Scandit SDK Plugin Integration with Plugman 
+------------------------
+
+The easiest way to install the Scandit plugin into your Phonegap/Cordova project is to use [Plugman](https://github.com/imhotep/plugman). 
+
+1. Sign up and download the Scandit SDK Cordova Plugins for iOS and Android from your Scandit SDK account.
+2. Install Android and iOS Scandit SDK Plugin using [Plugman](https://github.com/imhotep/plugman)
+
+        plugman --platform android --project . --plugin <path to unzipped ScanditSDK Plugin for Android> 
+        plugman --platform ios --project . --plugin <path to unzipped ScanditSDK Plugin for iOS> 
+
+   There is a [bug](https://issues.apache.org/jira/browse/CB-2718) in [Plugman](https://github.com/imhotep/plugman) that prevents .a files (static libraries) to be installed properly under iOS. To add the `libscanditsdk-iphone-<version>.a` file under iOS, you need click on your project in the navigation pane of Xcode, select your target and the tab "Build Phases". Under the entry "Link Binary with Libraries", add the `libscanditsdk-iphone-<version>.a` library by clicking the "+" button and select it from the file system by clicking "add other".
+ 
+3. Start using the Scandit SDK in your html code 
+    * Get the app key from your Scandit SDK account
+    * Invoke the Scandit SDK scanner by invoking the cordova.exec() function with the following parameters:
+
+	`cordova.exec(function(success), function(cancel), "ScanditSDK", "scan", ["ENTER YOUR APP KEY HERE",{}]);`
+
+    * See extensive example below
+    * See [ScanditSDK.h](/src/ios/ScanditSDK.h) and the example below for a detailed list of parameters. 
+
+To install [Plugman](https://github.com/imhotep/plugman):
+
+         git clone https://github.com/imhotep/plugman.git
+         cd plugman
+         npm install -g
+
+
+Manual Scandit SDK Plugin Integration for iOS 
 ------------------------
 
 * Download and add the Scandit SDK for iOS library to your Xcode Cordova Project:
     * Sign up for a free community license (or one of the enterprise packages) at http://www.scandit.com. 
-    * Download the latest Scandit SDK version for iOS from your Scandit account. 
-    * Unzip the downloaded zip file and copy the ScanditSDK folder into your Phonegap/Cordova project (i.e. into the same folder where you also have the Plugins, Resources and Classes folder)
+    * Download the Scandit SDK Cordova Plugin for iOS version from your Scandit account. 
+    * Unzip the downloaded zip file and copy the contents of the src/ios folder into the Plugins folder of your Phonegap/Cordova project 
     * Open your project in Xcode, right-click on your project in the navigation pane and select "Add Files to <name of your project>" 
-    * Choose the ScanditSDK folder you copied in the step above (make sure you select the option "create group for added folders")
-
-* Add this plugin to your Xcode Cordova Project:
-    * Download this project as a zip and copy the four files from the src/iOS folder (ScanditSDK.h/m and ScanditSDKRotatingBarcodePicker.h/m) into the Plugins folder of your project.
-    * Right-click on the "Plugins" Group in the Xcode navigation pane and select "Add Files to <name of your project>" 
-    * Choose the four files you just copied
-
-![Xcode screenshot](http://www.scandit.com/wp-content/uploads/2012/07/XCODE_PROJECT_AFTER_ADDING_SCANDIT_SDK.png "Xcode Screenshot")
-
+    * Choose the files and folder you copied in the step above (make sure you select the option "create group for added folders")
 
 * Add frameworks needed by Scandit Barcode Scanner SDK:
     * Click on your project in the navigation pane of Xcode, then select your target and the tab "Build Phases" 
@@ -42,7 +64,6 @@ How to integrate the Scandit SDK into your own iOS Phonegap App
 * Register the Plugin with your Cordova App:
     * Open the Cordova.plist file and add an entry to `Plugins` with key `ScanditSDK` and value `ScanditSDK`.
 
-
 * Start using the Scandit SDK in your html code 
     * Get the app key from your Scandit SDK account
     * Invoke the Scandit SDK scanner by invoking the cordova.exec() function with the following parameters:
@@ -50,27 +71,23 @@ How to integrate the Scandit SDK into your own iOS Phonegap App
     * See `ScanditSDK.h` and the example below for a detailed list of parameters. 
          
 
-
-
-How to integrate the Scandit SDK into your own Android Phonegap App
+Manual Scandit SDK Plugin Integration for Android
 ------------------------
 
 * Download and add the Scandit SDK library for Android to your Eclipse Cordova Project:
     * Sign up for a free community license (or one of the enterprise packages) at http://www.scandit.com. 
-    * Download the latest Scandit SDK version for Android from your Scandit account. 
+    * Download the latest Scandit SDK Phonegap/Cordova for Android from your Scandit account. 
     * Unzip the downloaded zip file 
     * Copy the contents of the "libs" folder from the unzipped folder to the `libs` folder of your Phonegap/Cordova project. The `libs` folder includes the shared library libscanditsdk-android-*.so (in a folder called armeabi)
 and the scanditsdk-barcodepicker-android-*.jar.
     * Copy the `res/raw` folder to the `res` folder of your Phonegap/Cordova project 
-
-* Add this plugin to your Eclipse Cordova Project:
-    * Download this project as a zip and copy the classes ScanditSDK.java and ScanditSDKActivity.java from the src/android folder of this github repo (in the com.mirasense.scanditsdk.plugin package) into your project preserving the package hierarchy.
+    * Copy the classes ScanditSDK.java and ScanditSDKActivity.java from the src/android folder (in the com.mirasense.scanditsdk.plugin package) into your project preserving the package hierarchy.
     * Refresh your eclipse project for the files to show up in Eclipse
 
 * Add ScanditSDK jar file to your build path:
     * Right-click on the scanditsdk-barcodepicker-android-*.jar file in the libs folder and select "Add to Build Path"
    
-* Register the Plugin with your Cordova App:
+* Register the Plugin with your Cordova App and set the permissions correctly:
     * Add ScanditSDK Activity to the "application" section of your app's AndroidManifest.xml file
 
     ```
