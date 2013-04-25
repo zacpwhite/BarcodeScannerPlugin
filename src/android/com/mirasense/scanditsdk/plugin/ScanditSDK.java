@@ -20,6 +20,10 @@ package com.mirasense.scanditsdk.plugin;
 
 import java.util.Iterator;
 
+import org.apache.cordova.api.CallbackContext;
+import org.apache.cordova.api.CordovaPlugin;
+import org.apache.cordova.api.PluginResult;
+import org.apache.cordova.api.PluginResult.Status;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,32 +31,30 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.util.Log;
 
-import org.apache.cordova.api.Plugin;
-import org.apache.cordova.api.PluginResult;
-import org.apache.cordova.api.PluginResult.Status;
 
-
-public class ScanditSDK extends Plugin {
+public class ScanditSDK extends CordovaPlugin {
     
     public static final String SCAN = "scan";
     
-    private String mCallbackId;
+    private CallbackContext mCallbackContext;
+    
     
     
     @Override
-    public PluginResult execute(String action, JSONArray data, String callbackId) {
-        mCallbackId = callbackId;
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
+        mCallbackContext = callbackContext;
         PluginResult result = null;
 
         if (action.equals(SCAN)) {
-            scan(data);
+            scan(args);
             result = new PluginResult(Status.NO_RESULT);
             result.setKeepCallback(true);
+            return true;
         } else {
             result = new PluginResult(Status.INVALID_ACTION);
+            callbackContext.error("Invalid Action");
+            return false;
         }
-        
-        return result;
     }
     /**
      * Start scanning. The available options to pass this function are as 
@@ -241,17 +243,17 @@ public class ScanditSDK extends Plugin {
             JSONArray args = new JSONArray();
             args.put(barcode);
             args.put(symbology);
-            this.success(new PluginResult(Status.OK, args), mCallbackId);
+            mCallbackContext.success(args);
         
         } else if (resultCode == ScanditSDKActivity.MANUAL) {
             String barcode = data.getExtras().getString("barcode");
             JSONArray args = new JSONArray();
             args.put(barcode);
             args.put("UNKNOWN");
-            this.success(new PluginResult(Status.OK, args), mCallbackId);
+            mCallbackContext.success(args);
             
         } else if (resultCode == ScanditSDKActivity.CANCEL) {
-            this.error(new PluginResult(Status.NO_RESULT, "Canceled"), mCallbackId);
+        	mCallbackContext.error("Canceled");
         }
     }
 }
