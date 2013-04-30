@@ -42,10 +42,14 @@ Manual Scandit SDK Plugin Integration for iOS
 
 * Download and add the Scandit SDK for iOS library to your Xcode Cordova Project:
     * Sign up for a free community license (or one of the enterprise packages) at http://www.scandit.com. 
-    * Download the Scandit SDK Cordova Plugin for iOS version from your Scandit account. 
-    * Unzip the downloaded zip file and copy the contents of the src/ios folder into the Plugins folder of your Phonegap/Cordova project 
-    * Open your project in Xcode, right-click on your project in the navigation pane and select "Add Files to <name of your project>" 
-    * Choose the files and folder you copied in the step above (make sure you select the option "create group for added folders")
+    * Download the Scandit SDK Cordova Plugin for iOS version from your Scandit account and unzip it. 
+    * Open your project in Xcode, right-click on the `Plugins` group in the navigation pane and select "Add Files to <name of your project>" 
+    * Choose the files folders below from the zip you downloaded above (make sure you select the options `create group for added folders` and the `copy items to destination group's folder`):
+         * ScanditSDK.h
+         * ScanditSDK.mm
+         * ScanditSDKBarcodePicker.h
+         * ScanditSDKBarcodePicker.m
+         * ScanditSDK folder (which includes the libscanditsdk-iphone-<version>.a static lib)
 
 * Add frameworks needed by Scandit Barcode Scanner SDK:
     * Click on your project in the navigation pane of Xcode, then select your target and the tab "Build Phases" 
