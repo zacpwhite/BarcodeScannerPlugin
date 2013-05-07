@@ -295,6 +295,7 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
     public void didManualSearch(String entry) {
         Intent intent = new Intent();
         intent.putExtra("barcode", entry.trim());
+        intent.putExtra("symbology", "UNKNOWN");
         setResult(MANUAL, intent);
         finish();
     }
