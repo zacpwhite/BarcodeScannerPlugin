@@ -160,6 +160,10 @@
  * coordinate is calculated from the right side of the screen and not the left like with the torch
  * button.
  *
+ * logoOffsets: "0, 0, 0, 0" (xOffset, yOffset, landscapeXOffset, landscapeYOffset)
+ * Sets the x and y offset at which the Scandit logo should be drawn for both portrait and landscape
+ * orientation. Be aware that the standard Scandit SDK licenses do not allow you to hide the logo.
+ *
  * searchBarActionButtonCaption: "Go"
  * Sets the caption of the manual entry at the top when a barcode of valid length has been entered.
  *

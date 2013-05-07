@@ -238,6 +238,21 @@
         }
     }
 	
+    NSObject *logoOffsets = [options objectForKey:@"logoOffsets"];
+    if (logoOffsets && [logoOffsets isKindOfClass:[NSString class]]) {
+        NSArray *split = [((NSString *) logoOffsets) componentsSeparatedByString:@"/"];
+        if ([split count] == 4) {
+            int xOffset = [[split objectAtIndex:0] floatValue];
+            int yOffset = [[split objectAtIndex:1] floatValue];
+            int landscapeXOffset = [[split objectAtIndex:2] intValue];
+            int landscapeYOffset = [[split objectAtIndex:3] intValue];
+            [scanditSDKBarcodePicker.overlayController setLogoXOffset:xOffset
+															  yOffset:yOffset
+													 landscapeXOffset:landscapeXOffset
+													 landscapeYOffset:landscapeYOffset];
+        }
+    }
+	
     NSObject *t5 = [options objectForKey:@"searchBarActionButtonCaption"];
     if (t5 && [t5 isKindOfClass:[NSString class]]) {
         [scanditSDKBarcodePicker.overlayController setSearchBarActionButtonCaption:((NSString *) t5)];
