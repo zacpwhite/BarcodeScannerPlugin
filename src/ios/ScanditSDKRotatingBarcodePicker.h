@@ -27,6 +27,5 @@
     
 }
 
-- (void)adjustPickerToOrientation:(UIInterfaceOrientation)orientation;
 
 @end

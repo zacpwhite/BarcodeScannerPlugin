@@ -29,11 +29,6 @@
 - (id)initWithAppKey:(NSString *)scanditSDKAppKey {
     id result = [super initWithAppKey:scanditSDKAppKey];
     
-    // As the aspect ratio changes we want to adjust some minor things like the banner. If this is
-    // not needed, there is no reason to call anything here. The only important thing is to
-    // override shouldAutorotateToInterfaceOrientation.
-    [self adjustPickerToOrientation:self.interfaceOrientation];
-    
     return result;
 }
 
@@ -41,25 +36,6 @@
                                 duration:(NSTimeInterval)duration {
     // If this function is overriden, don't forget to call the super view first.
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    
-    // Adjust the UI elements.
-    [self adjustPickerToOrientation:toInterfaceOrientation];
-}
-
-- (void)adjustPickerToOrientation:(UIInterfaceOrientation)orientation {
-    // Adjust the offset of the info banner since the dimensions are quite a bit different in
-    // portrait and landscape mode.
-    CGRect screen = [[UIScreen mainScreen] bounds];
-    if (orientation == UIInterfaceOrientationLandscapeLeft
-        || orientation == UIInterfaceOrientationLandscapeRight) {
-        if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
-            [self.overlayController setInfoBannerOffset:- 3 * screen.size.width / 32];
-        }
-    } else {
-        if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
-            [self.overlayController setInfoBannerOffset:0];
-        }
-    }
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -90,7 +66,7 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Check the project settings for screen orientation and only allow rotation to the specified 
+    // Check the project settings for screen orientation and only allow rotation to the specified
     // ones.
     
     NSArray *orientations;
@@ -101,7 +77,7 @@
     }
     
     if ([orientations containsObject:@"UIInterfaceOrientationPortrait"]
-            && interfaceOrientation == UIInterfaceOrientationPortrait) {
+		&& interfaceOrientation == UIInterfaceOrientationPortrait) {
         return YES;
     } else if ([orientations containsObject:@"UIInterfaceOrientationPortraitUpsideDown"]
                && interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
@@ -115,6 +91,10 @@
     } else {
         return NO;
     }
+}
+
+- (BOOL)shouldAutorotate {
+	return YES;
 }
 
 @end

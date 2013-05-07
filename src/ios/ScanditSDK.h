@@ -38,6 +38,10 @@
  * exampleStringForOption: defaultValue
  * Short explanation of option.
  *
+ * preferFrontCamera: false
+ * Whether showing the front camera should be prefered over the back camera (for devices without a
+ * front camera the back camera is shown).
+ *
  * searchBar: true
  * Shows or hides the search bar at the top of the screen.
  *
@@ -68,12 +72,24 @@
  * Enables or disables the recognition of ITF codes.
  * Note: Not all Scandit SDK versions support ITF scanning.
  *
- * qr: false
+ * qr: true
  * Enables or disables the recognition of QR codes.
  *
- * dataMatrix: false
+ * dataMatrix: true
  * Enables or disables the recognition of Data Matrix codes.
  * Note: Not all Scandit SDK versions support Data Matrix scanning.
+ *
+ * pdf417: true
+ * Enables or disables the recognition of PDF417 codes.
+ * Note: Not all Scandit SDK versions support PDF417 scanning.
+ *
+ * msiPlessey: false
+ * Enables or disables the recognition of MSI Plessey codes.
+ * Note: Not all Scandit SDK versions support MSI Plessey scanning.
+ *
+ * msiPlesseyChecksumType: "mod10"
+ * Sets the type of checksum that is expected of the MSI Plessey codes.
+ * Legal values are: "none", "mod10", "mod11", "mod1010", "mod1110"
  *
  * inverseRecognition: false
  * Enables the detection of white on black codes. This option currently
@@ -86,6 +102,12 @@
  * 2d recognition on every frame. This option only works on devices with
  * Android 2.2 or higher, it does not cause issues with lower versions but
  * simply doesn't work.
+ *
+ * restrictActiveScanningArea: false
+ * Reduces the area in which barcodes are detected and decoded to an
+ * area defined by setScanningHotSpotHeight and setScanningHotSpotToX andY.
+ * If this method is set to disabled, barcodes in the full camera image
+ * are detected and decoded.
  *
  * force2d: false
  * Forces the engine to always run a 2d recognition, ignoring whether a 2d
@@ -104,6 +126,11 @@
  * to decrease the quality of the recognition to keep the speed at an
  * acceptable level.
  *
+ * viewfinderSize: "0.8/0.4/0.6/0.4" (width/height/landscapeWidth/landscapeHeight)
+ * Sets the size of the viewfinder relative to the size of the screen size.
+ * Changing this value does not(!) affect the area in which barcodes are successfully recognized.
+ * It only changes the size of the box drawn onto the scan screen.
+ *
  * ignorePreviewAspectRatio: false
  * Normally the picker adjusts to the aspect ratio of the preview image. If
  * this is called, it will no longer do this.
@@ -116,24 +143,22 @@
  * vibrate: true
  * Enables or disables the vibration when a code was recognized.
  *
- * uiFont: "Helvetica"
- * Sets the font of all text displayed in the UI (must be known by iOS).
+ * torch: true
+ * Enables or disables the torch toggle button for all devices that support a torch.
  *
- * textForMostLikelyBarcodeUIElement: "Tap to use"
- * Sets the text that will be displayed alongside the lucky shot to tell the user what to do, to
- * use the displayed barcode.
+ * torchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
+ * Sets the position at which the button to enable the torch is drawn. The X and Y coordinates are
+ * relative to the screen size, which means they have to be between 0 and 1.
  *
- * textForInitialScanScreenState: "Align code with box"
- * Sets the text that will be displayed above the viewfinder to tell the user to align it with the
- * barcode that should be recognized.
+ * cameraSwitchVisibility: "never"
+ * Sets when the camera switch button is visible for all devices that have more than one camera.
+ * Legal values are: "never", "tablet", "always"
  *
- * textForBarcodePresenceDetected: "Align code and hold still"
- * Sets the text that will be displayed above the viewfinder to tell the user to align it with the
- * barcode and hold still because a potential code seems to be on the screen.
- *
- * textForBarcodeDecodingInProgress: "Decoding ..."
- * Sets the text that will be displayed above the viewfinder to tell the user to hold still because
- * a barcode is aligned with the box and the recognition is trying to recognize it.
+ * cameraSwitchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
+ * Sets the position at which the button to switch the camera is drawn. The X and Y coordinates are
+ * relative to the screen size, which means they have to be between 0 and 1. Be aware that the x
+ * coordinate is calculated from the right side of the screen and not the left like with the torch
+ * button.
  *
  * searchBarActionButtonCaption: "Go"
  * Sets the caption of the manual entry at the top when a barcode of valid length has been entered.

@@ -51,14 +51,25 @@
         wasStatusBarHidden = NO;
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
     }
+	
+	CameraFacingDirection facing = CAMERA_FACING_BACK;
+    NSObject *preferFrontCamera = [options objectForKey:@"preferFrontCamera"];
+    if (preferFrontCamera && [preferFrontCamera isKindOfClass:[NSNumber class]]) {
+        if ([((NSNumber *)preferFrontCamera) boolValue]) {
+			facing = CAMERA_FACING_FRONT;
+		}
+    }
     
-    ScanditSDKBarcodePicker *scanditSDKBarcodePicker = [[ScanditSDKRotatingBarcodePicker alloc] initWithAppKey:appKey];
+    ScanditSDKBarcodePicker *scanditSDKBarcodePicker = [[ScanditSDKRotatingBarcodePicker alloc]
+														initWithAppKey:appKey
+														cameraFacingPreference:facing];
     
+	
     NSObject *searchBar = [options objectForKey:@"searchBar"];
     if (searchBar && [searchBar isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker.overlayController showSearchBar:[((NSNumber *)searchBar) boolValue]];
     }
-    
+	
     // Set the options.
     NSObject *scanning1D = [options objectForKey:@"1DScanning"];
     if (scanning1D && [scanning1D isKindOfClass:[NSNumber class]]) {
@@ -101,6 +112,30 @@
     if (dataMatrix && [dataMatrix isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker setDataMatrixEnabled:[((NSNumber *)dataMatrix) boolValue]];
     }
+    NSObject *pdf417 = [options objectForKey:@"pdf417"];
+    if (pdf417 && [pdf417 isKindOfClass:[NSNumber class]]) {
+        [scanditSDKBarcodePicker setPdf417Enabled:[((NSNumber *)pdf417) boolValue]];
+    }
+    NSObject *msiPlessey = [options objectForKey:@"msiPlessey"];
+    if (msiPlessey && [msiPlessey isKindOfClass:[NSNumber class]]) {
+        [scanditSDKBarcodePicker setMsiPlesseyEnabled:[((NSNumber *)msiPlessey) boolValue]];
+    }
+    
+    NSObject *msiPlesseyChecksum = [options objectForKey:@"msiPlesseyChecksumType"];
+    if (msiPlesseyChecksum && [msiPlesseyChecksum isKindOfClass:[NSString class]]) {
+        NSString *msiPlesseyChecksumString = (NSString *)msiPlesseyChecksum;
+        if ([msiPlesseyChecksumString isEqualToString:@"none"]) {
+			[scanditSDKBarcodePicker setMsiPlesseyChecksumType:NONE];
+        } else if ([msiPlesseyChecksumString isEqualToString:@"mod11"]) {
+			[scanditSDKBarcodePicker setMsiPlesseyChecksumType:CHECKSUM_MOD_11];
+		} else if ([msiPlesseyChecksumString isEqualToString:@"mod1010"]) {
+			[scanditSDKBarcodePicker setMsiPlesseyChecksumType:CHECKSUM_MOD_1010];
+		} else if ([msiPlesseyChecksumString isEqualToString:@"mod1110"]) {
+			[scanditSDKBarcodePicker setMsiPlesseyChecksumType:CHECKSUM_MOD_1110];
+		} else {
+			[scanditSDKBarcodePicker setMsiPlesseyChecksumType:CHECKSUM_MOD_10];
+		}
+    }
     
     NSObject *inverseRecognition = [options objectForKey:@"inverseRecognition"];
     if (inverseRecognition && [inverseRecognition isKindOfClass:[NSNumber class]]) {
@@ -113,6 +148,12 @@
     NSObject *force2d = [options objectForKey:@"force2d"];
     if (force2d && [force2d isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker force2dRecognition:[((NSNumber *)force2d) boolValue]];
+    }
+	
+    NSObject *restrictActiveScanningArea = [options objectForKey:@"restrictActiveScanningArea"];
+    if (restrictActiveScanningArea && [restrictActiveScanningArea isKindOfClass:[NSNumber class]]) {
+        [scanditSDKBarcodePicker
+		 restrictActiveScanningArea:[((NSNumber *)restrictActiveScanningArea) boolValue]];
     }
     
     NSObject *scanningHotspot = [options objectForKey:@"scanningHotspot"];
@@ -128,6 +169,20 @@
     if (scanningHotspotHeight && [scanningHotspotHeight isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker setScanningHotSpotHeight:[((NSNumber *)scanningHotspotHeight) floatValue]];
     }
+    NSObject *viewfinderSize = [options objectForKey:@"viewfinderSize"];
+    if (viewfinderSize && [viewfinderSize isKindOfClass:[NSString class]]) {
+        NSArray *split = [((NSString *) viewfinderSize) componentsSeparatedByString:@"/"];
+        if ([split count] == 4) {
+            float width = [[split objectAtIndex:0] floatValue];
+            float height = [[split objectAtIndex:1] floatValue];
+            float landscapeWidth = [[split objectAtIndex:2] floatValue];
+            float landscapeHeight = [[split objectAtIndex:3] floatValue];
+            [scanditSDKBarcodePicker.overlayController setViewfinderHeight:height
+																	 width:width
+														   landscapeHeight:landscapeHeight
+															landscapeWidth:landscapeWidth];
+        }
+    }
     
     NSObject *beep = [options objectForKey:@"beep"];
     if (beep && [beep isKindOfClass:[NSNumber class]]) {
@@ -137,23 +192,52 @@
     if (vibrate && [vibrate isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker.overlayController setVibrateEnabled:[((NSNumber *)vibrate) boolValue]];
     }
+	
     
-    NSObject *uiFont = [options objectForKey:@"uiFont"];
-    if (uiFont && [uiFont isKindOfClass:[NSString class]]) {
-        [scanditSDKBarcodePicker.overlayController setUIFont:((NSString *) uiFont)];
+    NSObject *torch = [options objectForKey:@"torch"];
+    if (torch && [torch isKindOfClass:[NSNumber class]]) {
+        [scanditSDKBarcodePicker.overlayController setTorchEnabled:[((NSNumber *)torch) boolValue]];
     }
-    NSObject *t2 = [options objectForKey:@"textForInitialScanScreenState"];
-    if (t2 && [t2 isKindOfClass:[NSString class]]) {
-        [scanditSDKBarcodePicker.overlayController setTextForInitialScanScreenState:((NSString *) t2)];
+    NSObject *torchButtonPositionAndSize = [options objectForKey:@"torchButtonPositionAndSize"];
+    if (torchButtonPositionAndSize && [torchButtonPositionAndSize isKindOfClass:[NSString class]]) {
+        NSArray *split = [((NSString *) torchButtonPositionAndSize) componentsSeparatedByString:@"/"];
+        if ([split count] == 4) {
+            float x = [[split objectAtIndex:0] floatValue];
+            float y = [[split objectAtIndex:1] floatValue];
+            int width = [[split objectAtIndex:2] intValue];
+            int height = [[split objectAtIndex:3] intValue];
+            [scanditSDKBarcodePicker.overlayController setTorchButtonRelativeX:x
+																	 relativeY:y
+																		 width:width
+																		height:height];
+        }
     }
-    NSObject *t3 = [options objectForKey:@"textForBarcodePresenceDetected"];
-    if (t3 && [t3 isKindOfClass:[NSString class]]) {
-        [scanditSDKBarcodePicker.overlayController setTextForBarcodePresenceDetected:((NSString *) t3)];
+    NSObject *cameraSwitchVisibility = [options objectForKey:@"cameraSwitchVisibility"];
+    if (cameraSwitchVisibility && [cameraSwitchVisibility isKindOfClass:[NSString class]]) {
+        NSString *cameraSwitchVisibilityString = (NSString *)cameraSwitchVisibility;
+        if ([cameraSwitchVisibilityString isEqualToString:@"tablet"]) {
+			[scanditSDKBarcodePicker.overlayController setCameraSwitchVisibility:CAMERA_SWITCH_ON_TABLET];
+		} else if ([cameraSwitchVisibilityString isEqualToString:@"always"]) {
+			[scanditSDKBarcodePicker.overlayController setCameraSwitchVisibility:CAMERA_SWITCH_ALWAYS];
+		} else {
+			[scanditSDKBarcodePicker.overlayController setCameraSwitchVisibility:CAMERA_SWITCH_NEVER];
+		}
     }
-    NSObject *t4 = [options objectForKey:@"textForBarcodeDecodingInProgress"];
-    if (t4 && [t4 isKindOfClass:[NSString class]]) {
-        [scanditSDKBarcodePicker.overlayController setTextForBarcodeDecodingInProgress:((NSString *) t4)];
+    NSObject *cameraSwitchButton = [options objectForKey:@"cameraSwitchButtonPositionAndSize"];
+    if (cameraSwitchButton && [cameraSwitchButton isKindOfClass:[NSString class]]) {
+        NSArray *split = [((NSString *) cameraSwitchButton) componentsSeparatedByString:@"/"];
+        if ([split count] == 4) {
+            float x = [[split objectAtIndex:0] floatValue];
+            float y = [[split objectAtIndex:1] floatValue];
+            int width = [[split objectAtIndex:2] intValue];
+            int height = [[split objectAtIndex:3] intValue];
+            [scanditSDKBarcodePicker.overlayController setCameraSwitchButtonRelativeInverseX:x
+																				   relativeY:y
+																					   width:width
+																					  height:height];
+        }
     }
+	
     NSObject *t5 = [options objectForKey:@"searchBarActionButtonCaption"];
     if (t5 && [t5 isKindOfClass:[NSString class]]) {
         [scanditSDKBarcodePicker.overlayController setSearchBarActionButtonCaption:((NSString *) t5)];
@@ -259,12 +343,12 @@
 #pragma mark ScanDKOverlayControllerDelegate methods
 
 /**
- * This delegate method of the ScanDKOverlayController protocol needs to be implemented by 
+ * This delegate method of the ScanDKOverlayController protocol needs to be implemented by
  * every app that uses the ScanDK and this is where the custom application logic goes.
- * In the example below, we are just showing an alert view that asks the user whether he 
+ * In the example below, we are just showing an alert view that asks the user whether he
  * wants to continue scanning.
  */
-- (void)scanditSDKOverlayController:(ScanditSDKOverlayController *)scanditSDKOverlayController1 
+- (void)scanditSDKOverlayController:(ScanditSDKOverlayController *)scanditSDKOverlayController1
                      didScanBarcode:(NSDictionary *)barcodeResult {
 	if (!startAnimationDone) {
 		// If the initial animation hasn't finished yet we buffer the result and return it as soon
@@ -286,17 +370,18 @@
     
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
 													   messageAsArray:result];
+	
     [self writeJavascript:[pluginResult toSuccessCallbackString:self.callbackId]];
     self.hasPendingOperation = NO;
 }
 
 /**
- * This delegate method of the ScanDKOverlayController protocol needs to be implemented by 
+ * This delegate method of the ScanDKOverlayController protocol needs to be implemented by
  * every app that uses the ScanDK and this is where the custom application logic goes.
- * In the example below, we are just showing an alert view that asks the user whether he 
+ * In the example below, we are just showing an alert view that asks the user whether he
  * wants to continue scanning.
  */
-- (void)scanditSDKOverlayController:(ScanditSDKOverlayController *)scanditSDKOverlayController1 
+- (void)scanditSDKOverlayController:(ScanditSDKOverlayController *)scanditSDKOverlayController1
                 didCancelWithStatus:(NSDictionary *)status {
 	
     if (!wasStatusBarHidden) {
@@ -305,19 +390,19 @@
     
     [self.viewController dismissModalViewControllerAnimated:YES];
     
-	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK 
+	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:@"Canceled"];
     [self writeJavascript:[pluginResult toErrorCallbackString:self.callbackId]];
     self.hasPendingOperation = NO;
 }
 
 /**
- * This delegate method of the ScanDKOverlayController protocol needs to be implemented by 
+ * This delegate method of the ScanDKOverlayController protocol needs to be implemented by
  * every app that uses the ScanDK and this is where the custom application logic goes.
- * In the example below, we are just showing an alert view that asks the user whether he 
+ * In the example below, we are just showing an alert view that asks the user whether he
  * wants to continue scanning.
  */
-- (void)scanditSDKOverlayController:(ScanditSDKOverlayController *)scanditSDKOverlayController 
+- (void)scanditSDKOverlayController:(ScanditSDKOverlayController *)scanditSDKOverlayController
                     didManualSearch:(NSString *)input {
 	
     if (!wasStatusBarHidden) {
@@ -325,6 +410,7 @@
     }
 	
     [self.viewController dismissModalViewControllerAnimated:YES];
+    
 	
     NSArray *result = [[NSArray alloc] initWithObjects:input, @"UNKNOWN", nil];
     
