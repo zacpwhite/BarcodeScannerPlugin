@@ -281,12 +281,11 @@
 	NSString *barcode = [barcodeResult objectForKey:@"barcode"];
     
     [self.viewController dismissModalViewControllerAnimated:YES];
-     
+	
+    NSArray *result = [[NSArray alloc] initWithObjects:barcode, symbology, nil];
     
-    NSString *concat =[NSString stringWithFormat:@"%@|%@", symbology, barcode];
-    
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK 
-                                                      messageAsString:concat];
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+													   messageAsArray:result];
     [self writeJavascript:[pluginResult toSuccessCallbackString:self.callbackId]];
     self.hasPendingOperation = NO;
 }
@@ -326,11 +325,11 @@
     }
 	
     [self.viewController dismissModalViewControllerAnimated:YES];
-    
-    NSString *concat =[NSString stringWithFormat:@"UNKNOWN|%@", input];
+	
+    NSArray *result = [[NSArray alloc] initWithObjects:input, @"UNKNOWN", nil];
     
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:concat];
+													   messageAsArray:result];
     [self writeJavascript:[pluginResult toSuccessCallbackString:self.callbackId]];
     self.hasPendingOperation = NO;
 }
