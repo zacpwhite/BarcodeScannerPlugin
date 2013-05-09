@@ -24,6 +24,14 @@
         <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-off-icon@2x.png" />
         <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-on-icon.png" />
         <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-on-icon@2x.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-off-icon-pressed.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-off-icon-pressed@2x.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-on-icon-pressed.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-on-icon-pressed@2x.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/camera-swap-icon-pressed.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/camera-swap-icon-pressed@2x.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/camera-swap-icon.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/camera-swap-icon@2x.png" />
         
         <!-- Header files of Scandit SDK -->
         <header-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/ScanditSDKBarcodePicker.h" target-dir="ScanditSDK" />
