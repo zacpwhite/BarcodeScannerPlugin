@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.mirasense.scanditsdk.plugin"
+    version="1.1.0">
+
+    <name>ScanditBarcodeScanner</name>
+
+    <!-- ios -->
+    <platform name="ios">
+		<plugins-plist key="ScanditSDK" string="ScanditSDK" />
+
+        <!-- Cordova >= 2.3 -->
+        <config-file target="config.xml" parent="/widget/plugins">
+            <plugin name="ScanditSDK" value="ScanditSDK"/>
+        </config-file>
+
+        <!-- Resources for Scandit SDK -->
+		<resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/beep.wav" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/empty.cpp" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/poweredby.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/poweredby@2x.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-off-icon.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-off-icon@2x.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-on-icon.png" />
+        <resource-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/flashlight-turn-on-icon@2x.png" />
+        
+        <!-- Header files of Scandit SDK -->
+        <header-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/ScanditSDKBarcodePicker.h" target-dir="ScanditSDK" />
+        <header-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/ScanditSDKOverlayController.h" target-dir="ScanditSDK" />
+        <source-file src="scanditsdk-community-ios_3.0.0/ScanditSDK/libscanditsdk-iphone-3.0.0.a" target-dir="ScanditSDK" />
+
+        <!-- Scandit SDK Cordova Plugin Source for iOS -->
+        <header-file src="ScanditSDK.h" />
+        <source-file src="ScanditSDK.mm"  />
+        <header-file src="ScanditSDKRotatingBarcodePicker.h"  />
+        <source-file src="ScanditSDKRotatingBarcodePicker.m"  />
+        
+        <!-- Frameworks needed by Scandit SDK for iOS -->
+        <framework src="AudioToolbox.framework" />
+        <framework src="AVFoundation.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="CoreLocation.framework" />
+        <framework src="CoreMedia.framework" />
+        <framework src="CoreVideo.framework" />
+        <framework src="QuartzCore.framework" />
+        <framework src="SystemConfiguration.framework" />
+        <framework src="libiconv.dylib" />
+        <framework src="libz.dylib" />
+    </platform>
+
+    <platform name="android">
+        
+        <!-- register plugin -->
+        <config-file target="res/xml/config.xml" parent="plugins">
+            <plugin name="ScanditSDK" value="com.mirasense.scanditsdk.plugin.ScanditSDK"/>
+        </config-file>
+
+        <!-- add permissions in AndroidManifest.xml file--> 
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.VIBRATE" />
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        
+        <!-- add ScanditSDK Activity to the "application" section of AndroidManifest.xml file -->
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.mirasense.scanditsdk.plugin.ScanditSDKActivity"/>
+        </config-file>
+        
+        <!-- copy Scandit SDK libs -->
+        <source-file src="scanditsdk-community-android_3.3.1/libs/scanditsdk-barcodepicker-android-3.3.1.jar"
+                target-dir="libs" />
+        <source-file src="scanditsdk-community-android_3.3.1/libs/armeabi/libscanditsdk-android-3.3.1.so"
+                target-dir="libs/armeabi" />
+        
+        <!-- copy Scandit SDK resources (images, beep) -->
+        <source-file src="scanditsdk-community-android_3.3.1/res/raw/beep.wav" target-dir="res/raw"/>
+        <source-file src="scanditsdk-community-android_3.3.1/res/raw/poweredby2x.png" target-dir="res/raw"/>
+        <source-file src="scanditsdk-community-android_3.3.1/res/raw/ic_btn_search.png" target-dir="res/raw"/>
+        <source-file src="scanditsdk-community-android_3.3.1/res/raw/flashlight_turn_off_icon.png" target-dir="res/raw"/>
+        <source-file src="scanditsdk-community-android_3.3.1/res/raw/flashlight_turn_on_icon.png" target-dir="res/raw"/>
+        
+        <!-- add plugin source code --> 
+        <source-file src="com/mirasense/scanditsdk/plugin/ScanditSDK.java"
+                target-dir="src/com/mirasense/scanditsdk/plugin" />
+        <source-file src="com/mirasense/scanditsdk/plugin/ScanditSDKActivity.java"
+                target-dir="src/com/mirasense/scanditsdk/plugin" />
+        
+    </platform> 
+</plugin>
