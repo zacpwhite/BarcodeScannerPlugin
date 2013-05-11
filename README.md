@@ -174,7 +174,7 @@ cordova.exec(function(success), function(cancel), "ScanditSDK", "scan", ["YOUR A
             	// identical to the way the Scandit SDK plugin for Android reports results.
             
             	// If you are running the Scandit SDK Phonegap Plugin Version 1.* for iOS,
-            	// use the following line to generate a result array from the string result:
+            	// use the following approach to generate a result array from the string result returned:
             	// resultArray = result.split("|");
             }
             
@@ -203,7 +203,41 @@ cordova.exec(function(success), function(cancel), "ScanditSDK", "scan", ["YOUR A
 ```
 
 
-### API for Scandit SDK Phonegap Plugin iOS and Android  1.* 
+Changelog
+------------------------
+
+**Scandit SDK Phonegap Plugin 2.0.0 for iOS only - May 11th 2013**
+
+ * upgraded to new Scandit SDK 3.0.1 for iOS which comprises various new features: full screen scanning, 
+   improved autofocus management, better scan performance and robustness, new cleaner scan screen interface 
+   with the option to add a button to switch cameras and new symbologies (PDF417 beta and MSI-Plessey).
+
+ * IMPORTANT: updated Scandit SDK Phonegap Plugin API to reflect updates in Scandit SDK 3.0.1 for iOS. 
+   This includes a number of new API options (see below), a number of options have also disappeared. 
+
+ * harmonized return results of Android and iPhone Plugin. In previous versions, 
+   the iOS Plugin would return a string, while the Android Plugin would return an array. 
+   Starting with Scandit SDK Phonegap Plugin for iOS 2.0.0, the iOS Plugin will also return an array. 
+
+
+
+**Scandit SDK Phonegap Plugin 1.1.0 for Android & iOS - April 2nd 2013**
+
+ * upgraded to native Scandit SDK 2.2.7 for iOS and 3.3.1 for Android
+ 
+ * includes support PLUGMAN
+
+ * Fixed a bug that would freeze and stop the modal view from closing.
+
+ * Scandit SDK Phonegap Plugin for Android now also supports barcode scanning in landscape mode.
+
+ * Minor changes to ScanditSDKActivity.java 
+
+
+
+
+API for Scandit SDK Phonegap Plugin iOS and Android  1.* 
+------------------------
 
  * searchBar: true
  
@@ -359,7 +393,8 @@ Sets the maximum size a barcode in the manual entry field can have to possibly b
  
 
 
-### API for Scandit SDK Phonegap Plugin iOS 2.* and higher
+API for Scandit SDK Phonegap Plugin iOS 2.* and higher
+------------------------
 
 The available options that can be passed to scan function are listed below:
 
