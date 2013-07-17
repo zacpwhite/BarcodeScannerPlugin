@@ -206,6 +206,10 @@ cordova.exec(function(success), function(cancel), "ScanditSDK", "scan", ["YOUR A
 Changelog
 ------------------------
 
+Scandit SDK Phonegap Plugin 2.0.1 for iOS only - June 17th 2013**
+
+ * upgraded to Scandit SDK 3.0.3 for iOS which is a new bug fix release (see release notes of native iOS version for details)
+
 **Scandit SDK Phonegap Plugin 2.0.0 for iOS only - May 11th 2013**
 
  * upgraded to new Scandit SDK 3.0.1 for iOS which comprises various new features: full screen scanning, 
