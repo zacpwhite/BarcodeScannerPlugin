@@ -1,7 +1,7 @@
 BarcodeScannerPlugin
 ====================
 
-**IMPORTANT: The Scandit Phonegap/Cordova Plugin does not yet support Cordova/Phonegap 3.0.0 - use version 2.9.0 instead ** 
+**IMPORTANT: The Scandit Phonegap/Cordova Plugin does not yet support Cordova/Phonegap 3.0.0 - use version 2.9.0 instead** 
 
 *Support for Cordova 3.0.0 will be available by Aug 2nd*
 
