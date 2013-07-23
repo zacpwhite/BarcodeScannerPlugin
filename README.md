@@ -1,6 +1,10 @@
 BarcodeScannerPlugin
 ====================
 
+**IMPORTANT: The Scandit Phonegap/Cordova Plugin does not yet support Cordova/Phonegap 3.0.0 - use version 2.9.0 instead ** 
+
+*Support for Cordova 3.0.0 will be available by Aug 2nd*
+
 Cross platform Phonegap/Cordova Plugin of the Scandit Barcode Scanner SDK for iOS and Android
 
 Follow the detailed instructions below to add a high-performance barcode scanner to your app in 5 min using [Plugman](https://github.com/imhotep/plugman).
