@@ -33,7 +33,14 @@
 @property (nonatomic, retain) NSDictionary *bufferedResult;
 
 /**
- * Start scanning. The available options to pass this function are as follows:
+ * Starts the scanning. You call this the following way from java script (success and failure are 
+ * callback functions defined by you):
+ *
+ * cordova.exec(success, failure, "ScanditSDK", "scan", ["___your_app_key___", 
+ *              {"option1":"value1", "option2":true}]);
+ *
+ *
+ * The available options are:
  *
  * exampleStringForOption: defaultValue
  * Short explanation of option.
@@ -188,7 +195,7 @@
  * maxSearchBarBarcodeLength: 100
  * Sets the maximum size a barcode in the manual entry field can have to possibly be valid.
  */
-- (void)scan:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options;
+- (void)scan:(CDVInvokedUrlCommand *)command;
 
 
 @end

@@ -25,22 +25,22 @@
 @synthesize hasPendingOperation;
 @synthesize bufferedResult;
 
-
-- (void)scan:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
+- (void)scan:(CDVInvokedUrlCommand *)command {
     
     if (self.hasPendingOperation) {
         return;
     }
     self.hasPendingOperation = YES;
     
-    NSUInteger argc = [arguments count];
+    NSUInteger argc = [command.arguments count];
     if (argc < 2) {
         NSLog(@"The scan call received too few arguments and has to return without starting.");
         return;
     }
-    self.callbackId = [arguments pop];
+    self.callbackId = command.callbackId;
     
-    NSString *appKey = [arguments objectAtIndex:0];
+    NSString *appKey = [command.arguments objectAtIndex:0];
+	NSDictionary *options = [command.arguments objectAtIndex:1];
     
     // Hide the status bar to get a bigger area of the video feed. We have to set this before we add
     // GUI elements to the overview, such that the views are aware of the fact that there is no
@@ -351,7 +351,6 @@
 	}
 	
 	[scanditSDKBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
-    [scanditSDKBarcodePicker release];
 }
 
 #pragma mark -
