@@ -24,9 +24,10 @@
 @synthesize callbackId;
 @synthesize hasPendingOperation;
 @synthesize bufferedResult;
+@synthesize scanditSDKBarcodePicker;
 
 - (void)scan:(CDVInvokedUrlCommand *)command {
-    
+    NSLog(@"scanning");
     if (self.hasPendingOperation) {
         return;
     }
@@ -60,9 +61,10 @@
 		}
     }
     
-    ScanditSDKBarcodePicker *scanditSDKBarcodePicker = [[ScanditSDKRotatingBarcodePicker alloc]
-														initWithAppKey:appKey
-														cameraFacingPreference:facing];
+    scanditSDKBarcodePicker = [[ScanditSDKRotatingBarcodePicker alloc]
+							   initWithAppKey:appKey
+							   cameraFacingPreference:facing];
+	
     
 	
     NSObject *searchBar = [options objectForKey:@"searchBar"];
@@ -351,7 +353,6 @@
 	}
 	
 	[scanditSDKBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
-	[scanditSDKBarcodePicker release];
 }
 
 #pragma mark -
@@ -380,6 +381,7 @@
 	NSString *barcode = [barcodeResult objectForKey:@"barcode"];
     
     [self.viewController dismissModalViewControllerAnimated:YES];
+	self.scanditSDKBarcodePicker = nil;
 	
     NSArray *result = [[NSArray alloc] initWithObjects:barcode, symbology, nil];
     
@@ -404,6 +406,7 @@
     }
     
     [self.viewController dismissModalViewControllerAnimated:YES];
+	self.scanditSDKBarcodePicker = nil;
     
 	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:@"Canceled"];
@@ -425,6 +428,7 @@
     }
 	
     [self.viewController dismissModalViewControllerAnimated:YES];
+	self.scanditSDKBarcodePicker = nil;
     
 	
     NSArray *result = [[NSArray alloc] initWithObjects:input, @"UNKNOWN", nil];

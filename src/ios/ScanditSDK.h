@@ -26,17 +26,20 @@
 	
 	BOOL startAnimationDone;
 	NSDictionary *bufferedResult;
+	
+	ScanditSDKBarcodePicker *scanditSDKBarcodePicker;
 }
 
 @property (nonatomic, copy) NSString *callbackId;
 @property (readwrite, assign) BOOL hasPendingOperation;
 @property (nonatomic, retain) NSDictionary *bufferedResult;
+@property (nonatomic, retain) ScanditSDKBarcodePicker *scanditSDKBarcodePicker;
 
 /**
- * Starts the scanning. You call this the following way from java script (success and failure are 
+ * Starts the scanning. You call this the following way from java script (success and failure are
  * callback functions defined by you):
  *
- * cordova.exec(success, failure, "ScanditSDK", "scan", ["___your_app_key___", 
+ * cordova.exec(success, failure, "ScanditSDK", "scan", ["___your_app_key___",
  *              {"option1":"value1", "option2":true}]);
  *
  *
