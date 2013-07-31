@@ -351,6 +351,7 @@
 	}
 	
 	[scanditSDKBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
+	[scanditSDKBarcodePicker release];
 }
 
 #pragma mark -
