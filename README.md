@@ -1,13 +1,9 @@
 BarcodeScannerPlugin
 ====================
 
-**IMPORTANT: The Scandit Phonegap/Cordova Plugin does not yet support Cordova/Phonegap 3.0.0 - use version 2.9.0 instead** 
-
-*Support for Cordova 3.0.0 will be available by Aug 2nd*
-
 Cross platform Phonegap/Cordova Plugin of the Scandit Barcode Scanner SDK for iOS and Android
 
-Follow the detailed instructions below to add a high-performance barcode scanner to your app in 5 min using [Plugman](https://github.com/imhotep/plugman).
+Follow the detailed instructions below to add a high-performance barcode scanner to your app in 5 min using [Plugman](https://github.com/apache/cordova-plugman/).
 
 If you don't have a Phonegap app yet, but want to try out our Phonegap Plugins anyway, [follow the instructions on phonegap.com](http://docs.phonegap.com/) to generate a sample app. 
 
@@ -15,17 +11,25 @@ If you don't have a Phonegap app yet, but want to try out our Phonegap Plugins a
 Scandit SDK Plugin Integration with Plugman 
 ------------------------
 
-The easiest way to install the Scandit plugin into your Phonegap/Cordova project is to use [Plugman](https://github.com/imhotep/plugman). 
+The easiest way to install the Scandit plugin into your Phonegap/Cordova project is to use [Plugman](https://github.com/apache/cordova-plugman/). 
 
-1. Sign up and download the Scandit SDK Cordova Plugins for iOS and Android from your Scandit SDK account.
-2. Install Android and iOS Scandit SDK Plugin using [Plugman](https://github.com/imhotep/plugman)
+* Sign up and download the Scandit SDK Cordova Plugins for iOS and Android from your Scandit SDK account.
+* Generate a sample Cordova project or use your existing Cordova project
 
+```
+	cordova create .
+	cordova platform add ios
+	cordova platform add android
+```
+
+* Install Android and iOS Scandit SDK Plugin using [Plugman](https://github.com/imhotep/plugman)
+
+```
         plugman --platform android --project . --plugin <path to unzipped ScanditSDK Plugin for Android> 
         plugman --platform ios --project . --plugin <path to unzipped ScanditSDK Plugin for iOS> 
-
-   There is a [bug](https://issues.apache.org/jira/browse/CB-2718) in [Plugman](https://github.com/imhotep/plugman) that prevents .a files (static libraries) to be installed properly under iOS. To add the `libscanditsdk-iphone-<version>.a` file under iOS, you need click on your project in the navigation pane of Xcode, select your target and the tab "Build Phases". Under the entry "Link Binary with Libraries", add the `libscanditsdk-iphone-<version>.a` library by clicking the "+" button and select it from the file system by clicking "add other".
+```
  
-3. Start using the Scandit SDK in your html code 
+* Start using the Scandit SDK in your html code 
     * Get the app key from your Scandit SDK account
     * Invoke the Scandit SDK scanner by invoking the cordova.exec() function with the following parameters:
 
@@ -33,11 +37,10 @@ The easiest way to install the Scandit plugin into your Phonegap/Cordova project
 
     * See full example and API below for a detailed list of options. 
 
-To install [Plugman](https://github.com/imhotep/plugman):
+To install [Plugman](https://github.com/apache/cordova-plugman/):
 
-         git clone https://github.com/imhotep/plugman.git
-         cd plugman
-         npm install -g
+         npm install -g plugman
+
 
 
 Manual Scandit SDK Plugin Integration for iOS 
@@ -70,7 +73,13 @@ Manual Scandit SDK Plugin Integration for iOS
          * libc++.dylib
    
 * Register the Plugin with your Cordova App:
-    * Open the Cordova.plist file and add an entry to `Plugins` with key `ScanditSDK` and value `ScanditSDK`.
+    * Open the config.xml file and add a feature tag.
+
+```
+	<feature name="ScanditSDK">
+                <param name="ios-package" value="ScanditSDK"/>
+        </feature>
+```
 
 * Start using the Scandit SDK in your html code 
     * Get the app key from your Scandit SDK account
@@ -111,7 +120,9 @@ and the scanditsdk-barcodepicker-android-*.jar.
     * Add the following line to the res/xml/config.xml resource
 
     ```
-     <plugin name="ScanditSDK" value="com.mirasense.scanditsdk.plugin.ScanditSDK"/>
+     <feature name="ScanditSDK">
+                <param name="android-package" value="com.mirasense.scanditsdk.plugin.ScanditSDK"/>
+     </feature>
     ```
 
 
@@ -210,7 +221,14 @@ cordova.exec(function(success), function(cancel), "ScanditSDK", "scan", ["YOUR A
 Changelog
 ------------------------
 
-Scandit SDK Phonegap Plugin 2.0.1 for iOS only - June 17th 2013**
+**Scandit SDK Phonegap Plugin for iOS (2.1.0) and Android (1.2.0) - August 6th 2013**
+
+ * support for Phonegap/Cordova 3.0 
+
+ * upgraded to Scandit SDK 3.0.4 for iOS (for details see release notes in download section of your Scandit SDK account), Android version of plugin still uses Scandit SDK 3.3.1 for Android
+
+
+**Scandit SDK Phonegap Plugin 2.0.1 for iOS only - June 17th 2013**
 
  * upgraded to Scandit SDK 3.0.3 for iOS which is a new bug fix release (see release notes of native iOS version for details)
 
