@@ -73,13 +73,15 @@ Manual Scandit SDK Plugin Integration for iOS
          * libc++.dylib
    
 * Register the Plugin with your Cordova App:
-    * Open the config.xml file and add a feature tag.
 
-```
-	<feature name="ScanditSDK">
-                <param name="ios-package" value="ScanditSDK"/>
-        </feature>
-```
+    * Open the config.xml file and add the following xml element to the widget element
+
+    ```
+	<feature name="ScanditSDK" >
+		<param name="ios-package" value="ScanditSDK" />
+	</feature>
+    ```
+
 
 * Start using the Scandit SDK in your html code 
     * Get the app key from your Scandit SDK account
@@ -117,9 +119,10 @@ and the scanditsdk-barcodepicker-android-*.jar.
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
     ```
-    * Add the following line to the res/xml/config.xml resource
+    * Add the following xml element to the res/xml/config.xml resource's widget element
 
     ```
+
      <feature name="ScanditSDK">
                 <param name="android-package" value="com.mirasense.scanditsdk.plugin.ScanditSDK"/>
      </feature>
