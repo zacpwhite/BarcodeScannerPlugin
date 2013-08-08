@@ -38,8 +38,6 @@ public class ScanditSDK extends CordovaPlugin {
     
     private CallbackContext mCallbackContext;
     
-    
-    
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         mCallbackContext = callbackContext;
@@ -193,6 +191,16 @@ public class ScanditSDK extends CordovaPlugin {
      * Sets the text shown in the manual entry field when nothing has been
      * entered yet.
      *
+     * viewfinderTextHook: true
+     * Sets whether to draw the hook at the top of the viewfinder that 
+     * displays text.
+     * 
+     * viewfinderDimension: "0.6/0.25" (width, height)
+     * Sets the size of the viewfinder relative to the size of the screen in
+     * portrait mode. Changing this value does not(!) affect the area in 
+     * which barcodes are successfully recognized. It only changes the size of
+     * the box drawn onto the scan screen.
+     * 
      * viewfinderColor: "FFFFFF"
      * Sets the color of the viewfinder when no code has been recognized yet.
      * 

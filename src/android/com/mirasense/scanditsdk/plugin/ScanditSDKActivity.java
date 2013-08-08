@@ -134,8 +134,8 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
             String[] split = hotspot.split("[/]");
             if (split.length == 2) {
                 try {
-                    Float x = new Float(split[0]);
-                    Float y = new Float(split[1]);
+                    Float x = Float.valueOf(split[0]);
+                    Float y = Float.valueOf(split[1]);
                     mBarcodePicker.setScanningHotSpot(x, y);
                 } catch (NumberFormatException e) {}
             }
@@ -211,6 +211,21 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         if (extras.containsKey("searchBarHint")) {
             mBarcodePicker.getOverlayView().setSearchBarPlaceholderText(
                     extras.getString("searchBarHint"));
+        }
+
+        if (extras.containsKey("viewfinderDimension")) {
+            String hotspot = extras.getString("viewfinderDimension");
+            String[] split = hotspot.split("[/]");
+            if (split.length == 2) {
+                try {
+                    Float width = Float.valueOf(split[0]);
+                    Float height = Float.valueOf(split[1]);
+                	mBarcodePicker.getOverlayView().setViewfinderDimension(width, height);
+                } catch (NumberFormatException e) {}
+            }
+        }
+        if (extras.containsKey("viewfinderTextHook")) {
+        	mBarcodePicker.getOverlayView().drawViewfinderTextHook(extras.getBoolean("viewfinderTextHook"));
         }
         if (extras.containsKey("viewfinderColor")) {
             String color = extras.getString("viewfinderColor");
