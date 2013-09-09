@@ -53,8 +53,8 @@ Manual Scandit SDK Plugin Integration for iOS
     * Choose the files folders below from the zip you downloaded above (make sure you select the options `create group for added folders` and the `copy items to destination group's folder`):
          * ScanditSDK.h
          * ScanditSDK.mm
-         * ScanditSDKBarcodePicker.h
-         * ScanditSDKBarcodePicker.m
+         * ScanditSDKRotatingBarcodePicker.h
+         * ScanditSDKRotatingBarcodePicker.m
          * ScanditSDK folder (which includes the libscanditsdk-iphone-<version>.a static lib)
 
 * Add frameworks needed by Scandit Barcode Scanner SDK:
