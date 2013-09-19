@@ -61,6 +61,10 @@ public class ScanditSDK extends CordovaPlugin {
      * exampleStringForOption: defaultValue
      * Short explanation of option.
      *
+     * preferFrontCamera: false
+     * Whether showing the front camera should be preferred over the back camera (for devices without a
+     * front camera the back camera is shown).
+     *
      * searchBar: true
      * Shows or hides the search bar at the top of the screen.
      *
@@ -97,6 +101,14 @@ public class ScanditSDK extends CordovaPlugin {
      * dataMatrix: false
      * Enables or disables the recognition of Data Matrix codes.
      * Note: Not all Scandit SDK versions support Data Matrix scanning.
+     *
+     * msiPlessey: false
+     * Enables or disables the recognition of MSI Plessey codes.
+     * Note: Not all Scandit SDK versions support MSI Plessey scanning.
+     *
+     * msiPlesseyChecksumType: "mod10"
+     * Sets the type of checksum that is expected of the MSI Plessey codes.
+     * Legal values are: "none", "mod10", "mod11", "mod1010", "mod1110"
      *
      * inverseRecognition: false
      * Enables the detection of white on black codes. This option currently
@@ -156,20 +168,24 @@ public class ScanditSDK extends CordovaPlugin {
      * Enables or disables the icon that let's the user activate the LED torch
      * mode. If the device does not support torch mode, the icon to activate is
      * will not be visible regardless of the value.
-     * 
-     * textForInitialScanScreenState: "Align code with box"
-     * Sets the text that will be displayed above the viewfinder to tell the user 
-     * to align it with the barcode that should be recognized.
      *
-     * textForBarcodePresenceDetected: "Align code and hold still"
-     * Sets the text that will be displayed above the viewfinder to tell the user 
-     * to align it with the barcode and hold still because a potential code seems 
-     * to be on the screen.
+     * torchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
+     * Sets the position at which the button to enable the torch is drawn. The X and Y coordinates are
+     * relative to the screen size, which means they have to be between 0 and 1.
      *
-     * textForBarcodeDecodingInProgress: "Decoding ..."
-     * Sets the text that will be displayed above the viewfinder to tell the user 
-     * to hold still because a barcode is aligned with the box and the recognition 
-     * is trying to recognize it.
+     * cameraSwitchVisibility: "never"
+     * Sets when the camera switch button is visible for all devices that have more than one camera.
+     * Legal values are: "never", "tablet", "always"
+     *
+     * cameraSwitchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
+     * Sets the position at which the button to switch the camera is drawn. The X and Y coordinates are
+     * relative to the screen size, which means they have to be between 0 and 1. Be aware that the x
+     * coordinate is calculated from the right side of the screen and not the left like with the torch
+     * button.
+     *
+     * logoOffsets: "0, 0, 0, 0" (xOffset, yOffset, landscapeXOffset, landscapeYOffset)
+     * Sets the x and y offset at which the Scandit logo should be drawn for both portrait and landscape
+     * orientation. Be aware that the standard Scandit SDK licenses do not allow you to hide the logo.
      *
      * titleMessage: "Scan a barcode"
      * Sets the title shown at the top of the screen.
@@ -191,15 +207,10 @@ public class ScanditSDK extends CordovaPlugin {
      * Sets the text shown in the manual entry field when nothing has been
      * entered yet.
      *
-     * viewfinderTextHook: true
-     * Sets whether to draw the hook at the top of the viewfinder that 
-     * displays text.
-     * 
-     * viewfinderDimension: "0.6/0.25" (width, height)
-     * Sets the size of the viewfinder relative to the size of the screen in
-     * portrait mode. Changing this value does not(!) affect the area in 
-     * which barcodes are successfully recognized. It only changes the size of
-     * the box drawn onto the scan screen.
+     * viewfinderSize: "0.8/0.4/0.6/0.4" (width/height/landscapeWidth/landscapeHeight)
+     * Sets the size of the viewfinder relative to the size of the screen size.
+     * Changing this value does not(!) affect the area in which barcodes are successfully recognized.
+     * It only changes the size of the box drawn onto the scan screen.
      * 
      * viewfinderColor: "FFFFFF"
      * Sets the color of the viewfinder when no code has been recognized yet.

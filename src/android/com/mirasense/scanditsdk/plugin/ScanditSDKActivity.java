@@ -29,6 +29,7 @@ import com.mirasense.scanditsdk.LegacyPortraitScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.interfaces.ScanditSDK;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
+import com.mirasense.scanditsdk.interfaces.ScanditSDKOverlay;
 
 /**
  * Activity integrating the barcode scanner.
@@ -57,10 +58,14 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         if (ScanditSDKBarcodePicker.canRunPortraitPicker()) {
+        	int facing = ScanditSDK.CAMERA_FACING_BACK;
+        	if (extras.getBoolean("preferFrontCamera")) {
+        		facing = ScanditSDK.CAMERA_FACING_FRONT;
+        	}
             // create ScanditSDKBarcodePicker that takes care of the camera access and 
             // barcode recognition.
             ScanditSDKBarcodePicker picker = new ScanditSDKBarcodePicker(
-                    this, extras.getString("appKey"));
+                    this, extras.getString("appKey"), facing);
             
             // Add both views to activity, with the scan GUI on top.
             this.setContentView(picker);
@@ -117,7 +122,24 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         if (extras.containsKey("dataMatrix")) {
             mBarcodePicker.setDataMatrixEnabled(extras.getBoolean("dataMatrix"));
         }
-        
+        if (extras.containsKey("msiPlessey")) {
+            mBarcodePicker.setMsiPlesseyEnabled(extras.getBoolean("msiPlessey"));
+        }
+        if (extras.containsKey("msiPlesseyChecksumType")) {
+        	String checksum = extras.getString("msiPlesseyChecksumType");
+        	int actualChecksum = ScanditSDK.CHECKSUM_MOD_10;
+        	if (checksum.equals("none")) {
+        		actualChecksum = ScanditSDK.CHECKSUM_NONE;
+        	} else if (checksum.equals("mod11")) {
+        		actualChecksum = ScanditSDK.CHECKSUM_MOD_11;
+        	} else if (checksum.equals("mod1010")) {
+        		actualChecksum = ScanditSDK.CHECKSUM_MOD_1010;
+        	} else if (checksum.equals("mod1110")) {
+        		actualChecksum = ScanditSDK.CHECKSUM_MOD_1110;
+        	}
+        	mBarcodePicker.setMsiPlesseyChecksumType(actualChecksum);
+        }
+
         if (extras.containsKey("inverseRecognition")) {
             mBarcodePicker.setInverseRecognitionEnabled(extras.getBoolean("inverseRecognition"));
         }
@@ -176,6 +198,44 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
             mBarcodePicker.getOverlayView().setTorchEnabled(
                     extras.getBoolean("torch"));
         }
+        if (extras.containsKey("torchButtonPositionAndSize")) {
+            String hotspot = extras.getString("torchButtonPositionAndSize");
+            String[] split = hotspot.split("[/]");
+            if (split.length == 4) {
+                try {
+                    Float x = Float.valueOf(split[0]);
+                    Float y = Float.valueOf(split[1]);
+                    int width = Integer.valueOf(split[2]);
+                    int height = Integer.valueOf(split[3]);
+                	mBarcodePicker.getOverlayView().setTorchButtonPosition(x, y, width, height);
+                } catch (NumberFormatException e) {}
+            }
+        }
+        
+        if (extras.containsKey("cameraSwitchVisibility")) {
+            String visibility = extras.getString("cameraSwitchVisibility");
+            int actualVisibility = ScanditSDKOverlay.CAMERA_SWITCH_NEVER;
+            if (visibility.equals("tablet")) {
+            	actualVisibility = ScanditSDKOverlay.CAMERA_SWITCH_ON_TABLET;
+            } else if (visibility.equals("always")) {
+            	actualVisibility = ScanditSDKOverlay.CAMERA_SWITCH_ALWAYS;
+            }
+            mBarcodePicker.getOverlayView().setCameraSwitchVisibility(actualVisibility);
+        }
+        if (extras.containsKey("cameraSwitchButtonPositionAndSize")) {
+            String hotspot = extras.getString("cameraSwitchButtonPositionAndSize");
+            String[] split = hotspot.split("[/]");
+            if (split.length == 4) {
+                try {
+                    Float x = Float.valueOf(split[0]);
+                    Float y = Float.valueOf(split[1]);
+                    int width = Integer.valueOf(split[2]);
+                    int height = Integer.valueOf(split[3]);
+                	mBarcodePicker.getOverlayView().setCameraSwitchButtonPosition(x, y, width, height);
+                } catch (NumberFormatException e) {}
+            }
+        }
+        
         if (extras.containsKey("textForInitialScanScreenState")) {
             mBarcodePicker.getOverlayView().setTextForInitialScanScreenState(
                     extras.getString("textForInitialScanScreenState"));
@@ -222,8 +282,39 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
                     Float height = Float.valueOf(split[1]);
                 	mBarcodePicker.getOverlayView().setViewfinderDimension(width, height);
                 } catch (NumberFormatException e) {}
+            } else if (split.length == 4) {
+                try {
+                    Float width = Float.valueOf(split[0]);
+                    Float height = Float.valueOf(split[1]);
+                    Float landscapeWidth = Float.valueOf(split[2]);
+                    Float landscapeHeight = Float.valueOf(split[3]);
+                	mBarcodePicker.getOverlayView().setViewfinderDimension(
+                			width, height, landscapeWidth, landscapeHeight);
+                } catch (NumberFormatException e) {}
             }
         }
+
+        if (extras.containsKey("viewfinderSize")) {
+            String hotspot = extras.getString("viewfinderSize");
+            String[] split = hotspot.split("[/]");
+            if (split.length == 2) {
+                try {
+                    Float width = Float.valueOf(split[0]);
+                    Float height = Float.valueOf(split[1]);
+                	mBarcodePicker.getOverlayView().setViewfinderDimension(width, height);
+                } catch (NumberFormatException e) {}
+            } else if (split.length == 4) {
+                try {
+                    Float width = Float.valueOf(split[0]);
+                    Float height = Float.valueOf(split[1]);
+                    Float landscapeWidth = Float.valueOf(split[2]);
+                    Float landscapeHeight = Float.valueOf(split[3]);
+                	mBarcodePicker.getOverlayView().setViewfinderDimension(
+                			width, height, landscapeWidth, landscapeHeight);
+                } catch (NumberFormatException e) {}
+            }
+        }
+        
         if (extras.containsKey("viewfinderTextHook")) {
         	mBarcodePicker.getOverlayView().drawViewfinderTextHook(extras.getBoolean("viewfinderTextHook"));
         }
@@ -252,6 +343,20 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
                     float g = ((float) Integer.parseInt(green, 16)) / 256.0f;
                     float b = ((float) Integer.parseInt(blue, 16)) / 256.0f;
                     mBarcodePicker.getOverlayView().setViewfinderDecodedColor(r, g, b);
+                } catch (NumberFormatException e) {}
+            }
+        }
+        if (extras.containsKey("logoOffsets")) {
+            String offsets = extras.getString("logoOffsets");
+            String[] split = offsets.split("[,]");
+            if (split.length == 4) {
+                try {
+                    Float xOffset = Float.valueOf(split[0].trim());
+                    Float yOffset = Float.valueOf(split[1].trim());
+                    Float landscapeXOffset = Float.valueOf(split[2].trim());
+                    Float landscapeYOffset = Float.valueOf(split[3].trim());
+                	mBarcodePicker.getOverlayView().setViewfinderDimension(
+                			xOffset, yOffset, landscapeXOffset, landscapeYOffset);
                 } catch (NumberFormatException e) {}
             }
         }
