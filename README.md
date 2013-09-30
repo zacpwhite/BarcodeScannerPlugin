@@ -227,11 +227,10 @@ cordova.exec(function(success), function(cancel), "ScanditSDK", "scan", ["YOUR A
 Changelog
 ------------------------
 
-**Scandit SDK Phonegap Plugin for iOS and Android (2.2.0) - September 27th 2013**
+**Scandit SDK Phonegap Plugin for iOS and Android (2.2.0) - September 30th 2013**
 
- * upgraded to Scandit SDK for iOS 3.1.0 and Scandit SDK for Android 3.5.1 (see release notes in download section of your Scandit SDK for details)
+ * upgraded to Scandit SDK for iOS 3.1.1 and Scandit SDK for Android 3.5.1 (see release notes in download section of your Scandit SDK for details)
 
- * new API methods to 
 
 **Scandit SDK Phonegap Plugin for iOS (2.1.0) and Android (1.2.0) - August 6th 2013**
 
