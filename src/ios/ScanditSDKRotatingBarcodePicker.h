@@ -27,5 +27,8 @@
     
 }
 
+- (id)initWithAppKey:(NSString *)scanditSDKAppKey
+	  cameraFacingPreference:(CameraFacingDirection)facing
+	  orientations:(NSArray *)orientations;
 
 @end

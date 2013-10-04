@@ -23,13 +23,29 @@
 #import "ScanditSDKOverlayController.h"
 #import <objc/runtime.h>
 
+@interface ScanditSDKRotatingBarcodePicker() {
+	NSArray *allowedOrientations;
+}
+
+@property (nonatomic, retain) NSArray *allowedOrientations;
+
+@end
+
+
+
 @implementation ScanditSDKRotatingBarcodePicker
 
+@synthesize allowedOrientations;
 
-- (id)initWithAppKey:(NSString *)scanditSDKAppKey {
-    id result = [super initWithAppKey:scanditSDKAppKey];
+
+- (id)initWithAppKey:(NSString *)scanditSDKAppKey
+	  cameraFacingPreference:(CameraFacingDirection)facing
+	  orientations:(NSArray *)orientations {
+    if (self = [super initWithAppKey:scanditSDKAppKey]) {
+		self.allowedOrientations = orientations;
+	}
     
-    return result;
+    return self;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -39,14 +55,20 @@
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    // Check the project settings for screen orientation and only allow the specified ones.
-    
     NSArray *orientations;
-    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
-        orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
-    } else {
-        orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
-    }
+	
+	if (!self.allowedOrientations) {
+		// Use the orientations from the project settings.
+		if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+			orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
+		} else {
+			orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
+		}
+	} else {
+		// Use the user specified orientations.
+		orientations = self.allowedOrientations;
+	}
+	
     NSUInteger supportedOrientations = 0;
     
     if ([orientations containsObject:@"UIInterfaceOrientationPortrait"]) {
@@ -66,15 +88,19 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Check the project settings for screen orientation and only allow rotation to the specified
-    // ones.
-    
     NSArray *orientations;
-    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
-        orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
-    } else {
-        orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
-    }
+	
+	if (!self.allowedOrientations) {
+		// Use the orientations from the project settings.
+		if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+			orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
+		} else {
+			orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
+		}
+	} else {
+		// Use the user specified orientations.
+		orientations = self.allowedOrientations;
+	}
     
     if ([orientations containsObject:@"UIInterfaceOrientationPortrait"]
 		&& interfaceOrientation == UIInterfaceOrientationPortrait) {

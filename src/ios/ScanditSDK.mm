@@ -60,10 +60,30 @@
 			facing = CAMERA_FACING_FRONT;
 		}
     }
+	
+	NSMutableArray *orientations = nil;
+    NSObject *orientationsObj = [options objectForKey:@"orientations"];
+    if (orientationsObj && [orientationsObj isKindOfClass:[NSString class]]) {
+		NSString *orientationsString = (NSString *)orientationsObj;
+		orientations = [[NSMutableArray alloc] init];
+		if ([orientationsString rangeOfString:@"portrait"].location != NSNotFound) {
+			[orientations addObject:@"UIInterfaceOrientationPortrait"];
+		}
+		if ([orientationsString rangeOfString:@"portraitUpsideDown"].location != NSNotFound) {
+			[orientations addObject:@"UIInterfaceOrientationPortraitUpsideDown"];
+		}
+		if ([orientationsString rangeOfString:@"landscapeLeft"].location != NSNotFound) {
+			[orientations addObject:@"UIInterfaceOrientationLandscapeLeft"];
+		}
+		if ([orientationsString rangeOfString:@"landscapeRight"].location != NSNotFound) {
+			[orientations addObject:@"UIInterfaceOrientationLandscapeRight"];
+		}
+	}
     
     scanditSDKBarcodePicker = [[ScanditSDKRotatingBarcodePicker alloc]
 							   initWithAppKey:appKey
-							   cameraFacingPreference:facing];
+							   cameraFacingPreference:facing
+							   orientations:orientations];
 	
     
 	
@@ -79,6 +99,11 @@
     }
     NSObject *scanning2D = [options objectForKey:@"2DScanning"];
     if (scanning2D && [scanning2D isKindOfClass:[NSNumber class]]) {
+		if ([((NSNumber *)scanning2D) boolValue]) {
+			NSLog(@"enabling 2d");
+		} else {
+			NSLog(@"disabling 2d");
+		}
         [scanditSDKBarcodePicker set2DScanningEnabled:[((NSNumber *)scanning2D) boolValue]];
     }
     
@@ -108,6 +133,7 @@
     }
     NSObject *qr = [options objectForKey:@"qr"];
     if (qr && [qr isKindOfClass:[NSNumber class]]) {
+		NSLog(@"setting qr");
         [scanditSDKBarcodePicker setQrEnabled:[((NSNumber *)qr) boolValue]];
     }
     NSObject *dataMatrix = [options objectForKey:@"dataMatrix"];
