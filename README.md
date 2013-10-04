@@ -5,7 +5,7 @@ Cross platform Phonegap/Cordova Plugin of the Scandit Barcode Scanner SDK for iO
 
 Follow the detailed instructions below to add a high-performance barcode scanner to your app in 5 min using [Plugman](https://github.com/apache/cordova-plugman/).
 
-If you don't have a Phonegap app yet, but want to try out our Phonegap Plugins anyway, [follow the instructions on phonegap.com](http://docs.phonegap.com/) to generate a sample app. 
+If you don't have a Phonegap app yet, but want to try out our Phonegap/Cordova Plugins anyway, [follow the instructions on phonegap.com](http://docs.phonegap.com/) to generate a sample app. 
 
 
 Scandit SDK Plugin Integration with Plugman 
@@ -22,11 +22,14 @@ The easiest way to install the Scandit plugin into your Phonegap/Cordova project
 	cordova platform add android
 ```
 
-* Install Android and iOS Scandit SDK Plugin using [Plugman](https://github.com/imhotep/plugman)
+* Install Android and iOS Scandit SDK Plugin using [Plugman](https://github.com/apache/cordova-plugman/)
 
 ```
-        plugman --platform android --project . --plugin <path to unzipped ScanditSDK Plugin for Android> 
-        plugman --platform ios --project . --plugin <path to unzipped ScanditSDK Plugin for iOS> 
+        plugman install --platform android --project <your project dir> --plugin <path to unzipped ScanditSDK Plugin for Android> 
+```
+
+```
+        plugman install --platform ios --project <your project dir> --plugin <path to unzipped ScanditSDK Plugin for iOS> 
 ```
  
 * Start using the Scandit SDK in your html code 
@@ -224,6 +227,11 @@ cordova.exec(function(success), function(cancel), "ScanditSDK", "scan", ["YOUR A
 Changelog
 ------------------------
 
+**Scandit SDK Phonegap Plugin for iOS and Android (2.2.0) - September 30th 2013**
+
+ * upgraded to Scandit SDK for iOS 3.1.1 and Scandit SDK for Android 3.5.1 (see release notes in download section of your Scandit SDK for details)
+
+
 **Scandit SDK Phonegap Plugin for iOS (2.1.0) and Android (1.2.0) - August 6th 2013**
 
  * support for Phonegap/Cordova 3.0 
@@ -265,362 +273,10 @@ Changelog
 
 
 
-API for Scandit SDK Phonegap Plugin iOS and Android  1.* 
+API for Scandit SDK Phonegap Plugin iOS and Android  
 ------------------------
 
- * searchBar: true
- 
-Shows or hides the search bar at the top of the screen.
- 
- * 1DScanning: true
- 
-Enables or disables the recognition of 1D codes.
- 
- * 2DScanning: true
-
-Enables or disables the recognition of 2D codes.
- 
- * ean13AndUpc12: true
-
-Enables or disables the recognition of EAN13 and UPC12/UPCA codes.
- 
- * ean8: true
-
-Enables or disables the recognition of EAN8 codes.
- 
- * upce: true
-
-Enables or disables the recognition of UPCE codes.
- 
- * code39: true
-
-Enables or disables the recognition of CODE39 codes.
-Note: Not all Scandit SDK versions support Code 39 scanning.
- 
- * code128: true
-
-Enables or disables the recognition of CODE128 codes.
-Note: Not all Scandit SDK versions support Code 128 scanning.
- 
- * itf: true
-
-Enables or disables the recognition of ITF codes.
-Note: Not all Scandit SDK versions support ITF scanning.
- 
- * qr: false
-
-Enables or disables the recognition of QR codes.
- 
- * dataMatrix: false
-
-Enables or disables the recognition of Data Matrix codes.
-Note: Not all Scandit SDK versions support Data Matrix scanning.
- 
- * inverseRecognition: false
-
-Enables the detection of white on black codes. This option currently
-only works on Data Matrix codes.
- 
- * microDataMatrix: false
- 
-Enables special settings to allow the recognition of very small Data
-Matrix codes. If this is not specifically needed, do not enable it as it
-uses considerable processing power. This setting automatically forces
-2d recognition on every frame. This option only works on devices with
-Android 2.2 or higher, it does not cause issues with lower versions but
-simply doesn't work.
- 
- * force2d: false
- 
-Forces the engine to always run a 2d recognition, ignoring whether a 2d
-code was detected in the current frame.
- 
- * scanningHotSpot: "0.5/0.5" (x/y)
-
-Changes the location of the spot where the recognition actively scans for
-barcodes. X and y can be between 0 and 1, where 0/0 is the top left corner
-and 1/1 the bottom right corner.
- 
- * scanningHotSpotHeight: 0.25
-
-Changes the height of the spot where the recognition actively scans for
-barcodes. The height of the hot spot is given relative to the height of
-the screen and has to be between 0.0 and 0.5.
-Be aware that if the hot spot height is very large, the engine is forced
-to decrease the quality of the recognition to keep the speed at an
-acceptable level.
- 
- * ignorePreviewAspectRatio: false
-
-Normally the picker adjusts to the aspect ratio of the preview image. If
-Note: If the aspect ratio is not kept, the camera feed may be
-stretched and no longer be a proper representation of what is recorded.
- 
- * beep: true
-
-Enables or disables the sound played when a code was recognized.
- 
- * vibrate: true
-
-Enables or disables the vibration when a code was recognized.
- 
- * uiFont: "Helvetica"
-
-Sets the font of all text displayed in the UI (must be known by iOS).
- 
- * textForMostLikelyBarcodeUIElement: "Tap to use"
-
-Sets the text that will be displayed alongside the lucky shot to tell the user what to do, to
-use the displayed barcode.
- 
- * textForInitialScanScreenState: "Align code with box"
-
-Sets the text that will be displayed above the viewfinder to tell the user to align it with the
-barcode that should be recognized.
- 
- * textForBarcodePresenceDetected: "Align code and hold still"
-
-Sets the text that will be displayed above the viewfinder to tell the user to align it with the
-barcode and hold still because a potential code seems to be on the screen.
- 
- * textForBarcodeDecodingInProgress: "Decoding ..."
-
-Sets the text that will be displayed above the viewfinder to tell the user to hold still because
-a barcode is aligned with the box and the recognition is trying to recognize it.
- 
- * searchBarActionButtonCaption: "Go"
-
-Sets the caption of the manual entry at the top when a barcode of valid length has been entered.
- 
- * searchBarCancelButtonCaption: "Cancel"
-
-Sets the caption of the manual entry at the top when no barcode of valid length has been entered.
- 
- * searchBarPlaceholderText: "Scan barcode or enter it here"
-
-Sets the text shown in the manual entry field when nothing has been entered yet.
- 
- * toolBarButtonCaption: "Cancel"
-
-Sets the caption of the toolbar button.
- 
- * viewfinderColor: "FFFFFF"
-
-Sets the color of the static viewfinder and while tracking before the code has been recognized.
- 
- * viewfinderDecodedColor: "00FF00"
-
-Sets the color of the viewfinder when the code has been recognized.
- 
- * minSearchBarBarcodeLength: 8
-
-Sets the minimum size a barcode in the manual entry field has to have to possibly be valid.
- 
- * maxSearchBarBarcodeLength: 100
-
-Sets the maximum size a barcode in the manual entry field can have to possibly be valid.
- 
-
-
-API for Scandit SDK Phonegap Plugin iOS 2.* and higher
-------------------------
-
-The available options that can be passed to scan function are listed below:
-
- * preferFrontCamera: false
-
-Whether showing the front camera should be prefered over the back camera (for devices without a
-front camera the back camera is shown).
- 
- * searchBar: true
-  
-Shows or hides the search bar at the top of the screen.
-
- * 1DScanning: true
- 
-Enables or disables the recognition of 1D codes.
- 
- * 2DScanning: true
- 
-Enables or disables the recognition of 2D codes.
- 
- * ean13AndUpc12: true
-
-Enables or disables the recognition of EAN13 and UPC12/UPCA codes.
- 
- * ean8: true
-
-Enables or disables the recognition of EAN8 codes.
- 
- * upce: true
-
-Enables or disables the recognition of UPCE codes.
- 
- * code39: true
-
-Enables or disables the recognition of CODE39 codes.
-Note: Not all Scandit SDK editions support Code 39 scanning.
- 
- * code128: true
-
-Enables or disables the recognition of CODE128 codes.
-Note: Not all Scandit SDK editions support Code 128 scanning.
- 
- * itf: true
-
-Enables or disables the recognition of ITF codes.
-Note: Not all Scandit SDK editions support ITF scanning.
- 
- * qr: true
-
-Enables or disables the recognition of QR codes.
- 
- * dataMatrix: true
-
-Enables or disables the recognition of Data Matrix codes.
-Note: Not all Scandit SDK versions support Data Matrix scanning.
- 
- * pdf417: true
-
-Enables or disables the recognition of PDF417 codes.
-Note: Not all Scandit SDK versions support PDF417 scanning.
- 
- * msiPlessey: false
-
-Enables or disables the recognition of MSI Plessey codes.
-Note: Not all Scandit SDK versions support MSI Plessey scanning.
- 
- * msiPlesseyChecksumType: "mod10"
-
-Sets the type of checksum that is expected of the MSI Plessey codes.
-Legal values are: "none", "mod10", "mod11", "mod1010", "mod1110"
- 
- * inverseRecognition: false
-
-Enables the detection of white on black codes. This option currently
-only works on Data Matrix codes.
- 
- * microDataMatrix: false
-
-Enables special settings to allow the recognition of very small Data
-Matrix codes. If this is not specifically needed, do not enable it as it
-uses considerable processing power. This setting automatically forces
-2d recognition on every frame. 
-
- * restrictActiveScanningArea: false
-
-Reduces the area in which barcodes are detected and decoded to an
-area defined by setScanningHotSpotHeight and setScanningHotSpotToX andY.
-If this method is set to disabled, barcodes in the full camera image
-are detected and decoded.
- 
- * force2d: false
-
-Forces the engine to always run a 2d recognition, ignoring whether a 2d
-code was detected in the current frame.
- 
- * scanningHotSpot: "0.5/0.5" (x/y)
-
-Changes the location of the spot where the recognition actively scans for
-barcodes. X and y can be between 0 and 1, where 0/0 is the top left corner
-and 1/1 the bottom right corner.
- 
- * scanningHotSpotHeight: 0.25
-
-Changes the height of the spot where the recognition actively scans for
-barcodes. The height of the hot spot is given relative to the height of
-the screen and has to be between 0.0 and 0.5.
-Be aware that if the hot spot height is very large, the engine is forced
-to decrease the quality of the recognition to keep the speed at an
-acceptable level.
-
-Note: this option only works with restrictActiveScanningArea set to true
-
- * viewfinderSize: "0.8/0.4/0.6/0.4" (width/height/landscapeWidth/landscapeHeight)
-
-Sets the size of the viewfinder relative to the size of the screen size.
-Changing this value does not(!) affect the area in which barcodes are successfully recognized.
-It only changes the size of the box drawn onto the scan screen.
- 
- * ignorePreviewAspectRatio: false
-
-Normally the picker adjusts to the aspect ratio of the preview image. If
-this is called, it will no longer do this.
-Note: If the aspect ratio is not kept, the camera feed may be
-stretched and no longer be a proper representation of what is recorded.
- 
- * beep: true
- 
-Enables or disables the sound played when a code was recognized.
- 
- * vibrate: true
-
-Enables or disables the vibration when a code was recognized.
- 
- * torch: true
-
-Enables or disables the torch toggle button for all devices that support a torch.
- 
- * torchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
-
-Sets the position at which the button to enable the torch is drawn. The X and Y coordinates are
-relative to the screen size, which means they have to be between 0 and 1.
- 
- * cameraSwitchVisibility: "never"
-
-Sets when the camera switch button is visible for all devices that have more than one camera.
-Legal values are: "never", "tablet", "always"
- 
- * cameraSwitchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
-
-Sets the position at which the button to switch the camera is drawn. The X and Y coordinates are
-relative to the screen size, which means they have to be between 0 and 1. Be aware that the x
-coordinate is calculated from the right side of the screen and not the left like with the torch
-button.
- 
- * logoOffsets: "0, 0, 0, 0" (xOffset, yOffset, landscapeXOffset, landscapeYOffset)
-
-Sets the x and y offset at which the Scandit logo should be drawn for both portrait and landscape
-orientation. Be aware that the Scandit SDK license agreement requires you to show the Scandit 
-logo in the scan screen.
- 
- * searchBarActionButtonCaption: "Go"
-
-Sets the caption of the manual entry at the top when a barcode of valid length has been entered.
- 
- * searchBarCancelButtonCaption: "Cancel"
-
-Sets the caption of the manual entry at the top when no barcode of valid length has been entered.
- 
- * searchBarPlaceholderText: "Scan barcode or enter it here"
-
-Sets the text shown in the manual entry field when nothing has been entered yet.
- 
- * toolBarButtonCaption: "Cancel"
-
-Sets the caption of the toolbar button.
- 
- * viewfinderColor: "FFFFFF"
-
-Sets the color of the static viewfinder and while tracking before the code has been recognized.
-Not available in free community edition. 
- 
- * viewfinderDecodedColor: "00FF00"
-
-Sets the color of the viewfinder when the code has been recognized.
-Not available in free community edition. 
-
- * minSearchBarBarcodeLength: 8
-
-Sets the minimum size a barcode in the manual entry field has to have to possibly be valid.
- 
- * maxSearchBarBarcodeLength: 100
-
-Sets the maximum size a barcode in the manual entry field can have to possibly be valid.
-
-
-
-
+See http://www.scandit.com/support for more information 
 
 
 
@@ -628,9 +284,7 @@ License
 -------
 * This plug-in is released under the Apache 2.0 license: http://www.apache.org/licenses/LICENSE-2.0
 
-Notes
------
-* Generic Phone Gap plug-in installation instructions are available at http://wiki.phonegap.com/w/page/43708792/How%20to%20Install%20a%20PhoneGap%20Plugin%20for%20iOS.
+
 
 Questions? Contact `info@scandit.com`.
 
