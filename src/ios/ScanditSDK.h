@@ -57,6 +57,10 @@
  * that are allowed in the whole app. Legal values: portrait, portraitUpsideDown, landscapeLeft,
  * landscapeRight. Example: "landscapeRight,landscapeLeft"
  *
+ * disableStandbyState: false
+ * Disables the standby state of the camera between times when the scanner is actually running.
+ * If your app accesses the camera in multiple ways it is recommended to set this to true.
+ *
  * searchBar: true
  * Shows or hides the search bar at the top of the screen.
  *

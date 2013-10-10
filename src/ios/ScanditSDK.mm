@@ -86,7 +86,14 @@
 							   orientations:orientations];
 	
     
-	
+		
+    NSObject *disableStandby = [options objectForKey:@"disableStandbyState"];
+    if (disableStandby && [disableStandby isKindOfClass:[NSNumber class]]) {
+        if ([((NSNumber *)disableStandby) boolValue]) {
+            [scanditSDKBarcodePicker disableStandbyState];
+        }
+    }
+
     NSObject *searchBar = [options objectForKey:@"searchBar"];
     if (searchBar && [searchBar isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker.overlayController showSearchBar:[((NSNumber *)searchBar) boolValue]];
