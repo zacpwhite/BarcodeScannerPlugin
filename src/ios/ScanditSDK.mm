@@ -85,15 +85,13 @@
 							   cameraFacingPreference:facing
 							   orientations:orientations];
 	
-    
-		
     NSObject *disableStandby = [options objectForKey:@"disableStandbyState"];
-    if (disableStandby && [disableStandby isKindOfClass:[NSNumber class]]) {
-        if ([((NSNumber *)disableStandby) boolValue]) {
-            [scanditSDKBarcodePicker disableStandbyState];
-        }
-    }
-
+	if (disableStandby && [disableStandby isKindOfClass:[NSNumber class]]) {
+		if ([((NSNumber *)disableStandby) boolValue]) {
+			[scanditSDKBarcodePicker disableStandbyState];
+		}
+	}
+	
     NSObject *searchBar = [options objectForKey:@"searchBar"];
     if (searchBar && [searchBar isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker.overlayController showSearchBar:[((NSNumber *)searchBar) boolValue]];
@@ -106,11 +104,6 @@
     }
     NSObject *scanning2D = [options objectForKey:@"2DScanning"];
     if (scanning2D && [scanning2D isKindOfClass:[NSNumber class]]) {
-		if ([((NSNumber *)scanning2D) boolValue]) {
-			NSLog(@"enabling 2d");
-		} else {
-			NSLog(@"disabling 2d");
-		}
         [scanditSDKBarcodePicker set2DScanningEnabled:[((NSNumber *)scanning2D) boolValue]];
     }
     
@@ -140,7 +133,6 @@
     }
     NSObject *qr = [options objectForKey:@"qr"];
     if (qr && [qr isKindOfClass:[NSNumber class]]) {
-		NSLog(@"setting qr");
         [scanditSDKBarcodePicker setQrEnabled:[((NSNumber *)qr) boolValue]];
     }
     NSObject *dataMatrix = [options objectForKey:@"dataMatrix"];
@@ -375,9 +367,7 @@
 		[self.viewController presentViewController:scanditSDKBarcodePicker animated:YES completion:^{
 			startAnimationDone = YES;
 			if (self.bufferedResult != nil) {
-				[self scanditSDKOverlayController:scanditSDKBarcodePicker.overlayController
-								   didScanBarcode:self.bufferedResult];
-				self.bufferedResult = nil;
+				[self performSelector:@selector(returnBuffer) withObject:nil afterDelay:0.01];
 			}
 		}];
 	} else {
@@ -387,6 +377,15 @@
 	
 	[scanditSDKBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
 }
+
+- (void)returnBuffer {
+	if (self.bufferedResult != nil) {
+		[self scanditSDKOverlayController:scanditSDKBarcodePicker.overlayController
+						   didScanBarcode:self.bufferedResult];
+		self.bufferedResult = nil;
+	}
+}
+
 
 #pragma mark -
 #pragma mark ScanDKOverlayControllerDelegate methods
@@ -404,6 +403,8 @@
 		// as the animation finishes.
 		self.bufferedResult = barcodeResult;
 		return;
+	} else {
+		self.bufferedResult = nil;
 	}
 	
     if (!wasStatusBarHidden) {
@@ -414,6 +415,7 @@
 	NSString *barcode = [barcodeResult objectForKey:@"barcode"];
     
     [self.viewController dismissModalViewControllerAnimated:YES];
+	[self.scanditSDKBarcodePicker stopScanning];
 	self.scanditSDKBarcodePicker = nil;
 	
     NSArray *result = [[NSArray alloc] initWithObjects:barcode, symbology, nil];
