@@ -27,7 +27,6 @@
 @synthesize scanditSDKBarcodePicker;
 
 - (void)scan:(CDVInvokedUrlCommand *)command {
-    NSLog(@"scanning");
     if (self.hasPendingOperation) {
         return;
     }
