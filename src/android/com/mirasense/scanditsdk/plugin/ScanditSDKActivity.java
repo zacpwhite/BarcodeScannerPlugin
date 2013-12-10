@@ -268,9 +268,9 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
             mBarcodePicker.getOverlayView().setRightButtonCaptionWhenKeypadVisible(
                     extras.getString("rightButtonCaptionWhenKeypadVisible"));
         }
-        if (extras.containsKey("searchBarHint")) {
+        if (extras.containsKey("setSearchBarPlaceholderText")) {
             mBarcodePicker.getOverlayView().setSearchBarPlaceholderText(
-                    extras.getString("searchBarHint"));
+                    extras.getString("setSearchBarPlaceholderText"));
         }
 
         if (extras.containsKey("viewfinderDimension")) {
