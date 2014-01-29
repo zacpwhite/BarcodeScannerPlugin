@@ -41,7 +41,7 @@
 - (id)initWithAppKey:(NSString *)scanditSDKAppKey
 	  cameraFacingPreference:(CameraFacingDirection)facing
 	  orientations:(NSArray *)orientations {
-    if (self = [super initWithAppKey:scanditSDKAppKey]) {
+    if (self = [super initWithAppKey:scanditSDKAppKey cameraFacingPreference:facing]) {
 		self.allowedOrientations = orientations;
 	}
     
