@@ -139,9 +139,9 @@ Changelog
 
  * upgraded to Scandit SDK for iOS 4.0.1 and Scandit SDK for Android 4.0.1 (see release notes in download section of your Scandit SDK for details)
 
-		* [Release Notes of native Scandit SDK for iOS 4.0.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.0.1)
+    * [Release Notes of native Scandit SDK for iOS 4.0.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.0.1)
 
-		* [Release Notes of native Scandit SDK for Android 4.0.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-android_4.0.1)
+    * [Release Notes of native Scandit SDK for Android 4.0.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-android_4.0.1)
 
 
 **Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.0.0beta1) - March 31st 2014**
