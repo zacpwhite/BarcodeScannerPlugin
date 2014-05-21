@@ -11,7 +11,7 @@ If you don't have a Phonegap app yet, we will show you how to generate a sample 
 Scandit Barcode Scanner SDK Plugin Integration via the Cordova Command Line Interface (CLI)
 ------------------------
 
-The easiest way to install the Scandit Barcode Scanner plugin into your Phonegap/Cordova project is to use the [Cordova CLI](http://docs.phonegap.com/en/3.1.0/guide_cli_index.md.html#The%20Command-line%20Interface).
+The easiest way to install the Scandit Barcode Scanner plugin into your Phonegap/Cordova project is to use the [Cordova CLI](http://cordova.apache.org/docs/en/3.4.0/guide_cli_index.md.html#The%20Command-Line%20Interface).
 
 * Install [Cordova CLI](http://cordova.apache.org/docs/en/3.4.0/guide_cli_index.md.html#The%20Command-Line%20Interface) if it is not already installed.
 * [Sign up](http://www.scandit.com/pricing) and download the [Scandit Barcode Scanner SDK](http://www.scandit.com/barcode-scanner-sdk/) Cordova Plugins for iOS and Android from your Scandit account. Unzip the zip to a folder of your choice.
@@ -137,7 +137,7 @@ Changelog
 
 **Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.0.1) - May 21st 2014**
 
-* upgraded to Scandit SDK for iOS 4.0.1 and Scandit SDK for Android 4.0.1 (see release notes in download section of your Scandit SDK for details)
+ * upgraded to Scandit SDK for iOS 4.0.1 and Scandit SDK for Android 4.0.1 (see release notes in download section of your Scandit SDK for details)
 
 		* [Release Notes of native Scandit SDK for iOS 4.0.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.0.1)
 
