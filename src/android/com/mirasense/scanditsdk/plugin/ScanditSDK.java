@@ -88,6 +88,10 @@ public class ScanditSDK extends CordovaPlugin {
      * Enables or disables the recognition of CODE39 codes.
      * Note: Not all Scandit SDK versions support Code 39 scanning.
      *
+     * code93: false
+     * Enables or disables the recognition of CODE93 codes.
+     * Note: Not all Scandit SDK versions support Code 93 scanning.
+     *
      * code128: true
      * Enables or disables the recognition of CODE128 codes.
      * Note: Not all Scandit SDK versions support Code 128 scanning.
@@ -103,6 +107,10 @@ public class ScanditSDK extends CordovaPlugin {
      * gs1DataBarExpanded: false
      * Enables or disables the recognition of GS1 DataBar Expanded codes.
      * Note: Not all Scandit SDK versions support GS1 DataBar Expanded scanning.
+     *
+     * codabar: false
+     * Enables or disables the recognition of CODABAR codes.
+     * Note: Not all Scandit SDK versions support Codabar scanning.
      *
      * qr: false
      * Enables or disables the recognition of QR codes.

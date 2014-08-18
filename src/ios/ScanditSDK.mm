@@ -122,6 +122,10 @@
     if (code39 && [code39 isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker setCode39Enabled:[((NSNumber *)code39) boolValue]];
     }
+    NSObject *code93 = [options objectForKey:@"code93"];
+    if (code93 && [code93 isKindOfClass:[NSNumber class]]) {
+        [scanditSDKBarcodePicker setCode93Enabled:[((NSNumber *)code93) boolValue]];
+    }
     NSObject *code128 = [options objectForKey:@"code128"];
     if (code128 && [code128 isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker setCode128Enabled:[((NSNumber *)code128) boolValue]];
@@ -137,6 +141,10 @@
     NSObject *itf = [options objectForKey:@"itf"];
     if (itf && [itf isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker setItfEnabled:[((NSNumber *)itf) boolValue]];
+    }
+    NSObject *codabar = [options objectForKey:@"codabar"];
+    if (codabar && [codabar isKindOfClass:[NSNumber class]]) {
+        [scanditSDKBarcodePicker setCodabarEnabled:[((NSNumber *)codabar) boolValue]];
     }
     NSObject *qr = [options objectForKey:@"qr"];
     if (qr && [qr isKindOfClass:[NSNumber class]]) {

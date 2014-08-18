@@ -113,6 +113,9 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         if (extras.containsKey("code39")) {
             mBarcodePicker.setCode39Enabled(extras.getBoolean("code39"));
         }
+        if (extras.containsKey("code93")) {
+            mBarcodePicker.setCode93Enabled(extras.getBoolean("code93"));
+        }
         if (extras.containsKey("code128")) {
             mBarcodePicker.setCode128Enabled(extras.getBoolean("code128"));
         }
@@ -124,6 +127,9 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         }
         if (extras.containsKey("gs1DataBarExpanded")) {
             mBarcodePicker.setGS1DataBarExpandedEnabled(extras.getBoolean("gs1DataBarExpanded"));
+        }
+        if (extras.containsKey("codabar")) {
+            mBarcodePicker.setCodabarEnabled(extras.getBoolean("codabar"));
         }
         if (extras.containsKey("qr")) {
             mBarcodePicker.setQrEnabled(extras.getBoolean("qr"));
