@@ -41,7 +41,7 @@ To generate a sample project, use the following command line commands:
     * See [Scandit Barcode Scanner SDK Documentation](http://docs.scandit.com) for the full API reference.
 
 
-* Important:
+* Important(!!!):
 
     * if you decide against using the packaged zip with the Scandit Phonegap/Cordova plugin from the downloads page of your Scandit account and
       use the github src of the plugin instead (not recommended!), you will need to copy the libraries and resources from the native Scandit SDK
@@ -134,6 +134,15 @@ To generate a sample project, use the following command line commands:
 Changelog
 ------------------------
 
+**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.1.0) - Aug 21st 2014**
+
+ * upgraded to Scandit SDK for iOS 4.1.3 and Scandit SDK for Android 4.1.2 (see release notes in download section of your Scandit SDK for details)
+
+    * [Release Notes of native Scandit SDK for iOS 4.1.3](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.1.3)
+
+    * [Release Notes of native Scandit SDK for Android 4.1.2](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-android_4.1.2)
+
+ * added methods to enable/disable Codabar and Code93 barcode decoders (only available in enterprise editions and free trial)
 
 **Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.0.1) - May 21st 2014**
 
