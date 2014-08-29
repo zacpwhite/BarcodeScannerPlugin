@@ -32,6 +32,7 @@
 
 @property (nonatomic, copy) NSString *callbackId;
 @property (readwrite, assign) BOOL hasPendingOperation;
+@property (nonatomic, assign) BOOL continuousMode;
 @property (nonatomic, retain) NSDictionary *bufferedResult;
 @property (nonatomic, retain) ScanditSDKBarcodePicker *scanditSDKBarcodePicker;
 
@@ -216,6 +217,10 @@
  *
  * maxSearchBarBarcodeLength: 100
  * Sets the maximum size a barcode in the manual entry field can have to possibly be valid.
+ *
+ * continuousMode: false
+ * Enable continous mode. If a barcode is scanned, the view controller is not dismissed and the user is
+ * able to continue scanning until he press `Cancel`.
  */
 - (void)scan:(CDVInvokedUrlCommand *)command;
 

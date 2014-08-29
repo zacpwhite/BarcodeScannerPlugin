@@ -22,6 +22,7 @@
 @implementation ScanditSDK
 
 @synthesize callbackId;
+@synthesize continuousMode;
 @synthesize hasPendingOperation;
 @synthesize bufferedResult;
 @synthesize scanditSDKBarcodePicker;
@@ -41,6 +42,13 @@
     
     NSString *appKey = [command.arguments objectAtIndex:0];
 	NSDictionary *options = [command.arguments objectAtIndex:1];
+
+    // Continuous mode support
+    self.continuousMode = NO;
+    NSObject *continuousMode = [options objectForKey:@"continuousMode"];
+    if (continuousMode && [continuousMode isKindOfClass:[NSNumber class]]) {
+        self.continuousMode = [((NSNumber *)continuousMode) boolValue];
+    }
     
     // Hide the status bar to get a bigger area of the video feed. We have to set this before we add
     // GUI elements to the overview, such that the views are aware of the fact that there is no
@@ -422,24 +430,29 @@
 		self.bufferedResult = nil;
 	}
 	
-    if (!wasStatusBarHidden) {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-    }
-	
+    // Prepare result
 	NSString *symbology = [barcodeResult objectForKey:@"symbology"];
 	NSString *barcode = [barcodeResult objectForKey:@"barcode"];
     
-    [self.viewController dismissModalViewControllerAnimated:YES];
-	[self.scanditSDKBarcodePicker stopScanning];
-	self.scanditSDKBarcodePicker = nil;
-	
     NSArray *result = [[NSArray alloc] initWithObjects:barcode, symbology, nil];
     
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-													   messageAsArray:result];
+                                                       messageAsArray:result];
+    
+    if (!self.continuousMode) {
+        if (!wasStatusBarHidden) {
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+        }
+
+        [self.viewController dismissModalViewControllerAnimated:YES];
+        [self.scanditSDKBarcodePicker stopScanning];
+        self.scanditSDKBarcodePicker = nil;
+        self.hasPendingOperation = NO;
+    } else {
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+    }
 	
     [self writeJavascript:[pluginResult toSuccessCallbackString:self.callbackId]];
-    self.hasPendingOperation = NO;
 }
 
 /**
