@@ -501,6 +501,7 @@
         self.hasPendingOperation = NO;
     } else {
         [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+        [self.scanditSDKBarcodePicker.overlayController resetUI];
     }
     
     [self writeJavascript:[pluginResult toSuccessCallbackString:self.callbackId]];
