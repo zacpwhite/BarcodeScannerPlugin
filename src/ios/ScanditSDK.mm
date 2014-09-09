@@ -486,20 +486,24 @@
 - (void)scanditSDKOverlayController:(ScanditSDKOverlayController *)scanditSDKOverlayController
                     didManualSearch:(NSString *)input {
 	
-    if (!wasStatusBarHidden) {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-    }
-	
-    [self.viewController dismissModalViewControllerAnimated:YES];
-	self.scanditSDKBarcodePicker = nil;
-    
-	
     NSArray *result = [[NSArray alloc] initWithObjects:input, @"UNKNOWN", nil];
     
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-													   messageAsArray:result];
+                                                       messageAsArray:result];
+    if (!self.continuousMode) {
+        if (!wasStatusBarHidden) {
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+        }
+        
+        [self.viewController dismissModalViewControllerAnimated:YES];
+        [self.scanditSDKBarcodePicker stopScanning];
+        self.scanditSDKBarcodePicker = nil;
+        self.hasPendingOperation = NO;
+    } else {
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+    }
+    
     [self writeJavascript:[pluginResult toSuccessCallbackString:self.callbackId]];
-    self.hasPendingOperation = NO;
 }
 
 
