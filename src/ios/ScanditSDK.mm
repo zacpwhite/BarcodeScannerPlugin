@@ -452,7 +452,7 @@
         [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     }
 	
-    [self writeJavascript:[pluginResult toSuccessCallbackString:self.callbackId]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
 }
 
 /**
@@ -471,9 +471,9 @@
     [self.viewController dismissModalViewControllerAnimated:YES];
 	self.scanditSDKBarcodePicker = nil;
     
-	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+	CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
                                                       messageAsString:@"Canceled"];
-    [self writeJavascript:[pluginResult toErrorCallbackString:self.callbackId]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId]; 
     self.hasPendingOperation = NO;
 }
 
@@ -504,7 +504,7 @@
         [self.scanditSDKBarcodePicker.overlayController resetUI];
     }
     
-    [self writeJavascript:[pluginResult toSuccessCallbackString:self.callbackId]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
 }
 
 
