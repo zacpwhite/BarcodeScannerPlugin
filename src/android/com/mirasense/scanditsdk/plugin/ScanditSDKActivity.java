@@ -27,7 +27,7 @@ import android.view.WindowManager;
 
 import com.mirasense.scanditsdk.LegacyPortraitScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
-import com.mirasense.scanditsdk.ScanditSDKGlobals;
+import com.mirasense.scanditsdk.internal.ScanditSDKGlobals;
 import com.mirasense.scanditsdk.interfaces.ScanditSDK;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKOverlay;
