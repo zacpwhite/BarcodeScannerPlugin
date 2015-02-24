@@ -53,7 +53,7 @@
  * Whether showing the front camera should be preferred over the back camera (for devices without a
  * front camera the back camera is shown).
  *
- * orientation: (default setting is the same as set in the app settings)
+ * orientations: (default setting is the same as set in the app settings)
  * Sets which orientations are allowed for the scanner if they should differ from the orientations
  * that are allowed in the whole app. Legal values: portrait, portraitUpsideDown, landscapeLeft,
  * landscapeRight. Example: "landscapeRight,landscapeLeft"
