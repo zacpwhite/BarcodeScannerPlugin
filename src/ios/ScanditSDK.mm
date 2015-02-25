@@ -166,6 +166,10 @@
     if (pdf417 && [pdf417 isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker setPdf417Enabled:[((NSNumber *)pdf417) boolValue]];
     }
+    NSObject *aztec = [options objectForKey:@"aztec"];
+    if (aztec && [aztec isKindOfClass:[NSNumber class]]) {
+        [scanditSDKBarcodePicker setAztecEnabled:[((NSNumber *)aztec) boolValue]];
+    }
     NSObject *msiPlessey = [options objectForKey:@"msiPlessey"];
     if (msiPlessey && [msiPlessey isKindOfClass:[NSNumber class]]) {
         [scanditSDKBarcodePicker setMsiPlesseyEnabled:[((NSNumber *)msiPlessey) boolValue]];

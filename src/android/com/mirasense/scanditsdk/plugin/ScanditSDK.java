@@ -126,6 +126,10 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
      * Enables or disables the recognition of PDF417 codes.
      * Note: Not all Scandit SDK versions support PDF417 scanning.
      *
+     * aztec: false
+     * Enables or disables the recognition of Aztec codes.
+     * Note: Not all Scandit SDK versions support Aztec scanning.
+     *
      * msiPlessey: false
      * Enables or disables the recognition of MSI Plessey codes.
      * Note: Not all Scandit SDK versions support MSI Plessey scanning.

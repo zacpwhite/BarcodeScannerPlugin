@@ -141,6 +141,9 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         if (extras.containsKey("pdf417")) {
             mBarcodePicker.setPdf417Enabled(extras.getBoolean("pdf417"));
         }
+        if (extras.containsKey("aztec")) {
+            mBarcodePicker.setAztecEnabled(extras.getBoolean("aztec"));
+        }
         if (extras.containsKey("msiPlessey")) {
             mBarcodePicker.setMsiPlesseyEnabled(extras.getBoolean("msiPlessey"));
         }
