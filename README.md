@@ -132,6 +132,23 @@ To generate a sample project, use the following command line commands:
 Changelog
 ------------------------
 
+**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.4.1) - March 17th 2015**
+
+   * upgraded to native Scandit SDK iOS/Android 4.4.1  The new features include:
+
+    * New glare compensation algorithm - Scandit 4.4 significantly improves the scanning performance in the presence of glare (and shadows).
+
+    * Inverted QR code support (white QR codes on a dark background) - can be enabled via an API method.
+
+    * Significantly improved performance with damaged barcodes (worn, weak print, ink spread)
+
+    * Reduced the likelihood of false positive barcodes with challenging codes (e.g. with very blurry, ink spread)
+
+    * Better blurry decoding of UPC-E and ITF barcodes
+
+    * [Release Notes of native Scandit SDK 4.4.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.4.1)
+
+
 **Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.2.0) - Oct 30st 2014**
 
    * upgraded to Scandit SDK for iOS 4.2.2 and Scandit SDK for Android 4.2.2 (see release notes in download section of your Scandit SDK for details)
