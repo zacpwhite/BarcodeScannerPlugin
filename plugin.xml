@@ -6,7 +6,6 @@
 
     <name>ScanditBarcodeScanner</name>
 
-    <!-- ios -->
     <platform name="ios">
 		<plugins-plist key="ScanditSDK" string="ScanditSDK" />
         <!-- feature tag in config.xml -->
@@ -15,11 +14,6 @@
                 <param name="ios-package" value="ScanditSDK"/>
             </feature>
         </config-file>
-        <!-- Cordova >= 2.3 -->
-        <!-- deprecated plugins tag in config.xml -->
-        <!-- <config-file target="config.xml" parent="/*/plugins">
-            <plugin name="ScanditSDK" value="ScanditSDK"/>
-        </config-file> -->
 
         <!-- Resources for Scandit SDK -->
 		<resource-file src="src/ios/scanditsdk-community-ios_4.0.0/ScanditSDK/beep.wav" />
