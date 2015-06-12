@@ -30,12 +30,9 @@ cameraFacingPreference:(CameraFacingDirection)facing
   runningOnFramework:(NSString *)usedFramework;
 @end
 
-@interface ScanditSDKRotatingBarcodePicker() {
-	NSArray *allowedOrientations;
-}
-
-@property (nonatomic, retain) NSArray *allowedOrientations;
-
+@interface ScanditSDKRotatingBarcodePicker()
+@property (nonatomic, strong) NSArray *allowedOrientations;
+@property (nonatomic, assign) BOOL didSetSize;
 @end
 
 
@@ -49,17 +46,71 @@ cameraFacingPreference:(CameraFacingDirection)facing
 cameraFacingPreference:(CameraFacingDirection)facing
         orientations:(NSArray *)orientations {
     
-    if (self = [super initWithAppKey:scanditSDKAppKey cameraFacingPreference:facing runningOnFramework:@"phonegap"]) {
+    if (self = [super initWithAppKey:scanditSDKAppKey
+              cameraFacingPreference:facing
+                  runningOnFramework:@"phonegap"]) {
 		self.allowedOrientations = orientations;
 	}
     
     return self;
 }
 
+- (void)setPortraitSize:(CGRect)portraitSize {
+    _portraitSize = portraitSize;
+    self.didSetSize = YES;
+}
+
+- (void)setLandscapeSize:(CGRect)landscapeSize {
+    _landscapeSize = landscapeSize;
+    self.didSetSize = YES;
+}
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                 duration:(NSTimeInterval)duration {
-    // If this function is overriden, don't forget to call the super view first.
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    if (!self.didSetSize) {
+        return;
+    }
+    
+    [self adjustSize:0];
+}
+
+- (void)adjustSize:(CGFloat)animationDuration {
+    [UIView animateWithDuration:animationDuration animations:^{
+    
+    // Adjust the picker's frame, bounds and the offset of the info banner to fit the new dimensions.
+    CGRect screen = [[UIScreen mainScreen] bounds];
+    
+    CGRect subviewRect;
+    CGRect screenInOrientation;
+    
+    if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft
+            || self.interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+        subviewRect = self.landscapeSize;
+        screenInOrientation = CGRectMake(0, 0, screen.size.height, screen.size.width);
+        
+    } else {
+        subviewRect = self.portraitSize;
+        screenInOrientation = screen;
+    }
+    
+    float widthScale = subviewRect.size.width / screenInOrientation.size.width;
+    float heightScale = subviewRect.size.height / screenInOrientation.size.height;
+    
+    if (widthScale > heightScale) {
+        self.size = CGSizeMake(subviewRect.size.width,
+                               screenInOrientation.size.height * widthScale);
+    } else {
+        self.size = CGSizeMake(subviewRect.size.width * screenInOrientation.size.height / screenInOrientation.size.width,
+                               subviewRect.size.height);
+    }
+    
+    self.view.bounds = CGRectMake((self.size.width - subviewRect.size.width) / 2,
+                                  (self.size.height - subviewRect.size.height) / 2,
+                                  subviewRect.size.width, subviewRect.size.height);
+    self.view.frame = subviewRect;
+    }];
 }
 
 - (NSUInteger)supportedInterfaceOrientations {

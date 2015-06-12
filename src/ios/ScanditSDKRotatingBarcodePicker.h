@@ -23,12 +23,15 @@
 #import <UIKit/UIKit.h>
 #import "ScanditSDKBarcodePicker.h"
 
-@interface ScanditSDKRotatingBarcodePicker : ScanditSDKBarcodePicker {
-    
-}
+@interface ScanditSDKRotatingBarcodePicker : ScanditSDKBarcodePicker
+
+@property (nonatomic, assign) CGRect portraitSize;
+@property (nonatomic, assign) CGRect landscapeSize;
 
 - (id)initWithAppKey:(NSString *)scanditSDKAppKey
 	  cameraFacingPreference:(CameraFacingDirection)facing
 	  orientations:(NSArray *)orientations;
+
+- (void)adjustSize:(CGFloat)animationDuration;
 
 @end

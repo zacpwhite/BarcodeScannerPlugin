@@ -1,4 +1,3 @@
-
 //
 //  Copyright 2010 Mirasense AG
 //
@@ -20,6 +19,24 @@ package com.mirasense.scanditsdk.plugin;
 
 import java.util.Iterator;
 
+import android.animation.LayoutTransition;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.graphics.Rect;
+import android.os.*;
+import android.view.Display;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
+import android.widget.RelativeLayout;
+import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
+import com.mirasense.scanditsdk.ScanditSDKScanSettings;
+import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
+import com.mirasense.scanditsdk.interfaces.ScanditSDKOnScanListener;
+import com.mirasense.scanditsdk.internal.ScanditSDKGlobals;
+import com.scandit.base.system.SbSystemUtils;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
@@ -29,28 +46,60 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.mirasense.scanditsdk.plugin.ScanditSDKResultRelay.ScanditSDKResultRelayCallback;
 
 
-public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCallback {
+public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCallback, ScanditSDKListener {
     
     public static final String SCAN = "scan";
+    public static final String CANCEL = "cancel";
+    public static final String PAUSE = "pause";
+    public static final String RESUME = "resume";
+    public static final String START = "start";
+    public static final String STOP = "stop";
+    public static final String RESIZE = "resize";
     
     private CallbackContext mCallbackContext;
-    
+    private boolean mContinuousMode = false;
+    private boolean mPendingOperation = false;
+
+    private Rect mPortraitMargins = new Rect(0, 0, 0, 0);
+    private Rect mLandscapeMargins = new Rect(0, 0, 0, 0);
+    private final OrientationHandler mHandler = new OrientationHandler(Looper.getMainLooper());
+
+    private ScanditSDKBarcodePicker mBarcodePicker;
+    private RelativeLayout mLayout;
+
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         mCallbackContext = callbackContext;
         PluginResult result = null;
-        
+
         if (action.equals(SCAN)) {
             scan(args);
             result = new PluginResult(Status.NO_RESULT);
             result.setKeepCallback(true);
+            return true;
+        } else if (action.equals(CANCEL)) {
+            cancel(args);
+            return true;
+        } else if (action.equals(PAUSE)) {
+            pause(args);
+            return true;
+        } else if (action.equals(RESUME)) {
+            resume(args);
+            return true;
+        } else if (action.equals(STOP)) {
+            stop(args);
+            return true;
+        } else if (action.equals(START)) {
+            start(args);
+            return true;
+        } else if (action.equals(RESIZE)) {
+            resize(args);
             return true;
         } else {
             result = new PluginResult(Status.INVALID_ACTION);
@@ -58,9 +107,14 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             return false;
         }
     }
+
     /**
-     * Start scanning. The available options to pass this function are as
-     * follows:
+     * Starts the scanning. You call this the following way from java script (success and failure are
+     * callback functions defined by you):
+     *
+     * cordova.exec(success, failure, "ScanditSDK", "scan", ["___your_app_key___",
+     *              {"option1":"value1", "option2":true}]);
+     *
      *
      * exampleStringForOption: defaultValue
      * Short explanation of option.
@@ -167,11 +221,225 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
      * to decrease the quality of the recognition to keep the speed at an
      * acceptable level.
      *
-     * ignorePreviewAspectRatio: false
-     * Normally the picker adjusts to the aspect ratio of the preview image. If
-     * this is called, it will no longer do this.
-     * Warning: If the aspect ratio is not kept, the camera feed may be
-     * stretched and no longer be a proper representation of what is recorded.
+     * searchBar: false
+     * Adds (or removes) a search bar to the top of the scan screen.
+     *
+     * beep: true
+     * Enables or disables the sound played when a code was recognized.
+     *
+     * vibrate: true
+     * Enables or disables the vibration when a code was recognized.
+     *
+     * torch: true
+     * Enables or disables the icon that let's the user activate the LED torch
+     * mode. If the device does not support torch mode, the icon to activate is
+     * will not be visible regardless of the value.
+     *
+     * torchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
+     * Sets the position at which the button to enable the torch is drawn. The X and Y coordinates are
+     * relative to the screen size, which means they have to be between 0 and 1.
+     *
+     * cameraSwitchVisibility: "never"
+     * Sets when the camera switch button is visible for all devices that have more than one camera.
+     * Legal values are: "never", "tablet", "always"
+     *
+     * cameraSwitchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
+     * Sets the position at which the button to switch the camera is drawn. The X and Y coordinates are
+     * relative to the screen size, which means they have to be between 0 and 1. Be aware that the x
+     * coordinate is calculated from the right side of the screen and not the left like with the torch
+     * button.
+     *
+     * logoOffsets: "0, 0, 0, 0" (xOffset, yOffset, landscapeXOffset, landscapeYOffset)
+     * Sets the x and y offset at which the Scandit logo should be drawn for both portrait and landscape
+     * orientation. Be aware that the standard Scandit SDK licenses do not allow you to hide the logo.
+     *
+     * searchBarHint: "Scan barcode or enter it here"
+     * Sets the text shown in the manual entry field when nothing has been
+     * entered yet.
+     *
+     * viewfinderSize: "0.8/0.4/0.6/0.4" (width/height/landscapeWidth/landscapeHeight)
+     * Sets the size of the viewfinder relative to the size of the screen size.
+     * Changing this value does not(!) affect the area in which barcodes are successfully recognized.
+     * It only changes the size of the box drawn onto the scan screen.
+     *
+     * viewfinderColor: "FFFFFF"
+     * Sets the color of the viewfinder when no code has been recognized yet.
+     *
+     * viewfinderDecodedColor: "00FF00"
+     * Sets the color of the viewfinder once the barcode has been recognized.
+     *
+     * zoom: 0.4
+     * Sets the zoom to the given percentage of the max zoom possible.
+     *
+     * continuousMode: false
+     * Enable continous mode. If a barcode is scanned, the activity is not dismissed and the user
+     * is able to continue scanning until he presses the back button to close the activity.
+     *
+     * portraitMargins: "0/0/0/0"
+     * Sets left/top/right/bottom margins (in resolution independent pixels) for the scanner in
+     * portrait orientation. Settings margins will start the scanner in a subview on top of Cordova's
+     * webview and not in its own view controller.
+     * Use this parameter to make the scanner smaller than fullscreen and show your own content along
+     * with the scanner.
+     *
+     * landscapeMargins: "0/0/0/0"
+     * Sets left/top/right/bottom margins (in resolution independent pixels) for the scanner in
+     * landscape orientation. Settings margins will start the scanner in a subview on top of Cordova's
+     * webview and not in its own view controller.
+     * Use this parameter to make the scanner smaller than fullscreen and show your own content along
+     * with the scanner.
+     */
+    private void scan(JSONArray data) {
+        if (mPendingOperation) {
+            return;
+        }
+        mPendingOperation = true;
+        mHandler.start();
+
+        final Bundle bundle = new Bundle();
+        try {
+            bundle.putString("appKey", data.getString(0));
+        } catch (JSONException e) {
+            Log.e("ScanditSDK", "Function called through Java Script contained illegal objects.");
+            e.printStackTrace();
+            return;
+        }
+
+        if (data.length() > 1) {
+            // We extract all options and add them to the intent extra bundle.
+            try {
+                setOptionsOnBundle(data.getJSONObject(1), bundle);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (bundle.containsKey("continuousMode")) {
+            mContinuousMode = bundle.getBoolean("continuousMode");
+        }
+
+        if (bundle.containsKey("portraitMargins") || bundle.containsKey("landscapeMargins")) {
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    ScanditSDKScanSettings settings = ScanditSDKParameterParser.settingsForBundle(bundle);
+                    mBarcodePicker = new ScanditSDKBarcodePicker(cordova.getActivity(), bundle.getString("appKey"), settings);
+                    mBarcodePicker.getOverlayView().addListener(ScanditSDK.this);
+                    mLayout = new RelativeLayout(cordova.getActivity());
+                    webView.addView(mLayout);
+
+                    ScanditSDKParameterParser.updatePickerUIFromBundle(mBarcodePicker, bundle);
+
+                    RelativeLayout.LayoutParams rLayoutParams = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                    mLayout.addView(mBarcodePicker, rLayoutParams);
+                    adjustLayout(bundle, 0);
+
+                    mBarcodePicker.startScanning();
+                }
+            });
+
+        } else {
+            ScanditSDKResultRelay.setCallback(this);
+            Intent intent = new Intent(cordova.getActivity(), ScanditSDKActivity.class);
+            intent.putExtras(bundle);
+            cordova.startActivityForResult(this, intent, 1);
+        }
+    }
+
+    /**
+     * Cancels the scanning. You call this the following way from java script:
+     *
+     * cordova.exec(null, null, "ScanditSDK", "cancel", []);
+     */
+    private void cancel(JSONArray data) {
+        if (mBarcodePicker != null) {
+            didCancel();
+        } else {
+            ScanditSDKActivity.cancel();
+        }
+    }
+
+    /**
+     * Pauses the scanning while the video feed continues to run You call this the following way from
+     * java script:
+     *
+     * cordova.exec(null, null, "ScanditSDK", "pause", []);
+     */
+    private void pause(JSONArray data) {
+        if (mBarcodePicker != null) {
+            mBarcodePicker.pauseScanning();
+        } else {
+            ScanditSDKActivity.pause();
+        }
+    }
+
+    /**
+     * Resumes the scanning after pause was called. You call this the following way from java script:
+     *
+     * cordova.exec(null, null, "ScanditSDK", "resume", []);
+     */
+    private void resume(JSONArray data) {
+        if (mBarcodePicker != null) {
+            mBarcodePicker.resumeScanning();
+        } else {
+            ScanditSDKActivity.resume();
+        }
+    }
+
+    /**
+     * Stops the scanning and also freezes the video feed. You call this the following way from java
+     * script:
+     *
+     * cordova.exec(null, null, "ScanditSDK", "stop", []);
+     */
+    private void stop(JSONArray data) {
+        if (mBarcodePicker != null) {
+            mBarcodePicker.stopScanning();
+        } else {
+            ScanditSDKActivity.stop();
+        }
+    }
+
+    /**
+     * Restarts the scanning after stop or pause were called. You call this the following way from java
+     * script:
+     *
+     * cordova.exec(null, null, "ScanditSDK", "start", []);
+     */
+    private void start(JSONArray data) {
+        if (mBarcodePicker != null) {
+            mBarcodePicker.startScanning();
+        } else {
+            ScanditSDKActivity.start();
+        }
+    }
+
+    /**
+     * Resizes the scanner and newly configures the UI. This call does not have any effect if the
+     * scanner is launched in full screen mode. To not launch in full screen mode you have to set the
+     * portrait and/or landscape margins in the scan call.
+     * You call this the following way from java script:
+     *
+     * cordova.exec(null, null, "ScanditSDK", "resize", [{"option1":"value1", "option2":true}]);
+     *
+     *
+     * The available options are:
+     *
+     * exampleStringForOption: defaultValue
+     * Short explanation of option.
+     *
+     * scanningHotSpot: "0.5/0.5" (x/y)
+     * Changes the location of the spot where the recognition actively scans for
+     * barcodes. X and y can be between 0 and 1, where 0/0 is the top left corner
+     * and 1/1 the bottom right corner.
+     *
+     * scanningHotSpotHeight: 0.25
+     * Changes the height of the spot where the recognition actively scans for
+     * barcodes. The height of the hot spot is given relative to the height of
+     * the screen and has to be between 0.0 and 0.5.
+     * Be aware that if the hot spot height is very large, the engine is forced
+     * to decrease the quality of the recognition to keep the speed at an
+     * acceptable level.
      *
      * searchBar: false
      * Adds (or removes) a search bar to the top of the scan screen.
@@ -252,42 +520,156 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
      * continuousMode: false
      * Enable continous mode. If a barcode is scanned, the activity is not dismissed and the user
      * is able to continue scanning until he presses the back button to close the activity.
+     *
+     * portraitMargins: "0/0/0/0"
+     * Sets left/top/right/bottom margins (in resolution independent pixels) for the scanner in
+     * portrait orientation. Settings margins will start the scanner in a subview on top of Cordova's
+     * webview and not in its own view controller.
+     * Use this parameter to make the scanner smaller than fullscreen and show your own content along
+     * with the scanner.
+     *
+     * landscapeMargins: "0/0/0/0"
+     * Sets left/top/right/bottom margins (in resolution independent pixels) for the scanner in
+     * landscape orientation. Settings margins will start the scanner in a subview on top of Cordova's
+     * webview and not in its own view controller.
+     * Use this parameter to make the scanner smaller than fullscreen and show your own content along
+     * with the scanner.
+     *
+     * animationDuration: 0.0
+     * Sets the animation duration for the change in margins.
      */
-    private void scan(JSONArray data) {
-        Intent intent = new Intent(cordova.getActivity(), ScanditSDKActivity.class);
-        try {
-            intent.putExtra("appKey", data.getString(0));
-        } catch (JSONException e) {
-            Log.e("ScanditSDK", "Function called through Java Script contained illegal objects.");
-            e.printStackTrace();
-            return;
-        }
-        
-        if (data.length() > 1) {
-            // We extract all options and add them to the intent extra bundle.
+    private void resize(JSONArray data) {
+        if (mBarcodePicker != null) {
+            final Bundle bundle = new Bundle();
             try {
-                setOptionsOnIntent(data.getJSONObject(1), intent);
+                setOptionsOnBundle(data.getJSONObject(0), bundle);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    ScanditSDKParameterParser.updatePickerUIFromBundle(mBarcodePicker, bundle);
+                    double animationDuration = 0;
+                    if (bundle.containsKey("animationDuration")) {
+                        animationDuration = bundle.getDouble("animationDuration");
+                    }
+                    adjustLayout(bundle, animationDuration);
+                }
+            });
         }
-        ScanditSDKResultRelay.setCallback(this);
-        cordova.startActivityForResult(this, intent, 1);
     }
-    
-    private void setOptionsOnIntent(JSONObject options, Intent intent) {
+
+    /**
+     * Adjusts the layout parameters of the barcode picker according to the margins set through java script.
+     *
+     * @param bundle The bundle with the java script parameters.
+     * @param animationDuration Over how long the change should be animated.
+     */
+    private void adjustLayout(Bundle bundle, double animationDuration) {
+        final RelativeLayout.LayoutParams rLayoutParams = (RelativeLayout.LayoutParams) mBarcodePicker.getLayoutParams();
+
+        Display display = ((WindowManager) webView.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        if (bundle.containsKey("portraitMargins") && display.getHeight() > display.getWidth()) {
+            String portraitMargins = bundle.getString("portraitMargins");
+            String[] split = portraitMargins.split("[/]");
+            if (split.length == 4) {
+                try {
+                    final Rect oldPortraitMargins = new Rect(mPortraitMargins);
+                    mPortraitMargins = new Rect(Integer.valueOf(split[0]), Integer.valueOf(split[1]),
+                            Integer.valueOf(split[2]), Integer.valueOf(split[3]));
+                    if (animationDuration > 0) {
+                        Animation anim = new Animation() {
+                            @Override
+                            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                                rLayoutParams.topMargin = SbSystemUtils.pxFromDp(webView.getContext(),
+                                        (int) (oldPortraitMargins.top
+                                                + (mPortraitMargins.top - oldPortraitMargins.top) * interpolatedTime));
+                                rLayoutParams.rightMargin = SbSystemUtils.pxFromDp(webView.getContext(),
+                                        (int) (oldPortraitMargins.right
+                                                + (mPortraitMargins.right - oldPortraitMargins.right) * interpolatedTime));
+                                rLayoutParams.bottomMargin = SbSystemUtils.pxFromDp(webView.getContext(),
+                                        (int) (oldPortraitMargins.bottom
+                                                + (mPortraitMargins.bottom - oldPortraitMargins.bottom) * interpolatedTime));
+                                rLayoutParams.leftMargin = SbSystemUtils.pxFromDp(webView.getContext(),
+                                        (int) (oldPortraitMargins.left
+                                                + (mPortraitMargins.left - oldPortraitMargins.left) * interpolatedTime));
+                                mBarcodePicker.setLayoutParams(rLayoutParams);
+                            }
+                        };
+                        anim.setDuration((int) (animationDuration * 1000));
+                        mBarcodePicker.startAnimation(anim);
+                    } else {
+
+                        rLayoutParams.topMargin = SbSystemUtils.pxFromDp(webView.getContext(), mPortraitMargins.top);
+                        rLayoutParams.rightMargin = SbSystemUtils.pxFromDp(webView.getContext(), mPortraitMargins.right);
+                        rLayoutParams.bottomMargin = SbSystemUtils.pxFromDp(webView.getContext(), mPortraitMargins.bottom);
+                        rLayoutParams.leftMargin = SbSystemUtils.pxFromDp(webView.getContext(), mPortraitMargins.left);
+                        mBarcodePicker.setLayoutParams(rLayoutParams);
+                    }
+                } catch (NumberFormatException e) {
+
+                }
+            }
+        } else if (bundle.containsKey("landscapeMargins") && display.getWidth() > display.getHeight()) {
+            String landscapeMargins = bundle.getString("landscapeMargins");
+            String[] split = landscapeMargins.split("[/]");
+            if (split.length == 4) {
+                final Rect oldLandscapeMargins = new Rect(mLandscapeMargins);
+                mLandscapeMargins = new Rect(Integer.valueOf(split[0]), Integer.valueOf(split[1]),
+                        Integer.valueOf(split[2]), Integer.valueOf(split[3]));
+
+                Animation anim = new Animation() {
+                    @Override
+                    protected void applyTransformation(float interpolatedTime, Transformation t) {
+                        rLayoutParams.topMargin = SbSystemUtils.pxFromDp(webView.getContext(),
+                                (int) (oldLandscapeMargins.top
+                                        + (mLandscapeMargins.top - oldLandscapeMargins.top) * interpolatedTime));
+                        rLayoutParams.rightMargin = SbSystemUtils.pxFromDp(webView.getContext(),
+                                (int)(oldLandscapeMargins.right
+                                        + (mLandscapeMargins.right - oldLandscapeMargins.right) * interpolatedTime));
+                        rLayoutParams.bottomMargin = SbSystemUtils.pxFromDp(webView.getContext(),
+                                (int)(oldLandscapeMargins.bottom
+                                        + (mLandscapeMargins.bottom - oldLandscapeMargins.bottom) * interpolatedTime));
+                        rLayoutParams.leftMargin = SbSystemUtils.pxFromDp(webView.getContext(),
+                                (int)(oldLandscapeMargins.left
+                                        + (mLandscapeMargins.left - oldLandscapeMargins.left) * interpolatedTime));
+                        mBarcodePicker.setLayoutParams(rLayoutParams);
+                    }
+                };
+                anim.setDuration((int) (animationDuration * 1000));
+                mBarcodePicker.startAnimation(anim);
+            }
+        }
+    }
+
+    private void removeSubviewPicker() {
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                mBarcodePicker.stopScanning();
+                webView.removeView(mLayout);
+                mLayout = null;
+                mBarcodePicker = null;
+            }
+        });
+    }
+
+    private void setOptionsOnBundle(JSONObject options, Bundle bundle) {
         @SuppressWarnings("unchecked")
         Iterator<String> iter = (Iterator<String>) options.keys();
         while (iter.hasNext()) {
             String key = iter.next();
             Object obj = options.opt(key);
             if (obj != null) {
-                if (obj instanceof Integer) {
-                    intent.putExtra(key, (Integer) obj);
+                if (obj instanceof Float) {
+                    bundle.putFloat(key, (Float) obj);
+                } else if (obj instanceof Double) {
+                    bundle.putDouble(key, (Double) obj);
+                } else if (obj instanceof Integer) {
+                    bundle.putInt(key, (Integer) obj);
                 } else if (obj instanceof Boolean) {
-                    intent.putExtra(key, (Boolean) obj);
+                    bundle.putBoolean(key, (Boolean) obj);
                 } else if (obj instanceof String) {
-                    intent.putExtra(key, (String) obj);
+                    bundle.putString(key, (String) obj);
                 }
             }
         }
@@ -302,9 +684,13 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             JSONArray args = new JSONArray();
             args.put(barcode);
             args.put(symbology);
+            mPendingOperation = false;
+            mHandler.stop();
             mCallbackContext.success(args);
             
         } else if (resultCode == ScanditSDKActivity.CANCEL) {
+            mPendingOperation = false;
+            mHandler.stop();
             mCallbackContext.error("Canceled");
         }
     }
@@ -317,7 +703,110 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
         args.put(barcode);
         args.put(symbology);
         PluginResult result = new PluginResult(Status.OK, args);
-        result.setKeepCallback(true);
+        if (mContinuousMode) {
+            result.setKeepCallback(true);
+        } else {
+            mPendingOperation = false;
+            mHandler.stop();
+        }
         mCallbackContext.sendPluginResult(result);
+    }
+
+    @Override
+    public void didCancel() {
+        removeSubviewPicker();
+        mPendingOperation = false;
+        mHandler.stop();
+        mCallbackContext.error("Canceled");
+    }
+
+    @Override
+    public void didScanBarcode(String barcode, String symbology) {
+        JSONArray args = new JSONArray();
+        args.put(barcode);
+        args.put(symbology);
+        PluginResult result = new PluginResult(Status.OK, args);
+        if (mContinuousMode) {
+            result.setKeepCallback(true);
+        } else {
+            removeSubviewPicker();
+            mPendingOperation = false;
+            mHandler.stop();
+        }
+        mCallbackContext.sendPluginResult(result);
+    }
+
+    @Override
+    public void didManualSearch(String s) {
+        JSONArray args = new JSONArray();
+        args.put(s);
+        args.put("UNKNOWN");
+        PluginResult result = new PluginResult(Status.OK, args);
+        if (mContinuousMode) {
+            result.setKeepCallback(true);
+        } else {
+            removeSubviewPicker();
+            mPendingOperation = false;
+            mHandler.stop();
+        }
+        mCallbackContext.sendPluginResult(result);
+    }
+
+    /**
+     * Handler to check the orientation of the phone and adjust the margins based on it.
+     */
+    private final class OrientationHandler extends Handler {
+
+        final static int CHECK_ORIENTATION = 1;
+        private int mLastRotation = 0;
+        private boolean mRunning = false;
+
+        public OrientationHandler(Looper mainLooper) {
+            super(mainLooper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what) {
+                case CHECK_ORIENTATION:
+                    if (mRunning) {
+                        checkOrientation();
+                    }
+                    break;
+            }
+        }
+
+        private void start() {
+            if (!mRunning) {
+                mRunning = true;
+                mLastRotation = SbSystemUtils.getDisplayRotation(cordova.getActivity());
+                mHandler.sendEmptyMessageDelayed(OrientationHandler.CHECK_ORIENTATION, 20);
+            }
+        }
+
+        private void stop() {
+            if (mRunning) {
+                mRunning = false;
+            }
+        }
+
+        private void checkOrientation() {
+            Context context = cordova.getActivity();
+            if (context != null) {
+                int displayRotation = SbSystemUtils.getDisplayRotation(context);
+                if (displayRotation != mLastRotation) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("portraitMargins", mPortraitMargins.left + "/" + mPortraitMargins.top
+                            + "/" + mPortraitMargins.right + "/" + mPortraitMargins.bottom);
+                    bundle.putString("landscapeMargins", mLandscapeMargins.left + "/" + mLandscapeMargins.top
+                            + "/" + mLandscapeMargins.right + "/" + mLandscapeMargins.bottom);
+                    adjustLayout(bundle, 0);
+                    mLastRotation = displayRotation;
+                }
+                mHandler.sendEmptyMessageDelayed(OrientationHandler.CHECK_ORIENTATION, 20);
+            }
+        }
     }
 }

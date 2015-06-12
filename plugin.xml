@@ -43,6 +43,8 @@
         <source-file src="src/ios/ScanditSDK.mm"  />
         <header-file src="src/ios/ScanditSDKRotatingBarcodePicker.h"  />
         <source-file src="src/ios/ScanditSDKRotatingBarcodePicker.m"  />
+        <header-file src="src/ios/ScanditSDKParameterParser.h"  />
+        <source-file src="src/ios/ScanditSDKParameterParser.m"  />
         
         <!-- Frameworks needed by Scandit SDK for iOS -->
         <framework src="AudioToolbox.framework" />
@@ -91,5 +93,6 @@
     <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDK.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>
     <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDKActivity.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>
     <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDKResultRelay.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>
+    <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDKParameterParser.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>
   </platform>
 </plugin>

@@ -20,21 +20,7 @@
 #import "ScanditSDKBarcodePicker.h"
 #import "ScanditSDKOverlayController.h"
 
-@interface ScanditSDK : CDVPlugin <ScanditSDKOverlayControllerDelegate> {
-    NSString *callbackId;
-    BOOL wasStatusBarHidden;
-	
-	BOOL startAnimationDone;
-	NSDictionary *bufferedResult;
-	
-	ScanditSDKBarcodePicker *scanditSDKBarcodePicker;
-}
-
-@property (nonatomic, copy) NSString *callbackId;
-@property (readwrite, assign) BOOL hasPendingOperation;
-@property (nonatomic, assign) BOOL continuousMode;
-@property (nonatomic, retain) NSDictionary *bufferedResult;
-@property (nonatomic, retain) ScanditSDKBarcodePicker *scanditSDKBarcodePicker;
+@interface ScanditSDK : CDVPlugin <ScanditSDKOverlayControllerDelegate>
 
 /**
  * Starts the scanning. You call this the following way from java script (success and failure are
@@ -55,7 +41,8 @@
  *
  * orientations: (default setting is the same as set in the app settings)
  * Sets which orientations are allowed for the scanner if they should differ from the orientations
- * that are allowed in the whole app. Legal values: portrait, portraitUpsideDown, landscapeLeft,
+ * that are allowed in the whole app. This only works if the scanner is shown in full screen mode
+ * and does not work if margins are set. Legal values: portrait, portraitUpsideDown, landscapeLeft,
  * landscapeRight. Example: "landscapeRight,landscapeLeft"
  *
  * disableStandbyState: false
@@ -223,10 +210,161 @@
  * Sets the maximum size a barcode in the manual entry field can have to possibly be valid.
  *
  * continuousMode: false
- * Enable continous mode. If a barcode is scanned, the view controller is not dismissed and the user is
- * able to continue scanning until he press `Cancel`.
+ * Enables continous mode. If a barcode is scanned, the scanner is not dismissed and the user is
+ * able to continue scanning until he presses `Cancel` or the plugins cancel function is called.
+ *
+ * portraitMargins: "0/0/0/0"
+ * Sets left/top/right/bottom margins (in resolution independent pixels) for the scanner in
+ * portrait orientation. Settings margins will start the scanner in a subview on top of Cordova's 
+ * webview and not in its own view controller.
+ * Use this parameter to make the scanner smaller than fullscreen and show your own content along
+ * with the scanner.
+ *
+ * landscapeMargins: "0/0/0/0"
+ * Sets left/top/right/bottom margins (in resolution independent pixels) for the scanner in
+ * landscape orientation. Settings margins will start the scanner in a subview on top of Cordova's
+ * webview and not in its own view controller.
+ * Use this parameter to make the scanner smaller than fullscreen and show your own content along
+ * with the scanner.
  */
 - (void)scan:(CDVInvokedUrlCommand *)command;
 
+/**
+ * Cancels the scanning. You call this the following way from java script:
+ *
+ * cordova.exec(null, null, "ScanditSDK", "cancel", []);
+ */
+- (void)cancel:(CDVInvokedUrlCommand *)command;
+
+/**
+ * Pauses the scanning while the video feed continues to run You call this the following way from 
+ * java script:
+ *
+ * cordova.exec(null, null, "ScanditSDK", "pause", []);
+ */
+- (void)pause:(CDVInvokedUrlCommand *)command;
+
+/**
+ * Resumes the scanning after pause was called. You call this the following way from java script:
+ *
+ * cordova.exec(null, null, "ScanditSDK", "resume", []);
+ */
+- (void)resume:(CDVInvokedUrlCommand *)command;
+
+/**
+ * Stops the scanning and also freezes the video feed. You call this the following way from java 
+ * script:
+ *
+ * cordova.exec(null, null, "ScanditSDK", "stop", []);
+ */
+- (void)stop:(CDVInvokedUrlCommand *)command;
+
+/**
+ * Restarts the scanning after stop or pause were called. You call this the following way from java
+ * script:
+ *
+ * cordova.exec(null, null, "ScanditSDK", "start", []);
+ */
+- (void)start:(CDVInvokedUrlCommand *)command;
+
+/**
+ * Resizes the scanner and newly configures the UI. This call does not have any effect if the
+ * scanner is launched in full screen mode. To not launch in full screen mode you have to set the
+ * portrait and/or landscape margins in the scan call.
+ * You call this the following way from java script:
+ *
+ * cordova.exec(null, null, "ScanditSDK", "resize", [{"option1":"value1", "option2":true}]);
+ *
+ *
+ * The available options are:
+ *
+ * exampleStringForOption: defaultValue
+ * Short explanation of option.
+ *
+ * scanningHotSpot: "0.5/0.5" (x/y)
+ * Changes the location of the spot where the recognition actively scans for
+ * barcodes. X and y can be between 0 and 1, where 0/0 is the top left corner
+ * and 1/1 the bottom right corner.
+ *
+ * scanningHotSpotHeight: 0.25
+ * Changes the height of the spot where the recognition actively scans for
+ * barcodes. The height of the hot spot is given relative to the height of
+ * the screen and has to be between 0.0 and 0.5.
+ * Be aware that if the hot spot height is very large, the engine is forced
+ * to decrease the quality of the recognition to keep the speed at an
+ * acceptable level.
+ *
+ * viewfinderSize: "0.8/0.4/0.6/0.4" (width/height/landscapeWidth/landscapeHeight)
+ * Sets the size of the viewfinder relative to the size of the screen size.
+ * Changing this value does not(!) affect the area in which barcodes are successfully recognized.
+ * It only changes the size of the box drawn onto the scan screen.
+ *
+ * beep: true
+ * Enables or disables the sound played when a code was recognized.
+ *
+ * vibrate: true
+ * Enables or disables the vibration when a code was recognized.
+ *
+ * torch: true
+ * Enables or disables the torch toggle button for all devices that support a torch.
+ *
+ * torchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
+ * Sets the position at which the button to enable the torch is drawn. The X and Y coordinates are
+ * relative to the screen size, which means they have to be between 0 and 1.
+ *
+ * cameraSwitchVisibility: "never"
+ * Sets when the camera switch button is visible for all devices that have more than one camera.
+ * Legal values are: "never", "tablet", "always"
+ *
+ * cameraSwitchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
+ * Sets the position at which the button to switch the camera is drawn. The X and Y coordinates are
+ * relative to the screen size, which means they have to be between 0 and 1. Be aware that the x
+ * coordinate is calculated from the right side of the screen and not the left like with the torch
+ * button.
+ *
+ * logoOffsets: "0, 0, 0, 0" (xOffset, yOffset, landscapeXOffset, landscapeYOffset)
+ * Sets the x and y offset at which the Scandit logo should be drawn for both portrait and landscape
+ * orientation. Be aware that the standard Scandit SDK licenses do not allow you to hide the logo.
+ *
+ * searchBarActionButtonCaption: "Go"
+ * Sets the caption of the manual entry at the top when a barcode of valid length has been entered.
+ *
+ * searchBarCancelButtonCaption: "Cancel"
+ * Sets the caption of the manual entry at the top when no barcode of valid length has been entered.
+ *
+ * searchBarPlaceholderText: "Scan barcode or enter it here"
+ * Sets the text shown in the manual entry field when nothing has been entered yet.
+ *
+ * toolBarButtonCaption: "Cancel"
+ * Sets the caption of the toolbar button.
+ *
+ * viewfinderColor: "FFFFFF"
+ * Sets the color of the static viewfinder and while tracking before the code has been recognized.
+ *
+ * viewfinderDecodedColor: "00FF00"
+ * Sets the color of the viewfinder when the code has been recognized.
+ *
+ * minSearchBarBarcodeLength: 8
+ * Sets the minimum size a barcode in the manual entry field has to have to possibly be valid.
+ *
+ * maxSearchBarBarcodeLength: 100
+ * Sets the maximum size a barcode in the manual entry field can have to possibly be valid.
+ *
+ * portraitMargins: "0/0/0/0" (left/top/right/bottom)
+ * Sets margins (in iOS resolution independent points) for the scanner in portrait orientation. 
+ * Settings margins will start the scanner in a subview on top of Cordova's webview and not in its 
+ * own view controller. Use this parameter to make the scanner smaller than fullscreen and show your 
+ * own content along with the scanner.
+ *
+ * landscapeMargins: "0/0/0/0" (left/top/right/bottom)
+ * Sets margins (in iOS resolution independent points) for the scanner in landscape orientation. 
+ * Settings margins will start the scanner in a subview on top of Cordova's webview and not in its 
+ * own view controller. Use this parameter to make the scanner smaller than fullscreen and show your 
+ * own content along with the scanner.
+ *
+ * animationDuration: 0.0
+ * Sets the animation duration for the change in margins.
+ */
+- (void)resize:(CDVInvokedUrlCommand *)command;
 
 @end

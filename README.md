@@ -50,6 +50,8 @@ To generate a sample project, use the following command line commands:
 
 ### Sample HTML + JS
 
+#### Fullscreen Scanner
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -74,24 +76,24 @@ To generate a sample project, use the following command line commands:
      #
      -->
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name = "format-detection" content = "telephone=no"/>
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width;" />
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Scandit SDK</title>
+        <title>Scandit Barcode Scanner</title>
     </head>
     <body onload="onBodyLoad()" style="background: url(img/ScanditSDKDemo-Splash.png) no-repeat;background-size: 100%;background-color: #000000">
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
-            function onBodyLoad()
-            {
+            function onBodyLoad() {
                 document.addEventListener("deviceready", onDeviceReady, false);
             }
 
-	    function success(resultArray) {
-
-		alert("Scanned " + resultArray[0] + " code: " + resultArray[1]);
+            function success(resultArray) {
+                alert("Scanned " + resultArray[0] + " code: " + resultArray[1]);
 
             	// NOTE: Scandit SDK Phonegap Plugin Versions 1.* for iOS report
             	// the scanning result as a concatenated string.
@@ -113,12 +115,12 @@ To generate a sample project, use the following command line commands:
                 cordova.exec(success, failure, "ScanditSDK", "scan",
                              ["ENTER YOUR APP KEY HERE",
                               {"beep": true,
-                              "1DScanning" : true,
-                              "2DScanning" : true}]);
+                              "code128" : false,
+                              "dataMatrix" : false}]);
             }
 
             app.initialize();
-            </script>
+        </script>
 
         <div align="center" valign="center">
             <input type="button" value="scan" onclick="scan()" style="margin-top: 230px; width: 100px; height: 30px; font-size: 1em"/>
@@ -127,6 +129,108 @@ To generate a sample project, use the following command line commands:
 </html>
 
 ```
+
+
+#### Subview Scanner (Scaled and Cropped) 
+
+```
+<!DOCTYPE html>
+    <!--
+    #
+    # Licensed to the Apache Software Foundation (ASF) under one
+    # or more contributor license agreements.  See the NOTICE file
+    # distributed with this work for additional information
+    # regarding copyright ownership.  The ASF licenses this file
+    # to you under the Apache License, Version 2.0 (the
+    # "License"); you may not use this file except in compliance
+    # with the License.  You may obtain a copy of the License at
+    #
+    # http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing,
+    # software distributed under the License is distributed on an
+    # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    #  KIND, either express or implied.  See the License for the
+    # specific language governing permissions and limitations
+    # under the License.
+    #
+    -->
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Scandit Barcode Scanner</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+
+            function success(resultArray) {
+                alert("Scanned " + resultArray[0] + " code: " + resultArray[1]);
+
+                // NOTE: Scandit SDK Phonegap Plugin Versions 1.* for iOS report
+                // the scanning result as a concatenated string.
+                // Starting with version 2.0.0, the Scandit SDK Phonegap
+                // Plugin for iOS reports the result as an array
+                // identical to the way the Scandit SDK plugin for Android reports results.
+
+                // If you are running the Scandit SDK Phonegap Plugin Version 1.* for iOS,
+                // use the following approach to generate a result array from the string result returned:
+                // resultArray = result.split("|");
+            }
+
+            function failure(error) {
+                alert("Failed: " + error);
+            }
+
+            function scan() {
+                // See below for all available options.
+                cordova.exec(success, failure, "ScanditSDK", "scan",
+                             ["iHzNtjsNR+cSAyOqBhiQlm8prlIV+8uN0n5Iqir634U",
+                              {"beep": true,
+                               "code128" : false,
+                               "dataMatrix" : false,
+                               "continuousMode" : true,
+                               "portraitMargins" : "0/0/0/200"}]);
+            }
+
+            function stop() {
+                cordova.exec(null, null, "ScanditSDK", "stop", []);
+                cordova.exec(null, null, "ScanditSDK", "resize",
+                             [{"portraitMargins" : "0/0/0/400", "animationDuration" : 0.5,
+                               "viewfinderSize" : "0.8/0.2/0.6/0.4"}]);
+            }
+
+            function start() {
+                cordova.exec(null, null, "ScanditSDK", "start", []);
+                cordova.exec(null, null, "ScanditSDK", "resize",
+                             [{"portraitMargins" : "0/0/0/200", "animationDuration" : 0.5,
+                               "viewfinderSize" : "0.8/0.4/0.6/0.4"}]);
+            }
+
+            function cancel() {
+                cordova.exec(null, null, "ScanditSDK", "cancel", []);
+            }
+
+            app.initialize();
+        </script>
+
+        <div>
+            <input type="button" value="scan" onclick="scan()" style="position: absolute; bottom: 80px; left: 15%; width: 30%; height: 30px; font-size: 1em"/>
+            <input type="button" value="cancel" onclick="cancel()" style="position: absolute; bottom: 80px; right: 15%; width: 30%; height: 30px; font-size: 1em"/>
+            <input type="button" value="stop" onclick="stop()" style="position: absolute; bottom: 30px; left: 15%; width: 30%; height: 30px; font-size: 1em"/>
+            <input type="button" value="restart" onclick="start()" style="position: absolute; bottom: 30px; right: 15%; width: 30%; height: 30px; font-size: 1em"/>
+        </div>
+
+    </body>
+</html>
+```
+
+
 
 
 Changelog
