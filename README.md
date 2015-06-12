@@ -236,7 +236,7 @@ To generate a sample project, use the following command line commands:
 Changelog
 ------------------------
 
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.5.0) - TBD
+**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.5.0) - TBD**
 
  * upgraded to native ScanditSDK iOS/Android 4.5.0
 
