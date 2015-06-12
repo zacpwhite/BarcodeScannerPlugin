@@ -236,9 +236,18 @@ To generate a sample project, use the following command line commands:
 Changelog
 ------------------------
 
+**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.5.0) - TBD
+
+ * upgraded to native ScanditSDK iOS/Android 4.5.0
+
+ * Added the option to display the scanner as a subview (scaled/cropped)
+
+ * Added new functions to cancel, pause, resume, stop, start and resize the scanner
+
+
 **Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.4.1) - March 17th 2015**
 
-   * upgraded to native Scandit SDK iOS/Android 4.4.1  The new features include:
+ * upgraded to native Scandit SDK iOS/Android 4.4.1  The new features include:
 
     * New glare compensation algorithm - Scandit 4.4 significantly improves the scanning performance in the presence of glare (and shadows).
 
@@ -255,7 +264,7 @@ Changelog
 
 **Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.2.0) - Oct 30st 2014**
 
-   * upgraded to Scandit SDK for iOS 4.2.2 and Scandit SDK for Android 4.2.2 (see release notes in download section of your Scandit SDK for details)
+ * upgraded to Scandit SDK for iOS 4.2.2 and Scandit SDK for Android 4.2.2 (see release notes in download section of your Scandit SDK for details)
 
     * [Release Notes of native Scandit SDK for iOS 4.2.2](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.2.2)
 
