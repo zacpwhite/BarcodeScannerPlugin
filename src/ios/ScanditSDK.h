@@ -53,9 +53,11 @@
  * Shows or hides the search bar at the top of the screen.
  *
  * 1DScanning: true
+ * The parameter '1DScanning' is deprecated. Please enable symbologies individually instead.
  * Enables or disables the recognition of 1D codes.
  *
  * 2DScanning: true
+ * The parameter '2DScanning' is deprecated. Please enable symbologies individually instead.
  * Enables or disables the recognition of 2D codes.
  *
  * ean13AndUpc12: true

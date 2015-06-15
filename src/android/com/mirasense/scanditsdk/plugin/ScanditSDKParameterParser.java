@@ -124,6 +124,10 @@ public class ScanditSDKParameterParser {
             settings.force2dRecognition(bundle.getBoolean("force2d"));
         }
 
+        if (bundle.containsKey("codeDuplicateFilter")) {
+            settings.setCodeDuplicateFilter(bundle.getInt("codeDuplicateFilter"));
+        }
+
         if (bundle.containsKey("scanningHotSpot")) {
             String hotspot = bundle.getString("scanningHotSpot");
             String[] split = hotspot.split("[/]");

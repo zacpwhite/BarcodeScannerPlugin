@@ -127,9 +127,11 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
      * Shows or hides the search bar at the top of the screen.
      *
      * 1DScanning: true
+     * The parameter '1DScanning' is deprecated. Please enable symbologies individually instead.
      * Enables or disables the recognition of 1D codes.
      *
      * 2DScanning: true
+     * The parameter '2DScanning' is deprecated. Please enable symbologies individually instead.
      * Enables or disables the recognition of 2D codes.
      *
      * ean13AndUpc12: true
@@ -207,6 +209,13 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
      * force2d: false
      * Forces the engine to always run a 2d recognition, ignoring whether a 2d
      * code was detected in the current frame.
+     *
+     * codeDuplicateFilter: 0
+     * The duration of the duplicate filter in milliseconds. When set to a value larger than zero, barcodes with the
+     * same symbology and data are filtered out if they are decoded less than the given milliseconds apart. Set this
+     * value to zero if you do not want to filter duplicates. When set to -1 barcodes are filtered as duplicates if they
+     * match an already decoded barcode in the session (A session ends with a call to cancel or stop or a successful
+     * scan in non-continuous mode).
      *
      * scanningHotSpot: "0.5/0.5" (x/y)
      * Changes the location of the spot where the recognition actively scans for

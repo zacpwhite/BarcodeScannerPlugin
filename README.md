@@ -133,6 +133,12 @@ To generate a sample project, use the following command line commands:
 
 #### Subview Scanner (Scaled and Cropped) 
 
+When adding the scanner as a subview we need to additionally take care of the lifecycle events of the app. As we only need to do this for Android we have to access the device object which is available through an official plugin. Add it the following way:
+```
+cordova plugin add org.apache.cordova.device
+```
+
+
 ```
 <!DOCTYPE html>
     <!--
@@ -190,10 +196,11 @@ To generate a sample project, use the following command line commands:
             function scan() {
                 // See below for all available options.
                 cordova.exec(success, failure, "ScanditSDK", "scan",
-                             ["iHzNtjsNR+cSAyOqBhiQlm8prlIV+8uN0n5Iqir634U",
+                             ["ENTER YOUR APP KEY HERE",
                               {"beep": true,
                                "code128" : false,
                                "dataMatrix" : false,
+                               "codeDuplicateFilter" : 1000,
                                "continuousMode" : true,
                                "portraitMargins" : "0/0/0/200"}]);
             }
@@ -214,6 +221,25 @@ To generate a sample project, use the following command line commands:
 
             function cancel() {
                 cordova.exec(null, null, "ScanditSDK", "cancel", []);
+            }
+
+            // Since under Android the plugin is no longer in its own Activity we have to handle
+            // the pause and resume lifecycle events ourselves.
+            document.addEventListener("pause", onPause, false);
+            document.addEventListener("resume", onResume, false);
+
+            function onPause() {
+                // Only stop the scanner under Android, under iOS it is automatically stopped.
+                if (device.platform == "Android") {
+                    cordova.exec(null, null, "ScanditSDK", "stop", []);
+                }
+            }
+
+            function onResume() {
+                // Only start the scanner under Android, under iOS it is automatically restarted.
+                if (device.platform == "Android") {
+                    cordova.exec(null, null, "ScanditSDK", "start", []);
+                }
             }
 
             app.initialize();
