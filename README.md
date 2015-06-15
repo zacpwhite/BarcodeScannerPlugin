@@ -139,7 +139,7 @@ cordova plugin add org.apache.cordova.device
 ```
 
 
-```
+```html
 <!DOCTYPE html>
     <!--
     #
