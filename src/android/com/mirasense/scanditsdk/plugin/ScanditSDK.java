@@ -17,25 +17,23 @@
 
 package com.mirasense.scanditsdk.plugin;
 
-import java.util.Iterator;
-
-import android.animation.LayoutTransition;
-import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
-import android.os.*;
-import android.view.Display;
-import android.view.View;
-import android.view.WindowManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.view.animation.TranslateAnimation;
+import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKScanSettings;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
-import com.mirasense.scanditsdk.interfaces.ScanditSDKOnScanListener;
-import com.mirasense.scanditsdk.internal.ScanditSDKGlobals;
+import com.mirasense.scanditsdk.plugin.ScanditSDKResultRelay.ScanditSDKResultRelayCallback;
 import com.scandit.base.system.SbSystemUtils;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -45,14 +43,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
-import android.util.Log;
-
-import com.mirasense.scanditsdk.plugin.ScanditSDKResultRelay.ScanditSDKResultRelayCallback;
+import java.util.Iterator;
 
 
 public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCallback, ScanditSDKListener {
-    
+
     public static final String SCAN = "scan";
     public static final String CANCEL = "cancel";
     public static final String PAUSE = "pause";
@@ -334,7 +329,11 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
                     mBarcodePicker = new ScanditSDKBarcodePicker(cordova.getActivity(), bundle.getString("appKey"), settings);
                     mBarcodePicker.getOverlayView().addListener(ScanditSDK.this);
                     mLayout = new RelativeLayout(cordova.getActivity());
-                    webView.addView(mLayout);
+
+                    ViewGroup viewGroup = getViewGroupToAddTo();
+                    if (viewGroup != null) {
+                        viewGroup.addView(mLayout);
+                    }
 
                     ScanditSDKParameterParser.updatePickerUIFromBundle(mBarcodePicker, bundle);
 
@@ -655,7 +654,11 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 mBarcodePicker.stopScanning();
-                webView.removeView(mLayout);
+
+                ViewGroup viewGroup = getViewGroupToAddTo();
+                if (viewGroup != null) {
+                    viewGroup.removeView(mLayout);
+                }
                 mLayout = null;
                 mBarcodePicker = null;
             }
@@ -759,6 +762,28 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             mHandler.stop();
         }
         mCallbackContext.sendPluginResult(result);
+    }
+
+    private ViewGroup getViewGroupToAddTo() {
+        if (webView instanceof WebView) {
+            return (ViewGroup) webView;
+        } else {
+            try {
+                java.lang.reflect.Method getViewMethod = webView.getClass().getMethod("getView");
+                Object viewObject = getViewMethod.invoke(webView);
+                if (viewObject instanceof View) {
+                    View view = (View)viewObject;
+                    ViewParent parentView = view.getParent();
+                    if (parentView instanceof ViewGroup) {
+                        return (ViewGroup) parentView;
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("ScanditSDK", "Unable to fetch the ViewGroup through webView.getView().getParent().");
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**
