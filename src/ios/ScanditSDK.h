@@ -17,10 +17,16 @@
 //
 
 #import "Cordova/CDVPlugin.h"
-#import "ScanditSDKBarcodePicker.h"
-#import "ScanditSDKOverlayController.h"
 
-@interface ScanditSDK : CDVPlugin <ScanditSDKOverlayControllerDelegate>
+#define dispatch_main_sync_safe(block)\
+if ([NSThread isMainThread]) {\
+block();\
+} else {\
+dispatch_sync(dispatch_get_main_queue(), block);\
+}
+
+
+@interface ScanditSDK : CDVPlugin
 
 /**
  * Starts the scanning. You call this the following way from java script (success and failure are
@@ -132,15 +138,18 @@
  * Android 2.2 or higher, it does not cause issues with lower versions but
  * simply doesn't work.
  *
- * restrictActiveScanningArea: false
- * Reduces the area in which barcodes are detected and decoded to an
- * area defined by setScanningHotSpotHeight and setScanningHotSpotToX andY.
- * If this method is set to disabled, barcodes in the full camera image
- * are detected and decoded.
- *
  * force2d: false
  * Forces the engine to always run a 2d recognition, ignoring whether a 2d
  * code was detected in the current frame.
+ *
+ * codeDuplicateFilter: 0
+ * The duration of the duplicate filter in milliseconds. When set to a value
+ * larger than zero, barcodes with the same symbology and data are filtered
+ * out if they are decoded less than the given milliseconds apart. Set this
+ * value to zero if you do not want to filter duplicates. When set to -1
+ * barcodes are filtered as duplicates if they match an already decoded
+ * barcode in the session (A session ends with a call to cancel or stop or
+ * a successful scan in non-continuous mode).
  *
  * scanningHotSpot: "0.5/0.5" (x/y)
  * Changes the location of the spot where the recognition actively scans for
@@ -169,19 +178,15 @@
  * torch: true
  * Enables or disables the torch toggle button for all devices that support a torch.
  *
- * torchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
- * Sets the position at which the button to enable the torch is drawn. The X and Y coordinates are
- * relative to the screen size, which means they have to be between 0 and 1.
+ * torchButtonMarginsAndSize: "15/15/40/40" (leftMargin/topMargin/width/height)
+ * Sets the position at which the button to enable the torch is drawn.
  *
  * cameraSwitchVisibility: "never"
  * Sets when the camera switch button is visible for all devices that have more than one camera.
  * Legal values are: "never", "tablet", "always"
  *
- * cameraSwitchButtonPositionAndSize: "0.05/0.01/67/33" (x/y/width/height)
- * Sets the position at which the button to switch the camera is drawn. The X and Y coordinates are
- * relative to the screen size, which means they have to be between 0 and 1. Be aware that the x
- * coordinate is calculated from the right side of the screen and not the left like with the torch
- * button.
+ * cameraSwitchButtonMarginsAndSize: "15/15/40/40" (rightMargin/topMargin/width/height)
+ * Sets the position at which the button to switch the camera is drawn.
  *
  * logoOffsets: "0, 0, 0, 0" (xOffset, yOffset, landscapeXOffset, landscapeYOffset)
  * Sets the x and y offset at which the Scandit logo should be drawn for both portrait and landscape

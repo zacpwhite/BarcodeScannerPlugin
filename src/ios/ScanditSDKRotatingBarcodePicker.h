@@ -21,17 +21,28 @@
 
 
 #import <UIKit/UIKit.h>
-#import "ScanditSDKBarcodePicker.h"
 
-@interface ScanditSDKRotatingBarcodePicker : ScanditSDKBarcodePicker
+#import <ScanditBarcodeScanner/ScanditBarcodeScanner.h>
 
-@property (nonatomic, assign) CGRect portraitSize;
-@property (nonatomic, assign) CGRect landscapeSize;
+#import "ScanditSDKSearchBar.h"
 
-- (id)initWithAppKey:(NSString *)scanditSDKAppKey
-	  cameraFacingPreference:(CameraFacingDirection)facing
-	  orientations:(NSArray *)orientations;
+
+@protocol ScanditSDKSearchBarDelegate <NSObject>
+- (void)searchExecutedWithContent:(NSString *)content;
+@end
+
+
+@interface ScanditSDKRotatingBarcodePicker : SBSBarcodePicker
+
+@property (nonatomic, assign) CGRect portraitMargins;
+@property (nonatomic, assign) CGRect landscapeMargins;
+@property (nonatomic, weak) id<ScanditSDKSearchBarDelegate> searchDelegate;
+@property (nonatomic, strong, readonly) ScanditSDKSearchBar *manualSearchBar;
+
+- (instancetype)initWithSettings:(SBSScanSettings *)settings;
 
 - (void)adjustSize:(CGFloat)animationDuration;
+
+- (void)showSearchBar:(BOOL)show;
 
 @end

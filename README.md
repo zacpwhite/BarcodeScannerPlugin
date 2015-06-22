@@ -262,9 +262,9 @@ cordova plugin add org.apache.cordova.device
 Changelog
 ------------------------
 
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.5.0) - TBD**
+**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.7.0) - TBD**
 
- * upgraded to native ScanditSDK iOS/Android 4.5.0
+ * upgraded to native ScanditSDK iOS/Android 4.7.0
 
  * Added the option to display the scanner as a subview (scaled/cropped)
 

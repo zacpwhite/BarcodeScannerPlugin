@@ -8,7 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import <ScanditBarcodeScanner/ScanditBarcodeScanner.h>
+
+
 @interface ScanditSDKParameterParser : NSObject
+
++ (SBSScanSettings *)settingsForOptions:(NSDictionary *)options;
+
++ (void)updatePickerUI:(SBSBarcodePicker *)picker fromOptions:(NSDictionary *)options;
 
 + (CGRect)rectFromParameter:(NSObject *)parameter;
 
