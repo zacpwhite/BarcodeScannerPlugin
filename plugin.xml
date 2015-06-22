@@ -12,7 +12,7 @@
               </config-file>      
 
               <!-- Resource Bundle for Scandit SDK -->
-              <resource-file src="src/ios/scanditsdk-enterprise-premium-ios_4.0.0/ScanditSDK/ScanditBarcodeScanner.framework/Resources/ScanditBarcodeScanner.bundle"/>
+              <resource-file src="src/ios/scanditsdk-community-ios_4.0.0/ScanditSDK/ScanditBarcodeScanner.framework/Resources/ScanditBarcodeScanner.bundle"/>
               
               <!-- Scandit SDK Cordova Plugin Source for iOS -->
               <header-file src="src/ios/ScanditSDK.h"/>
@@ -26,7 +26,7 @@
 
               
               <!-- Frameworks needed by Scandit SDK for iOS -->
-              <framework src="src/ios/scanditsdk-enterprise-premium-ios_4.0.0/ScanditSDK/ScanditBarcodeScanner.framework" custom="true"/>
+              <framework src="src/ios/scanditsdk-community-ios_4.0.0/ScanditSDK/ScanditBarcodeScanner.framework" custom="true"/>
               <framework src="OpenGLES.framework"/>
               <framework src="AudioToolbox.framework"/>
               <framework src="AVFoundation.framework"/>      
@@ -61,16 +61,16 @@
                     <activity android:name="com.mirasense.scanditsdk.plugin.ScanditSDKActivity"/>        
               </config-file>      
           <!-- copy Scandit SDK libs -->      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/libs/scanditsdk-android-4.0.0.jar" target-dir="libs"/>      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/libs/armeabi/libscanditsdk-android-4.0.0.so" target-dir="libs/armeabi"/>      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/libs/armeabi-v7a/libscanditsdk-android-4.0.0.so" target-dir="libs/armeabi-v7a"/>      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/libs/x86/libscanditsdk-android-4.0.0.so" target-dir="libs/x86"/>      
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/libs/scanditsdk-android-4.0.0.jar" target-dir="libs"/>
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/libs/armeabi/libscanditsdk-android-4.0.0.so" target-dir="libs/armeabi"/>
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/libs/armeabi-v7a/libscanditsdk-android-4.0.0.so" target-dir="libs/armeabi-v7a"/>
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/libs/x86/libscanditsdk-android-4.0.0.so" target-dir="libs/x86"/>
           <!-- copy Scandit SDK resources (images, beep) -->      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/res/raw/beep.wav" target-dir="res/raw"/>      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/res/raw/poweredby2x.png" target-dir="res/raw"/>      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/res/raw/ic_btn_search.png" target-dir="res/raw"/>      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/res/raw/flashlight_turn_off_icon.png" target-dir="res/raw"/>      
-          <source-file src="src/android/scanditsdk-enterprise-premium-android_4.0.0/res/raw/flashlight_turn_on_icon.png" target-dir="res/raw"/>      
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/res/raw/beep.wav" target-dir="res/raw"/>      
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/res/raw/poweredby2x.png" target-dir="res/raw"/>      
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/res/raw/ic_btn_search.png" target-dir="res/raw"/>      
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/res/raw/flashlight_turn_off_icon.png" target-dir="res/raw"/>      
+          <source-file src="src/android/scanditsdk-community-android_4.0.0/res/raw/flashlight_turn_on_icon.png" target-dir="res/raw"/>      
           <!-- add plugin source code -->      
           <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDK.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>      
           <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDKActivity.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>      
