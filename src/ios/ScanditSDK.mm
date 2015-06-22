@@ -187,10 +187,9 @@
         if (self.scanditBarcodePicker && !self.modallyPresented) {
             NSUInteger argc = [command.arguments count];
             if (argc < 1) {
-                NSLog(@"The updateLayout call received too few arguments and has to return without starting.");
+                NSLog(@"The resize call received too few arguments and has to return without starting.");
                 return;
             }
-            self.callbackId = command.callbackId;
             
             NSDictionary *options = [command.arguments objectAtIndex:0];
             
@@ -224,6 +223,16 @@
     }
     
     [self.scanditBarcodePicker adjustSize:animationDuration];
+}
+
+- (void)torch:(CDVInvokedUrlCommand *)command {
+    NSUInteger argc = [command.arguments count];
+    if (argc < 1) {
+        NSLog(@"The torch call received too few arguments and has to return without starting.");
+        return;
+    }
+    NSNumber *enabled = [command.arguments objectAtIndex:0];
+    [self.scanditBarcodePicker switchTorchOn:[enabled boolValue]];
 }
 
 

@@ -550,6 +550,10 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
         if (mBarcodePicker != null) {
             final Bundle bundle = new Bundle();
             try {
+                if (data.length() < 1) {
+                    Log.e("ScanditSDK", "The resize call received too few arguments and has to return without starting.");
+                    return;
+                }
                 setOptionsOnBundle(data.getJSONObject(0), bundle);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -649,7 +653,34 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             }
         }
     }
-
+    
+    /**
+     * Switches the torch on or off. Pass true to turn it on, false to turn it off.
+     * You call this the following way from java script:
+     *
+     * cordova.exec(null, null, "ScanditSDK", "torch", [true]);
+     */
+    private void torch(JSONArray data) {
+        boolean enabled = false;
+        try {
+            if (data.length() < 1) {
+                Log.e("ScanditSDK", "The torch call received too few arguments and has to return without starting.");
+                return;
+            }
+            enabled = data.getBoolean(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final boolean innerEnabled = enabled;
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                if (mBarcodePicker != null) {
+                    mBarcodePicker.switchTorchOn(innerEnabled);
+                }
+            }
+        });
+    }
+    
     private void removeSubviewPicker() {
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {

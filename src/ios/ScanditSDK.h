@@ -374,4 +374,12 @@ dispatch_sync(dispatch_get_main_queue(), block);\
  */
 - (void)resize:(CDVInvokedUrlCommand *)command;
 
+/**
+ * Switches the torch on or off. Pass true to turn it on, false to turn it off.
+ * You call this the following way from java script:
+ *
+ * cordova.exec(null, null, "ScanditSDK", "torch", [true]);
+ */
+- (void)torch:(CDVInvokedUrlCommand *)command;
+
 @end
