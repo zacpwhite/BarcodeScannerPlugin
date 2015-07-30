@@ -98,7 +98,7 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             return true;
         } else {
             result = new PluginResult(Status.INVALID_ACTION);
-            callbackContext.error("Invalid Action");
+            callbackContext.error("Invalid Action: " + action);
             return false;
         }
     }
@@ -302,7 +302,7 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
 
         final Bundle bundle = new Bundle();
         try {
-            bundle.putString("appKey", data.getString(0));
+            bundle.putString(ScanditSDKParameterParser.paramAppKey, data.getString(0));
         } catch (JSONException e) {
             Log.e("ScanditSDK", "Function called through Java Script contained illegal objects.");
             e.printStackTrace();
@@ -318,15 +318,17 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             }
         }
 
-        if (bundle.containsKey("continuousMode")) {
-            mContinuousMode = bundle.getBoolean("continuousMode");
+        if (bundle.containsKey(ScanditSDKParameterParser.paramContinuousMode)) {
+            mContinuousMode = bundle.getBoolean(ScanditSDKParameterParser.paramContinuousMode);
         }
 
-        if (bundle.containsKey("portraitMargins") || bundle.containsKey("landscapeMargins")) {
+        if (bundle.containsKey(ScanditSDKParameterParser.paramPortraitMargins)
+                || bundle.containsKey(ScanditSDKParameterParser.paramLandscapeMargins)) {
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     ScanditSDKScanSettings settings = ScanditSDKParameterParser.settingsForBundle(bundle);
-                    mBarcodePicker = new ScanditSDKBarcodePicker(cordova.getActivity(), bundle.getString("appKey"), settings);
+                    mBarcodePicker = new ScanditSDKBarcodePicker(cordova.getActivity(),
+                            bundle.getString(ScanditSDKParameterParser.paramAppKey), settings);
                     mBarcodePicker.getOverlayView().addListener(ScanditSDK.this);
                     mLayout = new RelativeLayout(cordova.getActivity());
 
@@ -562,8 +564,8 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
                 public void run() {
                     ScanditSDKParameterParser.updatePickerUIFromBundle(mBarcodePicker, bundle);
                     double animationDuration = 0;
-                    if (bundle.containsKey("animationDuration")) {
-                        animationDuration = bundle.getDouble("animationDuration");
+                    if (bundle.containsKey(ScanditSDKParameterParser.paramAnimationDuration)) {
+                        animationDuration = bundle.getDouble(ScanditSDKParameterParser.paramAnimationDuration);
                     }
                     adjustLayout(bundle, animationDuration);
                 }
@@ -581,8 +583,8 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
         final RelativeLayout.LayoutParams rLayoutParams = (RelativeLayout.LayoutParams) mBarcodePicker.getLayoutParams();
 
         Display display = ((WindowManager) webView.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        if (bundle.containsKey("portraitMargins") && display.getHeight() > display.getWidth()) {
-            String portraitMargins = bundle.getString("portraitMargins");
+        if (bundle.containsKey(ScanditSDKParameterParser.paramPortraitMargins) && display.getHeight() > display.getWidth()) {
+            String portraitMargins = bundle.getString(ScanditSDKParameterParser.paramPortraitMargins);
             String[] split = portraitMargins.split("[/]");
             if (split.length == 4) {
                 try {
@@ -622,8 +624,8 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
 
                 }
             }
-        } else if (bundle.containsKey("landscapeMargins") && display.getWidth() > display.getHeight()) {
-            String landscapeMargins = bundle.getString("landscapeMargins");
+        } else if (bundle.containsKey(ScanditSDKParameterParser.paramLandscapeMargins) && display.getWidth() > display.getHeight()) {
+            String landscapeMargins = bundle.getString(ScanditSDKParameterParser.paramLandscapeMargins);
             String[] split = landscapeMargins.split("[/]");
             if (split.length == 4) {
                 final Rect oldLandscapeMargins = new Rect(mLandscapeMargins);
@@ -704,15 +706,15 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             Object obj = options.opt(key);
             if (obj != null) {
                 if (obj instanceof Float) {
-                    bundle.putFloat(key, (Float) obj);
+                    bundle.putFloat(key.toLowerCase(), (Float) obj);
                 } else if (obj instanceof Double) {
-                    bundle.putDouble(key, (Double) obj);
+                    bundle.putDouble(key.toLowerCase(), (Double) obj);
                 } else if (obj instanceof Integer) {
-                    bundle.putInt(key, (Integer) obj);
+                    bundle.putInt(key.toLowerCase(), (Integer) obj);
                 } else if (obj instanceof Boolean) {
-                    bundle.putBoolean(key, (Boolean) obj);
+                    bundle.putBoolean(key.toLowerCase(), (Boolean) obj);
                 } else if (obj instanceof String) {
-                    bundle.putString(key, (String) obj);
+                    bundle.putString(key.toLowerCase(), (String) obj);
                 }
             }
         }
@@ -863,9 +865,9 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
                 int displayRotation = SbSystemUtils.getDisplayRotation(context);
                 if (displayRotation != mLastRotation) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("portraitMargins", mPortraitMargins.left + "/" + mPortraitMargins.top
+                    bundle.putString(ScanditSDKParameterParser.paramPortraitMargins, mPortraitMargins.left + "/" + mPortraitMargins.top
                             + "/" + mPortraitMargins.right + "/" + mPortraitMargins.bottom);
-                    bundle.putString("landscapeMargins", mLandscapeMargins.left + "/" + mLandscapeMargins.top
+                    bundle.putString(ScanditSDKParameterParser.paramLandscapeMargins, mLandscapeMargins.left + "/" + mLandscapeMargins.top
                             + "/" + mLandscapeMargins.right + "/" + mLandscapeMargins.bottom);
                     adjustLayout(bundle, 0);
                     mLastRotation = displayRotation;

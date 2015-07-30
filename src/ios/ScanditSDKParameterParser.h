@@ -13,6 +13,26 @@
 
 @interface ScanditSDKParameterParser : NSObject
 
++ (NSString *)paramAppKey;
++ (NSString *)paramContinuousMode;
++ (NSString *)paramPortraitMargins;
++ (NSString *)paramLandscapeMargins;
++ (NSString *)paramAnimationDuration;
++ (NSString *)paramPreferFrontCamera;
+
++ (NSString *)paramOrientations;
++ (NSString *)paramOrientationsPortrait;
++ (NSString *)paramOrientationsPortraitUpsideDown;
++ (NSString *)paramOrientationsLandscapeLeft;
++ (NSString *)paramOrientationsLandscapeRight;
+
++ (NSString *)paramSearchBar;
++ (NSString *)paramSearchBarActionButtonCaption;
++ (NSString *)paramSearchBarCancelButtonCaption;
++ (NSString *)paramSearchBarPlaceholderText;
++ (NSString *)paramMinSearchBarBarcodeLength;
++ (NSString *)paramMaxSearchBarBarcodeLength;
+
 + (SBSScanSettings *)settingsForOptions:(NSDictionary *)options;
 
 + (void)updatePickerUI:(SBSBarcodePicker *)picker fromOptions:(NSDictionary *)options;

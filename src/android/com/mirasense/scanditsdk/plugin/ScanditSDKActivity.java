@@ -68,7 +68,7 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
 
         if (ScanditSDKBarcodePicker.canRunPortraitPicker()) {
             ScanditSDKBarcodePicker picker = new ScanditSDKBarcodePicker(
-                    this, extras.getString("appKey"), settings);
+                    this, extras.getString(ScanditSDKParameterParser.paramAppKey), settings);
 
             this.setContentView(picker);
             mBarcodePicker = picker;
@@ -78,7 +78,7 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
             LegacyPortraitScanditSDKBarcodePicker picker = new LegacyPortraitScanditSDKBarcodePicker(
-                    this, extras.getString("appKey"), settings);
+                    this, extras.getString(ScanditSDKParameterParser.paramAppKey), settings);
 
             this.setContentView(picker);
             mBarcodePicker = picker;
@@ -86,8 +86,8 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
 
         ScanditSDKParameterParser.updatePickerUIFromBundle(mBarcodePicker, extras);
 
-        if (extras.containsKey("continuousMode")) {
-            mContinuousMode = extras.getBoolean("continuousMode");
+        if (extras.containsKey(ScanditSDKParameterParser.paramContinuousMode)) {
+            mContinuousMode = extras.getBoolean(ScanditSDKParameterParser.paramContinuousMode);
         }
         
         // Register listener, in order to be notified about relevant events

@@ -54,11 +54,11 @@
     NSString *appKey = [command.arguments objectAtIndex:0];
     [SBSLicense setAppKey:appKey];
     
-	NSDictionary *options = [command.arguments objectAtIndex:1];
+    NSDictionary *options = [self lowerCaseOptionsFromOptions:[command.arguments objectAtIndex:1]];
 
     // Continuous mode support
     self.continuousMode = NO;
-    NSObject *continuousMode = [options objectForKey:@"continuousMode"];
+    NSObject *continuousMode = [options objectForKey:[ScanditSDKParameterParser paramContinuousMode]];
     if (continuousMode && [continuousMode isKindOfClass:[NSNumber class]]) {
         self.continuousMode = [((NSNumber *)continuousMode) boolValue];
     }
@@ -67,49 +67,49 @@
     self.scanditBarcodePicker = [[ScanditSDKRotatingBarcodePicker alloc]
                                  initWithSettings:[ScanditSDKParameterParser settingsForOptions:options]];
     
-    NSObject *orientationsObj = [options objectForKey:@"orientations"];
+    NSObject *orientationsObj = [options objectForKey:[ScanditSDKParameterParser paramOrientations]];
     if (orientationsObj && [orientationsObj isKindOfClass:[NSString class]]) {
         NSUInteger allowedOrientations = 0;
         NSString *orientationsString = (NSString *)orientationsObj;
-        if ([orientationsString rangeOfString:@"portrait"].location != NSNotFound) {
+        if ([orientationsString rangeOfString:[ScanditSDKParameterParser paramOrientationsPortrait]].location != NSNotFound) {
             allowedOrientations = allowedOrientations | (1 << UIInterfaceOrientationPortrait);
         }
-        if ([orientationsString rangeOfString:@"portraitUpsideDown"].location != NSNotFound) {
+        if ([orientationsString rangeOfString:[ScanditSDKParameterParser paramOrientationsPortraitUpsideDown]].location != NSNotFound) {
             allowedOrientations = allowedOrientations | (1 << UIInterfaceOrientationPortraitUpsideDown);
         }
-        if ([orientationsString rangeOfString:@"landscapeLeft"].location != NSNotFound) {
+        if ([orientationsString rangeOfString:[ScanditSDKParameterParser paramOrientationsLandscapeLeft]].location != NSNotFound) {
             allowedOrientations = allowedOrientations | (1 << UIInterfaceOrientationLandscapeLeft);
         }
-        if ([orientationsString rangeOfString:@"landscapeRight"].location != NSNotFound) {
+        if ([orientationsString rangeOfString:[ScanditSDKParameterParser paramOrientationsLandscapeRight]].location != NSNotFound) {
             allowedOrientations = allowedOrientations | (1 << UIInterfaceOrientationLandscapeRight);
         }
         self.scanditBarcodePicker.allowedInterfaceOrientations = allowedOrientations;
     }
 	
-    NSObject *searchBar = [options objectForKey:@"searchBar"];
+    NSObject *searchBar = [options objectForKey:[ScanditSDKParameterParser paramSearchBar]];
     if (searchBar && [searchBar isKindOfClass:[NSNumber class]]) {
         [self.scanditBarcodePicker showSearchBar:[((NSNumber *)searchBar) boolValue]];
         self.scanditBarcodePicker.searchDelegate = self;
     }
     
-    NSObject *t5 = [options objectForKey:@"searchBarActionButtonCaption"];
+    NSObject *t5 = [options objectForKey:[ScanditSDKParameterParser paramSearchBarActionButtonCaption]];
     if (t5 && [t5 isKindOfClass:[NSString class]]) {
         self.scanditBarcodePicker.manualSearchBar.goButtonCaption = (NSString *) t5;
     }
-    NSObject *t6 = [options objectForKey:@"searchBarCancelButtonCaption"];
+    NSObject *t6 = [options objectForKey:[ScanditSDKParameterParser paramSearchBarCancelButtonCaption]];
     if (t6 && [t6 isKindOfClass:[NSString class]]) {
         self.scanditBarcodePicker.manualSearchBar.cancelButtonCaption = (NSString *) t6;
     }
-    NSObject *t7 = [options objectForKey:@"searchBarPlaceholderText"];
+    NSObject *t7 = [options objectForKey:[ScanditSDKParameterParser paramSearchBarPlaceholderText]];
     if (t7 && [t7 isKindOfClass:[NSString class]]) {
         self.scanditBarcodePicker.manualSearchBar.placeholder = (NSString *) t7;
     }
     
-    NSObject *minManual = [options objectForKey:@"minSearchBarBarcodeLength"];
+    NSObject *minManual = [options objectForKey:[ScanditSDKParameterParser paramMinSearchBarBarcodeLength]];
     if (minManual && [minManual isKindOfClass:[NSNumber class]]) {
         self.scanditBarcodePicker.manualSearchBar.minTextLengthForSearch = [((NSNumber *) minManual) integerValue];
     }
-    NSObject *maxManual = [options objectForKey:@"maxSearchBarBarcodeLength"];
+    NSObject *maxManual = [options objectForKey:[ScanditSDKParameterParser paramMaxSearchBarBarcodeLength]];
     if (maxManual && [maxManual isKindOfClass:[NSNumber class]]) {
         self.scanditBarcodePicker.manualSearchBar.maxTextLengthForSearch = [((NSNumber *) maxManual) integerValue];
     }
@@ -121,7 +121,8 @@
     self.scanditBarcodePicker.scanDelegate = self;
     self.scanditBarcodePicker.overlayController.cancelDelegate = self;
     
-    if ([options objectForKey:@"portraitMargins"] || [options objectForKey:@"landscapeMargins"]) {
+    if ([options objectForKey:[ScanditSDKParameterParser paramPortraitMargins]]
+            || [options objectForKey:[ScanditSDKParameterParser paramLandscapeMargins]]) {
         self.modallyPresented = NO;
         [self.viewController addChildViewController:self.scanditBarcodePicker];
         [self.viewController.view addSubview:self.scanditBarcodePicker.view];
@@ -191,12 +192,12 @@
                 return;
             }
             
-            NSDictionary *options = [command.arguments objectAtIndex:0];
+            NSDictionary *options = [self lowerCaseOptionsFromOptions:[command.arguments objectAtIndex:0]];
             
             [ScanditSDKParameterParser updatePickerUI:self.scanditBarcodePicker fromOptions:options];
             
             CGFloat animation = 0;
-            NSObject *animationDuration = [options objectForKey:@"animationDuration"];
+            NSObject *animationDuration = [options objectForKey:[ScanditSDKParameterParser paramAnimationDuration]];
             if (animationDuration && [animationDuration isKindOfClass:[NSNumber class]]) {
                 animation = [((NSNumber *)animationDuration) floatValue];
             }
@@ -206,8 +207,8 @@
 }
 
 - (void)adjustLayoutWithOptions:(NSDictionary *)options animationDuration:(CGFloat)animationDuration {
-    NSObject *portraitMargins = [options objectForKey:@"portraitMargins"];
-    NSObject *landscapeMargins = [options objectForKey:@"landscapeMargins"];
+    NSObject *portraitMargins = [options objectForKey:[ScanditSDKParameterParser paramPortraitMargins]];
+    NSObject *landscapeMargins = [options objectForKey:[ScanditSDKParameterParser paramLandscapeMargins]];
     if (portraitMargins || landscapeMargins) {
         self.scanditBarcodePicker.portraitMargins = CGRectMake(0, 0, 0, 0);
         self.scanditBarcodePicker.landscapeMargins = CGRectMake(0, 0, 0, 0);
@@ -233,6 +234,17 @@
     }
     NSNumber *enabled = [command.arguments objectAtIndex:0];
     [self.scanditBarcodePicker switchTorchOn:[enabled boolValue]];
+}
+
+
+#pragma mark - Utilities
+
+- (NSDictionary *)lowerCaseOptionsFromOptions:(NSDictionary *)options {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    for (NSString *key in options) {
+        [result setObject:[options objectForKey:key] forKey:[key lowercaseString]];
+    }
+    return result;
 }
 
 
