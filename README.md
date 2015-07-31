@@ -21,7 +21,7 @@ The easiest way to install the Scandit Barcode Scanner plugin into your Phonegap
 To generate a sample project, use the following command line commands:
 ```
 	cordova create helloworld
-	cd hello world
+	cd helloworld
 	cordova platform add ios
 	cordova platform add android
 ```
@@ -40,6 +40,17 @@ To generate a sample project, use the following command line commands:
 
     * See [Scandit Barcode Scanner SDK Documentation](http://docs.scandit.com) for the full API reference.
 
+* Build your project and 
+
+```
+cordova build
+```
+
+* Open the iOS project in XCode to deploy the app from there or directly install the Android app through adb.
+
+```
+adb install platforms/android/ant-build/CordovaApp-debug.apk
+```
 
 * Important(!!!):
 
