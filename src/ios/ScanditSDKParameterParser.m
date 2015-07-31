@@ -232,7 +232,7 @@
     }
     NSObject *scanningHotspotHeight = [options objectForKey:[self paramScanningHotSpotHeight]];
     if (scanningHotspotHeight && [scanningHotspotHeight isKindOfClass:[NSNumber class]]) {
-        int height = [((NSNumber *)scanningHotspotHeight) intValue];
+        float height = [((NSNumber *)scanningHotspotHeight) floatValue];
         CGRect activeScanArea = CGRectMake(0.0f, settings.scanningHotSpot.y - height * 0.5f, 1.0f, height);
         [settings setActiveScanningArea:activeScanArea];
     }
