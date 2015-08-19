@@ -580,6 +580,9 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
      * @param animationDuration Over how long the change should be animated.
      */
     private void adjustLayout(Bundle bundle, double animationDuration) {
+        if (mBarcodePicker == null) {
+            return;
+        }
         final RelativeLayout.LayoutParams rLayoutParams = (RelativeLayout.LayoutParams) mBarcodePicker.getLayoutParams();
 
         Display display = ((WindowManager) webView.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();

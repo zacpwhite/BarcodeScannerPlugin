@@ -196,22 +196,32 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
     }
 
     public static void cancel() {
-        sActiveActivity.didCancel();
+        if (sActiveActivity != null) {
+            sActiveActivity.didCancel();
+        }
     }
 
     public static void pause() {
-        sActiveActivity.pauseScanning();
+        if (sActiveActivity != null) {
+            sActiveActivity.pauseScanning();
+        }
     }
 
     public static void resume() {
-        sActiveActivity.resumeScanning();
+        if (sActiveActivity != null) {
+            sActiveActivity.resumeScanning();
+        }
     }
 
     public static void stop() {
-        sActiveActivity.stopScanning();
+        if (sActiveActivity != null) {
+            sActiveActivity.stopScanning();
+        }
     }
 
     public static void start() {
-        sActiveActivity.startScanning();
+        if (sActiveActivity != null) {
+            sActiveActivity.startScanning();
+        }
     }
 }
