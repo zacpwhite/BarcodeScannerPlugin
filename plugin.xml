@@ -12,7 +12,7 @@
               </config-file>      
 
               <!-- Resource Bundle for Scandit SDK -->
-              <resource-file src="src/ios/scanditsdk-community-ios_4.0.0/ScanditSDK/ScanditBarcodeScanner.framework/Resources/ScanditBarcodeScanner.bundle"/>
+              <resource-file src="src/ios/scanditsdk-community-ios_4.0.0/ScanditBarcodeScanner.bundle"/>
               
               <!-- Scandit SDK Cordova Plugin Source for iOS -->
               <header-file src="src/ios/ScanditSDK.h"/>
@@ -26,7 +26,7 @@
 
               
               <!-- Frameworks needed by Scandit SDK for iOS -->
-              <framework src="src/ios/scanditsdk-community-ios_4.0.0/ScanditSDK/ScanditBarcodeScanner.framework" custom="true"/>
+              <framework src="src/ios/scanditsdk-community-ios_4.0.0/ScanditBarcodeScanner.framework" custom="true"/>
               <framework src="OpenGLES.framework"/>
               <framework src="AudioToolbox.framework"/>
               <framework src="AVFoundation.framework"/>      
