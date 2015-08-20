@@ -70,10 +70,10 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
-        mCallbackContext = callbackContext;
         PluginResult result = null;
 
         if (action.equals(SCAN)) {
+            mCallbackContext = callbackContext;
             scan(args);
             result = new PluginResult(Status.NO_RESULT);
             result.setKeepCallback(true);
