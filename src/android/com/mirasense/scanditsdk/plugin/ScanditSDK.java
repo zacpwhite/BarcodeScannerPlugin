@@ -55,6 +55,7 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
     public static final String START = "start";
     public static final String STOP = "stop";
     public static final String RESIZE = "resize";
+    public static final String TORCH = "torch";
     
     private CallbackContext mCallbackContext;
     private boolean mContinuousMode = false;
@@ -95,6 +96,9 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             return true;
         } else if (action.equals(RESIZE)) {
             resize(args);
+            return true;
+        } else if (action.equals(TORCH)) {
+            torch(args);
             return true;
         } else {
             result = new PluginResult(Status.INVALID_ACTION);
