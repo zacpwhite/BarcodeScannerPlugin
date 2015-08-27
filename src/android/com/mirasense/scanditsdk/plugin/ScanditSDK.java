@@ -826,6 +826,24 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
         return null;
     }
 
+    @Override
+    public void onPause(boolean multitasking) {
+        super.onPause(multitasking);
+
+        if (mBarcodePicker != null) {
+            mBarcodePicker.stopScanning();
+        }
+    }
+
+    @Override
+    public void onResume(boolean multitasking) {
+        super.onResume(multitasking);
+
+        if (mBarcodePicker != null) {
+            mBarcodePicker.startScanning();
+        }
+    }
+
     /**
      * Handler to check the orientation of the phone and adjust the margins based on it.
      */
