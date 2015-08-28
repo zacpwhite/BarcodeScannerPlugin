@@ -240,142 +240,10 @@ adb install platforms/android/ant-build/CordovaApp-debug.apk
 
 
 
-
-Changelog
-------------------------
-
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.7.0) - TBD**
-
- * upgraded to native ScanditSDK iOS/Android 4.7.0
-
- * Added the option to display the scanner as a subview (scaled/cropped)
-
- * Added new functions to cancel, pause, resume, stop, start and resize the scanner
-
-
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.4.1) - March 17th 2015**
-
- * upgraded to native Scandit SDK iOS/Android 4.4.1  The new features include:
-
-    * New glare compensation algorithm - Scandit 4.4 significantly improves the scanning performance in the presence of glare (and shadows).
-
-    * Inverted QR code support (white QR codes on a dark background) - can be enabled via an API method.
-
-    * Significantly improved performance with damaged barcodes (worn, weak print, ink spread)
-
-    * Reduced the likelihood of false positive barcodes with challenging codes (e.g. with very blurry, ink spread)
-
-    * Better blurry decoding of UPC-E and ITF barcodes
-
-    * [Release Notes of native Scandit SDK 4.4.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.4.1)
-
-
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.2.0) - Oct 30st 2014**
-
- * upgraded to Scandit SDK for iOS 4.2.2 and Scandit SDK for Android 4.2.2 (see release notes in download section of your Scandit SDK for details)
-
-    * [Release Notes of native Scandit SDK for iOS 4.2.2](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.2.2)
-
-    * [Release Notes of native Scandit SDK for Android 4.2.2](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-android_4.2.2)
-
- * added continuous mode to our Cordova plugins for iOS and Android where multiple barcodes can be scanned in sequence without closing the camera after each scan. This mode can be enabled when the scan function is invoked. Thanks to Loïc Mahieu for the contribution of the continuous mode to the Cordova iOS plugin. 
-
-
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.1.0) - Aug 21st 2014**
-
- * upgraded to Scandit SDK for iOS 4.1.3 and Scandit SDK for Android 4.1.2 (see release notes in download section of your Scandit SDK for details)
-
-    * [Release Notes of native Scandit SDK for iOS 4.1.3](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.1.3)
-
-    * [Release Notes of native Scandit SDK for Android 4.1.2](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-android_4.1.2)
-
- * added methods to enable/disable Codabar and Code93 barcode decoders (only available in enterprise editions and free trial)
-
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.0.1) - May 21st 2014**
-
- * upgraded to Scandit SDK for iOS 4.0.1 and Scandit SDK for Android 4.0.1 (see release notes in download section of your Scandit SDK for details)
-
-    * [Release Notes of native Scandit SDK for iOS 4.0.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.0.1)
-
-    * [Release Notes of native Scandit SDK for Android 4.0.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-android_4.0.1)
-
-
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (4.0.0beta1) - March 31st 2014**
-
- * upgraded to Scandit SDK for iOS 4.0.0 and Scandit SDK for Android 4.0.0beta1 (see release notes in download section of your Scandit SDK for details)
-
-    * [Release Notes of native Scandit SDK for iOS 4.0.0](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_4.0.0)
-
-    * [Release Notes of native Scandit SDK for Android 4.0.0beta1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-android_4.0.0beta1)
-
- * fixed bug that prevented 'preferFrontCamera' parameter implementation from working properly.  
-
-
-**Scandit SDK Phonegap/Cordova Plugin for iOS and Android (2.3.0) - November 26th 2013**
-
- * upgraded to Scandit SDK for iOS 3.2.1 and Scandit SDK for Android 3.5.2 (see release notes in download section of your Scandit SDK for details)
-
-    * [Release Notes of native Scandit SDK for iOS 3.2.1](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_3.2.1)
-
-    * [Release Notes of native Scandit SDK for Android 3.5.2](https://ssl.scandit.com/account/sdk/release-notes/scanditsdk-community-ios_3.5.2)
-
- * updated documentation to use Cordova CLI instead of Plugman
-
- * added support for disableStandbyState (iOS only, under Android this parameter is ignored)
-
- * added parameter orientation that allows developers to restrict the orientation that are allowed for the scan UI.
-
-
-**Scandit SDK Phonegap Plugin for iOS and Android (2.2.0) - September 30th 2013**
-
- * upgraded to Scandit SDK for iOS 3.1.1 and Scandit SDK for Android 3.5.1 (see release notes in download section of your Scandit SDK for details)
-
-
-**Scandit SDK Phonegap Plugin for iOS (2.1.0) and Android (1.2.0) - August 6th 2013**
-
- * support for Phonegap/Cordova 3.0
-
- * upgraded to Scandit SDK 3.0.4 for iOS (for details see release notes in download section of your Scandit SDK account), Android version of plugin still uses Scandit SDK 3.3.1 for Android
-
-
-**Scandit SDK Phonegap Plugin 2.0.1 for iOS only - June 17th 2013**
-
- * upgraded to Scandit SDK 3.0.3 for iOS which is a new bug fix release (see release notes of native iOS version for details)
-
-**Scandit SDK Phonegap Plugin 2.0.0 for iOS only - May 11th 2013**
-
- * upgraded to new Scandit SDK 3.0.1 for iOS which comprises various new features: full screen scanning,
-   improved autofocus management, better scan performance and robustness, new cleaner scan screen interface
-   with the option to add a button to switch cameras and new symbologies (PDF417 beta and MSI-Plessey).
-
- * IMPORTANT: updated Scandit SDK Phonegap Plugin API to reflect updates in Scandit SDK 3.0.1 for iOS.
-   This includes a number of new API options (see below), a number of options have also disappeared.
-
- * harmonized return results of Android and iPhone Plugin. In previous versions,
-   the iOS Plugin would return a string, while the Android Plugin would return an array.
-   Starting with Scandit SDK Phonegap Plugin for iOS 2.0.0, the iOS Plugin will also return an array.
-
-
-
-**Scandit SDK Phonegap Plugin 1.1.0 for Android & iOS - April 2nd 2013**
-
- * upgraded to native Scandit SDK 2.2.7 for iOS and 3.3.1 for Android
-
- * includes support PLUGMAN
-
- * Fixed a bug that would freeze and stop the modal view from closing.
-
- * Scandit SDK Phonegap Plugin for Android now also supports barcode scanning in landscape mode.
-
- * Minor changes to ScanditSDKActivity.java
-
-
-
-
 API for Scandit SDK Phonegap Plugin iOS and Android  
 ------------------------
 
-See http://www.scandit.com/support for more information
+See http://docs.scandit.com/interface_cordova_plugin.html for the plugin documentation.
 
 
 
@@ -385,4 +253,4 @@ License
 
 
 
-Questions? Contact `info@scandit.com`.
+Questions? Contact `support@scandit.com`.
