@@ -11,10 +11,12 @@ If you don't have a Phonegap app yet, we will show you how to generate a sample 
 Scandit Barcode Scanner SDK Plugin Integration via the Cordova Command Line Interface (CLI)
 ------------------------
 
+**Important:** This repository does not contain the core library of the Scandit Barcode Scanner since the library can not be publicly distributed. It only contains the classes that wrap the library to create a PhoneGap plugin and is therefore not an installable PhoneGap plugin. The actual library is only available from your [Scandit account](https://ssl.scandit.com/account) where you can download the fully installable PhoneGap plugin that includes the libraries. 
+
 The easiest way to install the Scandit Barcode Scanner plugin into your Phonegap/Cordova project is to use the [Cordova CLI](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface).
 
 * Install [Cordova CLI](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface) if it is not already installed.
-* [Sign up](http://www.scandit.com/pricing) and download the [Scandit Barcode Scanner SDK](http://www.scandit.com/barcode-scanner-sdk/) Cordova Plugins for iOS and Android from your Scandit account. Unzip the zip to a folder of your choice.
+* [Sign up](http://www.scandit.com/pricing) and download the [Scandit Barcode Scanner SDK](http://www.scandit.com/barcode-scanner-sdk/) Cordova Plugins for iOS and Android from your Scandit account (do not download it from this git repository as it is missing the libraries!). Unzip the zip to a folder of your choice.
 
 * Generate a sample Cordova project or use your existing Cordova project
 
@@ -51,12 +53,6 @@ cordova build
 ```
 adb install platforms/android/ant-build/CordovaApp-debug.apk
 ```
-
-* Important(!!!):
-
-    * if you decide against using the packaged zip with the Scandit Phonegap/Cordova plugin from the downloads page of your Scandit account and
-      use the github src of the plugin instead (not recommended!), you will need to copy the libraries and resources from the native Scandit SDK
-      builds for iOS and Android to the locations specified in the plugins.xml file.
 
 
 ### Sample HTML + JS
