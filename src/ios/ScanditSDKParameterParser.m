@@ -80,6 +80,9 @@
 + (NSString *)paramLogoOffsets { return [@"logoOffsets" lowercaseString]; }
 + (NSString *)paramZoom { return [@"zoom" lowercaseString]; }
 
++ (NSString *)paramGuiStyle { return [@"guiStyle" lowercaseString]; }
++ (NSString *)paramGuiStyleLaser { return [@"laser" lowercaseString]; }
+
 
 + (SBSScanSettings *)settingsForOptions:(NSDictionary *)options {
     SBSScanSettings *settings = [SBSScanSettings pre47DefaultSettings];
@@ -362,6 +365,16 @@
             float blue = ((float) blueInt) / 256.0;
             
             [picker.overlayController setViewfinderDecodedColor:red green:green blue:blue];
+        }
+    }
+    
+    NSObject *guiStyle = [options objectForKey:[self paramGuiStyle]];
+    if (guiStyle && [guiStyle isKindOfClass:[NSString class]]) {
+        NSString *guiStyleString = (NSString *)guiStyle;
+        if ([guiStyleString isEqualToString:[self paramGuiStyleLaser]]) {
+            picker.overlayController.guiStyle = SBSGuiStyleLaser;
+        } else {
+            picker.overlayController.guiStyle = SBSGuiStyleDefault;
         }
     }
 }
