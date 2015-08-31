@@ -261,12 +261,12 @@ public class ScanditSDKParameterParser {
         }
 
         if (bundle.containsKey(paramViewfinderDimension)
-                || bundle.containsKey(paramViewfinderDimension)) {
+                || bundle.containsKey(paramViewfinderSize)) {
             String hotspot = "";
             if (bundle.containsKey(paramViewfinderDimension)) {
                 hotspot = bundle.getString(paramViewfinderDimension);
             } else if (bundle.containsKey(paramViewfinderSize)) {
-                hotspot = bundle.getString(paramViewfinderDimension);
+                hotspot = bundle.getString(paramViewfinderSize);
             }
             String[] split = hotspot.split("[/]");
             if (split.length == 2) {
