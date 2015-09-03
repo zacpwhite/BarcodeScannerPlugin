@@ -128,6 +128,9 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         mBarcodePicker.startScanning();
     }
     
+    public void switchTorchOn(boolean enabled) {
+        mBarcodePicker.switchTorchOn(enabled);
+    }
     /**
      * Called when the user canceled the bar code scanning.
      */
@@ -222,6 +225,12 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
     public static void start() {
         if (sActiveActivity != null) {
             sActiveActivity.startScanning();
+        }
+    }
+    
+    public static void torch(boolean enabled) {
+        if (sActiveActivity != null) {
+            sActiveActivity.switchTorchOn(enabled);
         }
     }
 }

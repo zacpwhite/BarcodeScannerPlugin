@@ -685,6 +685,8 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
             public void run() {
                 if (mBarcodePicker != null) {
                     mBarcodePicker.switchTorchOn(innerEnabled);
+                } else {
+                    ScanditSDKActivity.torch(innerEnabled);
                 }
             }
         });
