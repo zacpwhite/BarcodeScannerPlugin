@@ -70,8 +70,11 @@ public class ScanditSDKParameterParser {
     public static final String paramViewfinderDecodedColor = "viewfinderDecodedColor".toLowerCase();
     public static final String paramLogoOffsets = "logoOffsets".toLowerCase();
     public static final String paramZoom = "zoom".toLowerCase();
-
-
+    
+    public static final String paramGuiStyle = "guiStyle".toLowerCase();
+    public static final String paramGuiStyleLaser = "laser".toLowerCase();
+    
+    
     public static ScanditSDKScanSettings settingsForBundle(Bundle bundle) {
 
         ScanditSDKScanSettings settings = ScanditSDKScanSettings.getDefaultSettings();
@@ -331,6 +334,15 @@ public class ScanditSDKParameterParser {
         }
         if (bundle.containsKey(paramZoom)) {
             picker.setZoom(bundle.getFloat(paramZoom));
+        }
+        
+        if (bundle.containsKey(paramGuiStyle)) {
+            String guiStyle = bundle.getString(paramGuiStyle);
+            if (guiStyle.equals(paramGuiStyleLaser)) {
+                picker.getOverlayView().setGuiStyle(ScanditSDKOverlay.GUI_STYLE_LASER);
+            } else {
+                picker.getOverlayView().setGuiStyle(ScanditSDKOverlay.GUI_STYLE_DEFAULT);
+            }
         }
     }
 }
