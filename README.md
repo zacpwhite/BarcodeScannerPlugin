@@ -48,9 +48,13 @@ To generate a sample project, use the following command line commands:
 cordova build
 ```
 
-* Open the iOS project in XCode to deploy the app from there or directly install the Android app through adb.
+* Open the iOS project in XCode to deploy the app from there or directly install the Android app through adb. Depending on whether it is built with ant or gradle the path to the apk will slightly differ.
 
 ```
+// gradle path
+adb install platforms/android/build/outputs/apk/android-debug.apk
+
+// ant path
 adb install platforms/android/ant-build/CordovaApp-debug.apk
 ```
 
