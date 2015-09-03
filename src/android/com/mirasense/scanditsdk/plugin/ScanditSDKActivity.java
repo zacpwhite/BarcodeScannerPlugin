@@ -28,7 +28,6 @@ import android.view.WindowManager;
 import com.mirasense.scanditsdk.LegacyPortraitScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKScanSettings;
-import com.mirasense.scanditsdk.internal.ScanditSDKGlobals;
 import com.mirasense.scanditsdk.interfaces.ScanditSDK;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKOverlay;
@@ -61,8 +60,6 @@ public class ScanditSDKActivity extends Activity implements ScanditSDKListener {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
-        ScanditSDKGlobals.usedFramework = "phonegap";
 
         ScanditSDKScanSettings settings = ScanditSDKParameterParser.settingsForBundle(extras);
 

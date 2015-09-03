@@ -23,6 +23,10 @@
 #import <ScanditBarcodeScanner/ScanditBarcodeScanner.h>
 
 
+@interface SBSLicense ()
++ (void)setFrameworkIdentifier:(NSString *)frameworkIdentifier;
+@end
+
 @interface ScanditSDK () <SBSScanDelegate, SBSOverlayControllerDidCancelDelegate, ScanditSDKSearchBarDelegate>
 @property (nonatomic, copy) NSString *callbackId;
 @property (readwrite, assign) BOOL hasPendingOperation;
@@ -52,6 +56,7 @@
     self.callbackId = command.callbackId;
     
     NSString *appKey = [command.arguments objectAtIndex:0];
+    [SBSLicense setFrameworkIdentifier:@"phonegap"];
     [SBSLicense setAppKey:appKey];
     
     NSDictionary *options = [self lowerCaseOptionsFromOptions:[command.arguments objectAtIndex:1]];

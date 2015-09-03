@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKScanSettings;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
+import com.mirasense.scanditsdk.internal.ScanditSDKGlobals;
 import com.mirasense.scanditsdk.plugin.ScanditSDKResultRelay.ScanditSDKResultRelayCallback;
 import com.scandit.base.system.SbSystemUtils;
 import org.apache.cordova.CallbackContext;
@@ -325,6 +326,8 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
         if (bundle.containsKey(ScanditSDKParameterParser.paramContinuousMode)) {
             mContinuousMode = bundle.getBoolean(ScanditSDKParameterParser.paramContinuousMode);
         }
+
+        ScanditSDKGlobals.usedFramework = "phonegap";
 
         if (bundle.containsKey(ScanditSDKParameterParser.paramPortraitMargins)
                 || bundle.containsKey(ScanditSDKParameterParser.paramLandscapeMargins)) {
