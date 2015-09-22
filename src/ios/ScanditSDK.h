@@ -164,6 +164,9 @@ dispatch_sync(dispatch_get_main_queue(), block);\
  * to decrease the quality of the recognition to keep the speed at an
  * acceptable level.
  *
+ * viewfinder: true
+ * Shows or hdies the viewfinder.
+ *
  * viewfinderSize: "0.8/0.4/0.6/0.4" (width/height/landscapeWidth/landscapeHeight)
  * Sets the size of the viewfinder relative to the size of the screen size.
  * Changing this value does not(!) affect the area in which barcodes are successfully recognized.
@@ -300,6 +303,9 @@ dispatch_sync(dispatch_get_main_queue(), block);\
  * Be aware that if the hot spot height is very large, the engine is forced
  * to decrease the quality of the recognition to keep the speed at an
  * acceptable level.
+ *
+ * viewfinder: true
+ * Shows or hides the viewfinder.
  *
  * viewfinderSize: "0.8/0.4/0.6/0.4" (width/height/landscapeWidth/landscapeHeight)
  * Sets the size of the viewfinder relative to the size of the screen size.

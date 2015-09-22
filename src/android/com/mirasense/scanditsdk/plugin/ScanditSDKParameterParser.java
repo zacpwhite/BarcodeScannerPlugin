@@ -63,6 +63,7 @@ public class ScanditSDKParameterParser {
 
     public static final String paramSearchBarPlaceholderText = "searchBarPlaceholderText".toLowerCase();
 
+    public static final String paramViewfinder = "viewfinder".toLowerCase();
     public static final String paramViewfinderDimension = "viewfinderDimension".toLowerCase();
     public static final String paramViewfinderSize = "viewfinderSize".toLowerCase();
     public static final String paramViewfinderTextHook = "viewfinderTextHook".toLowerCase();
@@ -317,6 +318,9 @@ public class ScanditSDKParameterParser {
                     picker.getOverlayView().setViewfinderDecodedColor(r, g, b);
                 } catch (NumberFormatException e) {}
             }
+        }
+        if (bundle.containsKey(paramViewfinder)) {
+            picker.getOverlayView().drawViewfinder(bundle.getBoolean(paramViewfinder));
         }
         if (bundle.containsKey(paramLogoOffsets)) {
             String offsets = bundle.getString(paramLogoOffsets);

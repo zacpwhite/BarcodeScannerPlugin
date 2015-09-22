@@ -266,6 +266,9 @@ public class ScanditSDK extends CordovaPlugin implements ScanditSDKResultRelayCa
      * Sets the text shown in the manual entry field when nothing has been
      * entered yet.
      *
+     * viewfinder: true
+     * Shows or hides the viewfinder.
+     *
      * viewfinderSize: "0.8/0.4/0.6/0.4" (width/height/landscapeWidth/landscapeHeight)
      * Sets the size of the viewfinder relative to the size of the screen size.
      * Changing this value does not(!) affect the area in which barcodes are successfully recognized.

@@ -74,6 +74,7 @@
 + (NSString *)paramCameraSwitchButtonMarginsAndSize { return [@"cameraSwitchButtonMarginsAndSize" lowercaseString]; }
 + (NSString *)paramToolBarButtonCaption { return [@"toolBarButtonCaption" lowercaseString]; }
 
++ (NSString *)paramViewfinder { return [@"viewfinder" lowercaseString]; }
 + (NSString *)paramViewfinderSize { return [@"viewfinderSize" lowercaseString]; }
 + (NSString *)paramViewfinderColor { return [@"viewfinderColor" lowercaseString]; }
 + (NSString *)paramViewfinderDecodedColor { return [@"viewfinderDecodedColor" lowercaseString]; }
@@ -244,6 +245,8 @@
 }
 
 + (void)updatePickerUI:(SBSBarcodePicker *)picker fromOptions:(NSDictionary *)options {
+    NSObject *viewfinder = [options objectForKey:[self paramViewfinder]];
+    
     NSObject *viewfinderSize = [options objectForKey:[self paramViewfinderSize]];
     if (viewfinderSize && [viewfinderSize isKindOfClass:[NSString class]]) {
         NSArray *split = [((NSString *) viewfinderSize) componentsSeparatedByString:@"/"];
@@ -257,6 +260,9 @@
                                           landscapeHeight:landscapeHeight
                                            landscapeWidth:landscapeWidth];
         }
+    }
+    if (viewfinder && [viewfinder isKindOfClass:[NSNumber class]]) {
+        [picker.overlayController drawViewfinder:[((NSNumber *)viewfinder) boolValue]];
     }
     
     NSObject *beep = [options objectForKey:[self paramBeep]];
