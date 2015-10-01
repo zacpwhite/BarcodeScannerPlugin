@@ -119,6 +119,12 @@
         self.scanditBarcodePicker.manualSearchBar.maxTextLengthForSearch = [((NSNumber *) maxManual) integerValue];
     }
     
+    if (![options objectForKey:[ScanditSDKParameterParser paramPortraitMargins]]
+        && ![options objectForKey:[ScanditSDKParameterParser paramLandscapeMargins]]) {
+        // Show the toolbar that contains a cancel button.
+        [self.scanditBarcodePicker.overlayController showToolBar:YES];
+    }
+    
     [ScanditSDKParameterParser updatePickerUI:self.scanditBarcodePicker fromOptions:options];
     
     // Set this class as the delegate for the overlay controller. It will now receive events when
@@ -137,9 +143,6 @@
         
     } else {
         self.modallyPresented = YES;
-        
-        // Show the toolbar that contains a cancel button.
-        [self.scanditBarcodePicker.overlayController showToolBar:YES];
         
         self.startAnimationDone = NO;
         self.bufferedResult = nil;
