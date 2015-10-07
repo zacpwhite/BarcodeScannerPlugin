@@ -157,7 +157,7 @@ public class ScanditSDKParameterParser {
         if (bundle.containsKey(paramMsiPlessey) && bundle.getBoolean(paramMsiPlessey)) {
             settings.enableSymbology(ScanditSDK.Symbology.MSI_PLESSEY);
         }
-        if (bundle.containsKey(paramMsiPlesseyChecksumType)) {
+        if (bundleContainsStringKey(bundle, paramMsiPlesseyChecksumType)) {
             String checksum = bundle.getString(paramMsiPlesseyChecksumType);
             int actualChecksum = com.mirasense.scanditsdk.interfaces.ScanditSDK.CHECKSUM_MOD_10;
             if (checksum.equals(paramMsiPlesseyChecksumTypeNone)) {
@@ -171,23 +171,23 @@ public class ScanditSDKParameterParser {
             }
             settings.setMsiPlesseyChecksumType(actualChecksum);
         }
-
+        
         if (bundle.containsKey(paramInverseRecognition)) {
             settings.enableColorInverted2dRecognition(bundle.getBoolean(paramInverseRecognition));
         }
         if (bundle.containsKey(paramMicroDataMatrix)) {
             settings.enableMicroDataMatrix(bundle.getBoolean(paramMicroDataMatrix));
         }
-
+        
         if (bundle.containsKey(paramForce2D)) {
             settings.force2dRecognition(bundle.getBoolean(paramForce2D));
         }
-
+        
         if (bundle.containsKey(paramCodeDuplicateFilter)) {
             settings.setCodeDuplicateFilter(bundle.getInt(paramCodeDuplicateFilter));
         }
-
-        if (bundle.containsKey(paramScanningHotSpot)) {
+        
+        if (bundleContainsStringKey(bundle, paramScanningHotSpot)) {
             String hotspot = bundle.getString(paramScanningHotSpot);
             String[] split = hotspot.split("[/]");
             if (split.length == 2) {
@@ -220,7 +220,7 @@ public class ScanditSDKParameterParser {
         if (bundle.containsKey(paramTorch)) {
             picker.getOverlayView().setTorchEnabled(bundle.getBoolean(paramTorch));
         }
-        if (bundle.containsKey(paramTorchButtonPositionAndSize)) {
+        if (bundleContainsStringKey(bundle, paramTorchButtonPositionAndSize)) {
             String hotspot = bundle.getString(paramTorchButtonPositionAndSize);
             String[] split = hotspot.split("[/]");
             if (split.length == 4) {
@@ -233,8 +233,8 @@ public class ScanditSDKParameterParser {
                 } catch (NumberFormatException e) {}
             }
         }
-
-        if (bundle.containsKey(paramCameraSwitchVisibility)) {
+        
+        if (bundleContainsStringKey(bundle, paramCameraSwitchVisibility)) {
             String visibility = bundle.getString(paramCameraSwitchVisibility);
             int actualVisibility = ScanditSDKOverlay.CAMERA_SWITCH_NEVER;
             if (visibility.equals(paramCameraSwitchVisibilityTablet)) {
@@ -244,7 +244,7 @@ public class ScanditSDKParameterParser {
             }
             picker.getOverlayView().setCameraSwitchVisibility(actualVisibility);
         }
-        if (bundle.containsKey(paramCameraSwitchButtonPositionAndSize)) {
+        if (bundleContainsStringKey(bundle, paramCameraSwitchButtonPositionAndSize)) {
             String hotspot = bundle.getString(paramCameraSwitchButtonPositionAndSize);
             String[] split = hotspot.split("[/]");
             if (split.length == 4) {
@@ -258,14 +258,14 @@ public class ScanditSDKParameterParser {
                 } catch (NumberFormatException e) {}
             }
         }
-
-        if (bundle.containsKey(paramSearchBarPlaceholderText)) {
+        
+        if (bundleContainsStringKey(bundle, paramSearchBarPlaceholderText)) {
             picker.getOverlayView().setSearchBarPlaceholderText(
                     bundle.getString(paramSearchBarPlaceholderText));
         }
-
-        if (bundle.containsKey(paramViewfinderDimension)
-                || bundle.containsKey(paramViewfinderSize)) {
+        
+        if (bundleContainsStringKey(bundle, paramViewfinderDimension)
+            || bundleContainsStringKey(bundle, paramViewfinderSize)) {
             String hotspot = "";
             if (bundle.containsKey(paramViewfinderDimension)) {
                 hotspot = bundle.getString(paramViewfinderDimension);
@@ -290,8 +290,8 @@ public class ScanditSDKParameterParser {
                 } catch (NumberFormatException e) {}
             }
         }
-
-        if (bundle.containsKey(paramViewfinderColor)) {
+        
+        if (bundleContainsStringKey(bundle, paramViewfinderColor)) {
             String color = bundle.getString(paramViewfinderColor);
             if (color.length() == 6) {
                 try {
@@ -305,7 +305,7 @@ public class ScanditSDKParameterParser {
                 } catch (NumberFormatException e) {}
             }
         }
-        if (bundle.containsKey(paramViewfinderDecodedColor)) {
+        if (bundleContainsStringKey(bundle, paramViewfinderDecodedColor)) {
             String color = bundle.getString(paramViewfinderDecodedColor);
             if (color.length() == 6) {
                 try {
@@ -322,7 +322,7 @@ public class ScanditSDKParameterParser {
         if (bundle.containsKey(paramViewfinder)) {
             picker.getOverlayView().drawViewfinder(bundle.getBoolean(paramViewfinder));
         }
-        if (bundle.containsKey(paramLogoOffsets)) {
+        if (bundleContainsStringKey(bundle, paramLogoOffsets)) {
             String offsets = bundle.getString(paramLogoOffsets);
             String[] split = offsets.split("[,]");
             if (split.length == 4) {
@@ -340,7 +340,7 @@ public class ScanditSDKParameterParser {
             picker.setZoom(bundle.getFloat(paramZoom));
         }
         
-        if (bundle.containsKey(paramGuiStyle)) {
+        if (bundleContainsStringKey(bundle, paramGuiStyle)) {
             String guiStyle = bundle.getString(paramGuiStyle);
             if (guiStyle.equals(paramGuiStyleLaser)) {
                 picker.getOverlayView().setGuiStyle(ScanditSDKOverlay.GUI_STYLE_LASER);
@@ -349,4 +349,9 @@ public class ScanditSDKParameterParser {
             }
         }
     }
+    
+    private static boolean bundleContainsStringKey(Bundle bundle, String key) {
+        return (bundle.containsKey(key) && bundle.getString(key) != null);
+    }
 }
+
