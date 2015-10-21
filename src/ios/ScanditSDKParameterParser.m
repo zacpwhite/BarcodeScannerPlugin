@@ -55,7 +55,8 @@
 + (NSString *)paramMsiPlesseyChecksumTypeMod1010 { return [@"mod1010" lowercaseString]; }
 + (NSString *)paramMsiPlesseyChecksumTypeMod1110 { return [@"mod1110" lowercaseString]; }
 
-+ (NSString *)paramInverseRecognition { return [@"inverseRecognition" lowercaseString]; }
++ (NSString *)paramDataMatrixInverseRecognition { return [@"dataMatrixInverseRecognition" lowercaseString]; }
++ (NSString *)paramQRInverseRecognition { return [@"qrInverseRecognition" lowercaseString]; }
 + (NSString *)paramMicroDataMatrix { return [@"microDataMatrix" lowercaseString]; }
 + (NSString *)paramForce2D { return [@"force2d" lowercaseString]; }
 + (NSString *)paramCodeDuplicateFilter { return [@"codeDuplicateFilter" lowercaseString]; }
@@ -204,10 +205,16 @@
         [settings settingsForSymbology:SBSSymbologyMSIPlessey].checksums = msiChecksums;
     }
     
-    NSObject *inverseRecognition = [options objectForKey:[self paramInverseRecognition]];
-    if (inverseRecognition && [inverseRecognition isKindOfClass:[NSNumber class]]) {
+    NSObject *dataMatrixinverseRecognition = [options objectForKey:[self paramDataMatrixInverseRecognition]];
+    if (dataMatrixinverseRecognition && [dataMatrixinverseRecognition isKindOfClass:[NSNumber class]]) {
         SBSSymbologySettings *dataMatrixSettings = [settings settingsForSymbology:SBSSymbologyDatamatrix];
-        dataMatrixSettings.colorInvertedEnabled = [((NSNumber *)inverseRecognition) boolValue];
+        dataMatrixSettings.colorInvertedEnabled = [((NSNumber *)dataMatrixinverseRecognition) boolValue];
+    }
+    
+    NSObject *qrInverseRecognition = [options objectForKey:[self paramQRInverseRecognition]];
+    if (qrInverseRecognition && [qrInverseRecognition isKindOfClass:[NSNumber class]]) {
+        SBSSymbologySettings *qrSettings = [settings settingsForSymbology:SBSSymbologyQR];
+        qrSettings.colorInvertedEnabled = [((NSNumber *)qrInverseRecognition) boolValue];
     }
     NSObject *microDataMatrix = [options objectForKey:[self paramMicroDataMatrix]];
     if (microDataMatrix && [microDataMatrix isKindOfClass:[NSNumber class]]) {
