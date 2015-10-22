@@ -33,7 +33,7 @@ import android.widget.RelativeLayout;
 import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKScanSettings;
 import com.mirasense.scanditsdk.interfaces.ScanditSDKListener;
-import com.mirasense.scanditsdk.internal.ScanditSDKGlobals;
+import com.scandit.barcodepicker.internal.ScanditSDKGlobals;
 import com.mirasense.scanditsdk.plugin.ScanditSDKResultRelay.ScanditSDKResultRelayCallback;
 import com.scandit.base.system.SbSystemUtils;
 import org.apache.cordova.CallbackContext;

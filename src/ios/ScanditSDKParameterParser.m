@@ -48,6 +48,8 @@
 + (NSString *)paramPdf417 { return [@"pdf417" lowercaseString]; }
 + (NSString *)paramAztec { return [@"aztec" lowercaseString]; }
 + (NSString *)paramMsiPlessey { return [@"msiPlessey" lowercaseString]; }
++ (NSString *)paramCode11 { return [@"code11" lowercaseString]; }
++ (NSString *)paramMaxiCode { return [@"maxicode" lowercaseString]; }
 
 + (NSString *)paramMsiPlesseyChecksumType { return [@"msiPlesseyChecksumType" lowercaseString]; }
 + (NSString *)paramMsiPlesseyChecksumTypeNone { return [@"none" lowercaseString]; }
@@ -167,9 +169,17 @@
     if (codabar && [codabar isKindOfClass:[NSNumber class]]) {
         [settings setSymbology:SBSSymbologyCodabar enabled:[((NSNumber *)codabar) boolValue]];
     }
+    NSObject *code11 = [options objectForKey:[self paramCode11]];
+    if (code11 && [code11 isKindOfClass:[NSNumber class]]) {
+        [settings setSymbology:SBSSymbologyCode11 enabled:[((NSNumber *)code11) boolValue]];
+    }
     NSObject *qr = [options objectForKey:[self paramQR]];
     if (qr && [qr isKindOfClass:[NSNumber class]]) {
         [settings setSymbology:SBSSymbologyQR enabled:[((NSNumber *)qr) boolValue]];
+    }
+    NSObject *maxiCode = [options objectForKey:[self paramMaxiCode]];
+    if (maxiCode && [maxiCode isKindOfClass:[NSNumber class]]) {
+        [settings setSymbology:SBSSymbologyMaxiCode enabled:[((NSNumber *)maxiCode) boolValue]];
     }
     NSObject *dataMatrix = [options objectForKey:[self paramDatamatrix]];
     if (dataMatrix && [dataMatrix isKindOfClass:[NSNumber class]]) {

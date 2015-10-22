@@ -10,7 +10,6 @@ import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
 import com.mirasense.scanditsdk.ScanditSDKScanSettings;
 import com.mirasense.scanditsdk.interfaces.*;
 import com.mirasense.scanditsdk.interfaces.ScanditSDK;
-import com.mirasense.scanditsdk.internal.ScanditSDKGlobals;
 
 
 public class ScanditSDKParameterParser {
@@ -34,10 +33,12 @@ public class ScanditSDKParameterParser {
     public static final String paramGS1Databar = "gs1Databar".toLowerCase();
     public static final String paramGS1DatabarExpanded = "gs1DatabarExpanded".toLowerCase();
     public static final String paramCodabar = "codabar".toLowerCase();
+    public static final String paramCode11 = "code11".toLowerCase();
     public static final String paramQR = "qr".toLowerCase();
     public static final String paramDatamatrix = "datamatrix".toLowerCase();
     public static final String paramPdf417 = "pdf417".toLowerCase();
     public static final String paramAztec = "aztec".toLowerCase();
+    public static final String paramMaxiCode = "maxiCode".toLowerCase();
     public static final String paramMsiPlessey = "msiPlessey".toLowerCase();
     public static final String paramMsiPlesseyChecksumType = "msiPlesseyChecksumType".toLowerCase();
     public static final String paramMsiPlesseyChecksumTypeNone = "none".toLowerCase();
@@ -156,6 +157,12 @@ public class ScanditSDKParameterParser {
         }
         if (bundle.containsKey(paramMsiPlessey) && bundle.getBoolean(paramMsiPlessey)) {
             settings.enableSymbology(ScanditSDK.Symbology.MSI_PLESSEY);
+        }
+        if (bundle.containsKey(paramCode11) && bundle.getBoolean(paramCode11)) {
+            settings.enableSymbology(ScanditSDK.Symbology.CODE11);
+        }
+        if (bundle.containsKey(paramMaxiCode) && bundle.getBoolean(paramMaxiCode)) {
+            settings.enableSymbology(ScanditSDK.Symbology.MAXICODE);
         }
         if (bundleContainsStringKey(bundle, paramMsiPlesseyChecksumType)) {
             String checksum = bundle.getString(paramMsiPlesseyChecksumType);
