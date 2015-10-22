@@ -55,6 +55,7 @@
 + (NSString *)paramMsiPlesseyChecksumTypeMod1010 { return [@"mod1010" lowercaseString]; }
 + (NSString *)paramMsiPlesseyChecksumTypeMod1110 { return [@"mod1110" lowercaseString]; }
 
++ (NSString *)paramInverseRecognition { return [@"inverseRecognition" lowercaseString]; }
 + (NSString *)paramDataMatrixInverseRecognition { return [@"dataMatrixInverseRecognition" lowercaseString]; }
 + (NSString *)paramQRInverseRecognition { return [@"qrInverseRecognition" lowercaseString]; }
 + (NSString *)paramMicroDataMatrix { return [@"microDataMatrix" lowercaseString]; }
@@ -203,6 +204,15 @@
             [msiChecksums addObject:[NSNumber numberWithInt:SBSChecksumMod10]];
         }
         [settings settingsForSymbology:SBSSymbologyMSIPlessey].checksums = msiChecksums;
+    }
+    
+    
+    NSObject *inverseRecognition = [options objectForKey:[self paramInverseRecognition]];
+    if (inverseRecognition && [inverseRecognition isKindOfClass:[NSNumber class]]) {
+        SBSSymbologySettings *dataMatrixSettings = [settings settingsForSymbology:SBSSymbologyDatamatrix];
+        dataMatrixSettings.colorInvertedEnabled = [((NSNumber *)inverseRecognition) boolValue];
+        SBSSymbologySettings *qrSettings = [settings settingsForSymbology:SBSSymbologyQR];
+        qrSettings.colorInvertedEnabled = [((NSNumber *)inverseRecognition) boolValue];
     }
     
     NSObject *dataMatrixinverseRecognition = [options objectForKey:[self paramDataMatrixInverseRecognition]];
