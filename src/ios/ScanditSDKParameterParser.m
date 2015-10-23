@@ -88,6 +88,8 @@
 + (NSString *)paramGuiStyle { return [@"guiStyle" lowercaseString]; }
 + (NSString *)paramGuiStyleLaser { return [@"laser" lowercaseString]; }
 
++ (NSString *)paramDeviceName { return [@"deviceName" lowercaseString]; }
+
 
 + (SBSScanSettings *)settingsForOptions:(NSDictionary *)options {
     SBSScanSettings *settings = [SBSScanSettings pre47DefaultSettings];
@@ -100,7 +102,11 @@
         }
     }
     
-    // Set the options.
+    NSObject *deviceName = [options objectForKey:[self paramDeviceName]];
+    if (deviceName && [deviceName isKindOfClass:[NSString class]]) {
+        [settings setDeviceName:(NSString *)deviceName];
+    }
+    
     NSObject *scanning1D = [options objectForKey:[self param1DScanning]];
     if (scanning1D && [scanning1D isKindOfClass:[NSNumber class]]) {
         NSLog(@"The parameter '1DScanning' is deprecated. Please enable symbologies individually instead");

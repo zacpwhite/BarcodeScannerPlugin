@@ -76,6 +76,8 @@ public class ScanditSDKParameterParser {
     public static final String paramGuiStyle = "guiStyle".toLowerCase();
     public static final String paramGuiStyleLaser = "laser".toLowerCase();
     
+    public static final String paramDeviceName = "deviceName".toLowerCase();
+    
     
     public static ScanditSDKScanSettings settingsForBundle(Bundle bundle) {
 
@@ -86,7 +88,11 @@ public class ScanditSDKParameterParser {
             facing = ScanditSDK.CAMERA_FACING_FRONT;
         }
         settings.setCameraFacingPreference(facing);
-
+        
+        if (bundleContainsStringKey(bundle, paramDeviceName)) {
+            settings.setDeviceName(bundle.getString(paramDeviceName));
+        }
+        
         if (bundle.containsKey(param1DScanning) && bundle.getBoolean(param1DScanning)) {
             Log.e("ScanditSDK", "The parameter '1DScanning' is deprecated. Please enable symbologies individually instead");
             settings.enableSymbologies(new ScanditSDK.Symbology[]{
