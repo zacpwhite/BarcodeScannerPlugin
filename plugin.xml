@@ -85,5 +85,7 @@
           <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDKActivity.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>      
           <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDKResultRelay.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>
           <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDKParameterParser.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>
+          <source-file src="src/android/com/mirasense/scanditsdk/plugin/ScanditSDKSearchBar.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>
+          <source-file src="src/android/com/mirasense/scanditsdk/plugin/SearchBarBarcodePicker.java" target-dir="src/com/mirasense/scanditsdk/plugin"/>
 
       </platform> </plugin>

@@ -20,6 +20,8 @@
 + (NSString *)paramAnimationDuration;
 + (NSString *)paramPreferFrontCamera;
 
++ (NSString *)paramPaused;
+
 + (NSString *)paramOrientations;
 + (NSString *)paramOrientationsPortrait;
 + (NSString *)paramOrientationsPortraitUpsideDown;

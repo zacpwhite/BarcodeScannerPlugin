@@ -18,6 +18,8 @@
 + (NSString *)paramAnimationDuration { return [@"animationDuration" lowercaseString]; }
 + (NSString *)paramPreferFrontCamera { return [@"preferFrontCamera" lowercaseString]; }
 
++ (NSString *)paramPaused { return [@"paused" lowercaseString]; }
+
 + (NSString *)paramOrientations { return [@"orientations" lowercaseString]; }
 + (NSString *)paramOrientationsPortrait { return [@"portrait" lowercaseString]; }
 + (NSString *)paramOrientationsPortraitUpsideDown { return [@"portraitUpsideDown" lowercaseString]; }

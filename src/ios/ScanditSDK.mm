@@ -39,7 +39,6 @@
 
 
 @implementation ScanditSDK
-
 @synthesize hasPendingOperation;
 
 - (void)scan:(CDVInvokedUrlCommand *)command {
@@ -156,7 +155,15 @@
         }];
     }
     
-    [self.scanditBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
+    NSObject *paused = [options objectForKey:[ScanditSDKParameterParser paramPaused]];
+    if (paused && [paused isKindOfClass:[NSNumber class]]) {
+        if ([((NSNumber *)paused) boolValue]) {
+            [self.scanditBarcodePicker performSelector:@selector(startScanningInPausedState:)
+                                            withObject:[NSNumber numberWithBool:YES] afterDelay:0.1];
+        } else {
+            [self.scanditBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
+        }
+    }
 }
 
 - (void)returnBuffer {
