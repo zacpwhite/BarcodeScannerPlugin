@@ -156,13 +156,11 @@
     }
     
     NSObject *paused = [options objectForKey:[ScanditSDKParameterParser paramPaused]];
-    if (paused && [paused isKindOfClass:[NSNumber class]]) {
-        if ([((NSNumber *)paused) boolValue]) {
-            [self.scanditBarcodePicker performSelector:@selector(startScanningInPausedState:)
-                                            withObject:[NSNumber numberWithBool:YES] afterDelay:0.1];
-        } else {
-            [self.scanditBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
-        }
+    if (paused && [paused isKindOfClass:[NSNumber class]] && [((NSNumber *)paused) boolValue]) {
+        [self.scanditBarcodePicker performSelector:@selector(startScanningInPausedState:)
+                                        withObject:[NSNumber numberWithBool:YES] afterDelay:0.1];
+    } else {
+        [self.scanditBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
     }
 }
 
