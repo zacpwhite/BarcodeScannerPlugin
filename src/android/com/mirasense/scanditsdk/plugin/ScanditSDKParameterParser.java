@@ -3,6 +3,7 @@ package com.mirasense.scanditsdk.plugin;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.mirasense.scanditsdk.ScanditSDKScanSettings;
 import com.scandit.barcodepicker.BarcodePicker;
 import com.scandit.barcodepicker.ScanOverlay;
 import com.scandit.barcodepicker.ScanSettings;
@@ -81,8 +82,9 @@ public class ScanditSDKParameterParser {
     public static final String paramDeviceName = "deviceName".toLowerCase();
     
     public static ScanSettings settingsForBundle(Bundle bundle) {
-
-        ScanSettings settings = ScanSettings.create();
+        
+        ScanditSDKScanSettings oldSettings = ScanditSDKScanSettings.getPre43DefaultSettings();
+        ScanSettings settings = oldSettings.getScanSettings();
 
         int facing = ScanSettings.CAMERA_FACING_BACK;
         if (bundle.containsKey(paramPreferFrontCamera) && bundle.getBoolean(paramPreferFrontCamera)) {
