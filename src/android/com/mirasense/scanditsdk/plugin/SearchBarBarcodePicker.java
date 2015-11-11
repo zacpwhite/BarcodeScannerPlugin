@@ -41,7 +41,11 @@ public class SearchBarBarcodePicker extends BarcodePicker {
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             rParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             addView(mSearchBar, rParams);
-
+            
+            getOverlayView().setTorchButtonMarginsAndSize(15, 55, 40, 40);
+            getOverlayView().setCameraSwitchButtonMarginsAndSize(15, 55, 40, 40);
+            
+            
             requestChildFocus(null, null);
         } else if (!show && mSearchBar != null) {
             removeView(mSearchBar);
