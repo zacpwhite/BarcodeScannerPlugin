@@ -13,7 +13,7 @@ This code would show the scanner with a 200 point bottom margin in portrait orie
 
 ~~~~~~~~~~~~~~~~{.java}
 cordova.exec(null, null, "ScanditSDK", "resize",
-             ["{"portraitMargins" : "0/0/0/100", "landscapeMargins" : "0/0/100/0", "animationDuration" : 0.5}]);
+             [{"portraitMargins" : "0/0/0/100", "landscapeMargins" : "0/0/100/0", "animationDuration" : 0.5}]);
 ~~~~~~~~~~~~~~~~
 
 This code would reduce the margins to 100 points and animate that change over 0.5 seconds.
