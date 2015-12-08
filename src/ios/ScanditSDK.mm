@@ -23,6 +23,10 @@
 #import <ScanditBarcodeScanner/ScanditBarcodeScanner.h>
 
 
+@interface SBSLicense ()
++ (void)setFrameworkIdentifier:(NSString *)frameworkIdentifier;
+@end
+
 @interface ScanditSDK () <SBSScanDelegate, SBSOverlayControllerDidCancelDelegate, ScanditSDKSearchBarDelegate>
 @property (nonatomic, copy) NSString *callbackId;
 @property (readwrite, assign) BOOL hasPendingOperation;
@@ -35,7 +39,6 @@
 
 
 @implementation ScanditSDK
-
 @synthesize hasPendingOperation;
 
 - (void)scan:(CDVInvokedUrlCommand *)command {
@@ -52,6 +55,7 @@
     self.callbackId = command.callbackId;
     
     NSString *appKey = [command.arguments objectAtIndex:0];
+    [SBSLicense setFrameworkIdentifier:@"phonegap"];
     [SBSLicense setAppKey:appKey];
     
     NSDictionary *options = [self lowerCaseOptionsFromOptions:[command.arguments objectAtIndex:1]];
@@ -114,6 +118,12 @@
         self.scanditBarcodePicker.manualSearchBar.maxTextLengthForSearch = [((NSNumber *) maxManual) integerValue];
     }
     
+    if (![options objectForKey:[ScanditSDKParameterParser paramPortraitMargins]]
+        && ![options objectForKey:[ScanditSDKParameterParser paramLandscapeMargins]]) {
+        // Show the toolbar that contains a cancel button.
+        [self.scanditBarcodePicker.overlayController showToolBar:YES];
+    }
+    
     [ScanditSDKParameterParser updatePickerUI:self.scanditBarcodePicker fromOptions:options];
     
     // Set this class as the delegate for the overlay controller. It will now receive events when
@@ -133,9 +143,6 @@
     } else {
         self.modallyPresented = YES;
         
-        // Show the toolbar that contains a cancel button.
-        [self.scanditBarcodePicker.overlayController showToolBar:YES];
-        
         self.startAnimationDone = NO;
         self.bufferedResult = nil;
         
@@ -148,7 +155,13 @@
         }];
     }
     
-    [self.scanditBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
+    NSObject *paused = [options objectForKey:[ScanditSDKParameterParser paramPaused]];
+    if (paused && [paused isKindOfClass:[NSNumber class]] && [((NSNumber *)paused) boolValue]) {
+        [self.scanditBarcodePicker performSelector:@selector(startScanningInPausedState:)
+                                        withObject:[NSNumber numberWithBool:YES] afterDelay:0.1];
+    } else {
+        [self.scanditBarcodePicker performSelector:@selector(startScanning) withObject:nil afterDelay:0.1];
+    }
 }
 
 - (void)returnBuffer {

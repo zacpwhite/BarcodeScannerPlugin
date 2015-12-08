@@ -18,6 +18,8 @@
 + (NSString *)paramAnimationDuration { return [@"animationDuration" lowercaseString]; }
 + (NSString *)paramPreferFrontCamera { return [@"preferFrontCamera" lowercaseString]; }
 
++ (NSString *)paramPaused { return [@"paused" lowercaseString]; }
+
 + (NSString *)paramOrientations { return [@"orientations" lowercaseString]; }
 + (NSString *)paramOrientationsPortrait { return [@"portrait" lowercaseString]; }
 + (NSString *)paramOrientationsPortraitUpsideDown { return [@"portraitUpsideDown" lowercaseString]; }
@@ -48,6 +50,8 @@
 + (NSString *)paramPdf417 { return [@"pdf417" lowercaseString]; }
 + (NSString *)paramAztec { return [@"aztec" lowercaseString]; }
 + (NSString *)paramMsiPlessey { return [@"msiPlessey" lowercaseString]; }
++ (NSString *)paramCode11 { return [@"code11" lowercaseString]; }
++ (NSString *)paramMaxiCode { return [@"maxicode" lowercaseString]; }
 
 + (NSString *)paramMsiPlesseyChecksumType { return [@"msiPlesseyChecksumType" lowercaseString]; }
 + (NSString *)paramMsiPlesseyChecksumTypeNone { return [@"none" lowercaseString]; }
@@ -56,6 +60,8 @@
 + (NSString *)paramMsiPlesseyChecksumTypeMod1110 { return [@"mod1110" lowercaseString]; }
 
 + (NSString *)paramInverseRecognition { return [@"inverseRecognition" lowercaseString]; }
++ (NSString *)paramDataMatrixInverseRecognition { return [@"dataMatrixInverseRecognition" lowercaseString]; }
++ (NSString *)paramQRInverseRecognition { return [@"qrInverseRecognition" lowercaseString]; }
 + (NSString *)paramMicroDataMatrix { return [@"microDataMatrix" lowercaseString]; }
 + (NSString *)paramForce2D { return [@"force2d" lowercaseString]; }
 + (NSString *)paramCodeDuplicateFilter { return [@"codeDuplicateFilter" lowercaseString]; }
@@ -74,11 +80,17 @@
 + (NSString *)paramCameraSwitchButtonMarginsAndSize { return [@"cameraSwitchButtonMarginsAndSize" lowercaseString]; }
 + (NSString *)paramToolBarButtonCaption { return [@"toolBarButtonCaption" lowercaseString]; }
 
++ (NSString *)paramViewfinder { return [@"viewfinder" lowercaseString]; }
 + (NSString *)paramViewfinderSize { return [@"viewfinderSize" lowercaseString]; }
 + (NSString *)paramViewfinderColor { return [@"viewfinderColor" lowercaseString]; }
 + (NSString *)paramViewfinderDecodedColor { return [@"viewfinderDecodedColor" lowercaseString]; }
 + (NSString *)paramLogoOffsets { return [@"logoOffsets" lowercaseString]; }
 + (NSString *)paramZoom { return [@"zoom" lowercaseString]; }
+
++ (NSString *)paramGuiStyle { return [@"guiStyle" lowercaseString]; }
++ (NSString *)paramGuiStyleLaser { return [@"laser" lowercaseString]; }
+
++ (NSString *)paramDeviceName { return [@"deviceName" lowercaseString]; }
 
 
 + (SBSScanSettings *)settingsForOptions:(NSDictionary *)options {
@@ -92,7 +104,11 @@
         }
     }
     
-    // Set the options.
+    NSObject *deviceName = [options objectForKey:[self paramDeviceName]];
+    if (deviceName && [deviceName isKindOfClass:[NSString class]]) {
+        [settings setDeviceName:(NSString *)deviceName];
+    }
+    
     NSObject *scanning1D = [options objectForKey:[self param1DScanning]];
     if (scanning1D && [scanning1D isKindOfClass:[NSNumber class]]) {
         NSLog(@"The parameter '1DScanning' is deprecated. Please enable symbologies individually instead");
@@ -161,9 +177,17 @@
     if (codabar && [codabar isKindOfClass:[NSNumber class]]) {
         [settings setSymbology:SBSSymbologyCodabar enabled:[((NSNumber *)codabar) boolValue]];
     }
+    NSObject *code11 = [options objectForKey:[self paramCode11]];
+    if (code11 && [code11 isKindOfClass:[NSNumber class]]) {
+        [settings setSymbology:SBSSymbologyCode11 enabled:[((NSNumber *)code11) boolValue]];
+    }
     NSObject *qr = [options objectForKey:[self paramQR]];
     if (qr && [qr isKindOfClass:[NSNumber class]]) {
         [settings setSymbology:SBSSymbologyQR enabled:[((NSNumber *)qr) boolValue]];
+    }
+    NSObject *maxiCode = [options objectForKey:[self paramMaxiCode]];
+    if (maxiCode && [maxiCode isKindOfClass:[NSNumber class]]) {
+        [settings setSymbology:SBSSymbologyMaxiCode enabled:[((NSNumber *)maxiCode) boolValue]];
     }
     NSObject *dataMatrix = [options objectForKey:[self paramDatamatrix]];
     if (dataMatrix && [dataMatrix isKindOfClass:[NSNumber class]]) {
@@ -200,10 +224,25 @@
         [settings settingsForSymbology:SBSSymbologyMSIPlessey].checksums = msiChecksums;
     }
     
+    
     NSObject *inverseRecognition = [options objectForKey:[self paramInverseRecognition]];
     if (inverseRecognition && [inverseRecognition isKindOfClass:[NSNumber class]]) {
         SBSSymbologySettings *dataMatrixSettings = [settings settingsForSymbology:SBSSymbologyDatamatrix];
         dataMatrixSettings.colorInvertedEnabled = [((NSNumber *)inverseRecognition) boolValue];
+        SBSSymbologySettings *qrSettings = [settings settingsForSymbology:SBSSymbologyQR];
+        qrSettings.colorInvertedEnabled = [((NSNumber *)inverseRecognition) boolValue];
+    }
+    
+    NSObject *dataMatrixinverseRecognition = [options objectForKey:[self paramDataMatrixInverseRecognition]];
+    if (dataMatrixinverseRecognition && [dataMatrixinverseRecognition isKindOfClass:[NSNumber class]]) {
+        SBSSymbologySettings *dataMatrixSettings = [settings settingsForSymbology:SBSSymbologyDatamatrix];
+        dataMatrixSettings.colorInvertedEnabled = [((NSNumber *)dataMatrixinverseRecognition) boolValue];
+    }
+    
+    NSObject *qrInverseRecognition = [options objectForKey:[self paramQRInverseRecognition]];
+    if (qrInverseRecognition && [qrInverseRecognition isKindOfClass:[NSNumber class]]) {
+        SBSSymbologySettings *qrSettings = [settings settingsForSymbology:SBSSymbologyQR];
+        qrSettings.colorInvertedEnabled = [((NSNumber *)qrInverseRecognition) boolValue];
     }
     NSObject *microDataMatrix = [options objectForKey:[self paramMicroDataMatrix]];
     if (microDataMatrix && [microDataMatrix isKindOfClass:[NSNumber class]]) {
@@ -241,6 +280,8 @@
 }
 
 + (void)updatePickerUI:(SBSBarcodePicker *)picker fromOptions:(NSDictionary *)options {
+    NSObject *viewfinder = [options objectForKey:[self paramViewfinder]];
+    
     NSObject *viewfinderSize = [options objectForKey:[self paramViewfinderSize]];
     if (viewfinderSize && [viewfinderSize isKindOfClass:[NSString class]]) {
         NSArray *split = [((NSString *) viewfinderSize) componentsSeparatedByString:@"/"];
@@ -254,6 +295,9 @@
                                           landscapeHeight:landscapeHeight
                                            landscapeWidth:landscapeWidth];
         }
+    }
+    if (viewfinder && [viewfinder isKindOfClass:[NSNumber class]]) {
+        [picker.overlayController drawViewfinder:[((NSNumber *)viewfinder) boolValue]];
     }
     
     NSObject *beep = [options objectForKey:[self paramBeep]];
@@ -362,6 +406,16 @@
             float blue = ((float) blueInt) / 256.0;
             
             [picker.overlayController setViewfinderDecodedColor:red green:green blue:blue];
+        }
+    }
+    
+    NSObject *guiStyle = [options objectForKey:[self paramGuiStyle]];
+    if (guiStyle && [guiStyle isKindOfClass:[NSString class]]) {
+        NSString *guiStyleString = (NSString *)guiStyle;
+        if ([guiStyleString isEqualToString:[self paramGuiStyleLaser]]) {
+            picker.overlayController.guiStyle = SBSGuiStyleLaser;
+        } else {
+            picker.overlayController.guiStyle = SBSGuiStyleDefault;
         }
     }
 }

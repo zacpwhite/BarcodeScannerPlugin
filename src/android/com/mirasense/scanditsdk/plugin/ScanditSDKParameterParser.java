@@ -1,16 +1,14 @@
 package com.mirasense.scanditsdk.plugin;
 
-import android.content.pm.ActivityInfo;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
-import com.mirasense.scanditsdk.LegacyPortraitScanditSDKBarcodePicker;
-import com.mirasense.scanditsdk.ScanditSDKBarcodePicker;
+
 import com.mirasense.scanditsdk.ScanditSDKScanSettings;
-import com.mirasense.scanditsdk.interfaces.*;
-import com.mirasense.scanditsdk.interfaces.ScanditSDK;
-import com.mirasense.scanditsdk.internal.ScanditSDKGlobals;
+import com.scandit.barcodepicker.ScanOverlay;
+import com.scandit.barcodepicker.ScanSettings;
+import com.scandit.recognition.Barcode;
+import com.scandit.recognition.SymbologySettings;
 
 
 public class ScanditSDKParameterParser {
@@ -20,6 +18,8 @@ public class ScanditSDKParameterParser {
     public static final String paramPortraitMargins = "portraitMargins".toLowerCase();
     public static final String paramLandscapeMargins = "landscapeMargins".toLowerCase();
     public static final String paramAnimationDuration = "animationDuration".toLowerCase();
+
+    public static final String paramPaused = "paused".toLowerCase();
 
     public static final String paramPreferFrontCamera = "preferFrontCamera".toLowerCase();
     public static final String param1DScanning = "1DScanning".toLowerCase();
@@ -34,10 +34,12 @@ public class ScanditSDKParameterParser {
     public static final String paramGS1Databar = "gs1Databar".toLowerCase();
     public static final String paramGS1DatabarExpanded = "gs1DatabarExpanded".toLowerCase();
     public static final String paramCodabar = "codabar".toLowerCase();
+    public static final String paramCode11 = "code11".toLowerCase();
     public static final String paramQR = "qr".toLowerCase();
     public static final String paramDatamatrix = "datamatrix".toLowerCase();
     public static final String paramPdf417 = "pdf417".toLowerCase();
     public static final String paramAztec = "aztec".toLowerCase();
+    public static final String paramMaxiCode = "maxiCode".toLowerCase();
     public static final String paramMsiPlessey = "msiPlessey".toLowerCase();
     public static final String paramMsiPlesseyChecksumType = "msiPlesseyChecksumType".toLowerCase();
     public static final String paramMsiPlesseyChecksumTypeNone = "none".toLowerCase();
@@ -56,134 +58,163 @@ public class ScanditSDKParameterParser {
     public static final String paramVibrate = "vibrate".toLowerCase();
     public static final String paramTorch = "torch".toLowerCase();
     public static final String paramTorchButtonPositionAndSize = "torchButtonPositionAndSize".toLowerCase();
+    public static final String paramTorchButtonMarginsAndSize = "torchButtonMarginsAndSize".toLowerCase();
     public static final String paramCameraSwitchVisibility = "cameraSwitchVisibility".toLowerCase();
     public static final String paramCameraSwitchVisibilityTablet = "tablet".toLowerCase();
     public static final String paramCameraSwitchVisibilityAlways = "always".toLowerCase();
     public static final String paramCameraSwitchButtonPositionAndSize = "cameraSwitchButtonPositionAndSize".toLowerCase();
+    public static final String paramCameraSwitchButtonMarginsAndSize = "cameraSwitchButtonMarginsAndSize".toLowerCase();
 
     public static final String paramSearchBarPlaceholderText = "searchBarPlaceholderText".toLowerCase();
 
+    public static final String paramViewfinder = "viewfinder".toLowerCase();
     public static final String paramViewfinderDimension = "viewfinderDimension".toLowerCase();
     public static final String paramViewfinderSize = "viewfinderSize".toLowerCase();
-    public static final String paramViewfinderTextHook = "viewfinderTextHook".toLowerCase();
     public static final String paramViewfinderColor = "viewfinderColor".toLowerCase();
     public static final String paramViewfinderDecodedColor = "viewfinderDecodedColor".toLowerCase();
     public static final String paramLogoOffsets = "logoOffsets".toLowerCase();
     public static final String paramZoom = "zoom".toLowerCase();
+    
+    public static final String paramGuiStyle = "guiStyle".toLowerCase();
+    public static final String paramGuiStyleLaser = "laser".toLowerCase();
+    
+    public static final String paramDeviceName = "deviceName".toLowerCase();
+    
+    public static ScanSettings settingsForBundle(Bundle bundle) {
+        
+        ScanditSDKScanSettings oldSettings = ScanditSDKScanSettings.getPre43DefaultSettings();
+        ScanSettings settings = oldSettings.getScanSettings();
 
-
-    public static ScanditSDKScanSettings settingsForBundle(Bundle bundle) {
-
-        ScanditSDKScanSettings settings = ScanditSDKScanSettings.getDefaultSettings();
-
-        int facing = ScanditSDK.CAMERA_FACING_BACK;
+        int facing = ScanSettings.CAMERA_FACING_BACK;
         if (bundle.containsKey(paramPreferFrontCamera) && bundle.getBoolean(paramPreferFrontCamera)) {
-            facing = ScanditSDK.CAMERA_FACING_FRONT;
+            facing = ScanSettings.CAMERA_FACING_FRONT;
         }
         settings.setCameraFacingPreference(facing);
-
+        
+        if (bundleContainsStringKey(bundle, paramDeviceName)) {
+            settings.setDeviceName(bundle.getString(paramDeviceName));
+        }
+        
         if (bundle.containsKey(param1DScanning) && bundle.getBoolean(param1DScanning)) {
             Log.e("ScanditSDK", "The parameter '1DScanning' is deprecated. Please enable symbologies individually instead");
-            settings.enableSymbologies(new ScanditSDK.Symbology[]{
-                    ScanditSDK.Symbology.EAN13, ScanditSDK.Symbology.UPC12, ScanditSDK.Symbology.EAN8,
-                    ScanditSDK.Symbology.CODE128, ScanditSDK.Symbology.CODE39, ScanditSDK.Symbology.CODE93,
-                    ScanditSDK.Symbology.ITF, ScanditSDK.Symbology.MSI_PLESSEY, ScanditSDK.Symbology.UPCE,
-                    ScanditSDK.Symbology.CODABAR, ScanditSDK.Symbology.GS1_DATABAR,
-                    ScanditSDK.Symbology.GS1_DATABAR_EXPANDED});
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_EAN13, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_UPCA, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_UPCE, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_EAN8, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODE39, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODE128, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODE93, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_INTERLEAVED_2_OF_5, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_MSI_PLESSEY, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODABAR, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_GS1_DATABAR, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_GS1_DATABAR_EXPANDED, true);
         }
         if (bundle.containsKey(param2DScanning) && bundle.getBoolean(param2DScanning)) {
             Log.e("ScanditSDK", "The parameter '2DScanning' is deprecated. Please enable symbologies individually instead");
-            settings.enableSymbologies(new ScanditSDK.Symbology[]{
-                    ScanditSDK.Symbology.AZTEC, ScanditSDK.Symbology.DATAMATRIX, ScanditSDK.Symbology.PDF417,
-                    ScanditSDK.Symbology.QR});
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_AZTEC, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_DATA_MATRIX, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_QR, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_PDF417, true);
         }
 
         if ((bundle.containsKey(paramEan13AndUpc12) && bundle.getBoolean(paramEan13AndUpc12))
                 || !bundle.containsKey(paramEan13AndUpc12)) {
             //Log.e("ScanditSDK", "The parameter 'ean13AndUpc12' is deprecated. Please enable the symbologies individually instead");
-            settings.enableSymbology(ScanditSDK.Symbology.EAN13);
-            settings.enableSymbology(ScanditSDK.Symbology.UPC12);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_EAN13, true);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_UPCA, true);
         }
         if ((bundle.containsKey(paramEan8) && bundle.getBoolean(paramEan8))
                 || !bundle.containsKey(paramEan8)) {
-            settings.enableSymbology(ScanditSDK.Symbology.EAN8);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_EAN8, true);
         }
         if ((bundle.containsKey(paramUpce) && bundle.getBoolean(paramUpce))
                 || !bundle.containsKey(paramUpce)) {
-            settings.enableSymbology(ScanditSDK.Symbology.UPCE);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_UPCE, true);
         }
         if ((bundle.containsKey(paramCode39) && bundle.getBoolean(paramCode39))
                 || !bundle.containsKey(paramCode39)) {
-            settings.enableSymbology(ScanditSDK.Symbology.CODE39);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODE39, true);
         }
-        if ((bundle.containsKey(paramCode93) && bundle.getBoolean("code93"))
+        if ((bundle.containsKey(paramCode93) && bundle.getBoolean(paramCode93))
                 || !bundle.containsKey(paramCode93)) {
-            settings.enableSymbology(ScanditSDK.Symbology.CODE93);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODE93, true);
         }
         if ((bundle.containsKey(paramCode128) && bundle.getBoolean(paramCode128))
                 || !bundle.containsKey(paramCode128)) {
-            settings.enableSymbology(ScanditSDK.Symbology.CODE128);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODE128, true);
         }
         if (bundle.containsKey(paramItf) && bundle.getBoolean(paramItf)) {
-            settings.enableSymbology(ScanditSDK.Symbology.ITF);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_INTERLEAVED_2_OF_5, true);
         }
         if (bundle.containsKey(paramGS1Databar) && bundle.getBoolean(paramGS1Databar)) {
-            settings.enableSymbology(ScanditSDK.Symbology.GS1_DATABAR);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_GS1_DATABAR, true);
         }
         if (bundle.containsKey(paramGS1DatabarExpanded) && bundle.getBoolean(paramGS1DatabarExpanded)) {
-            settings.enableSymbology(ScanditSDK.Symbology.GS1_DATABAR_EXPANDED);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_GS1_DATABAR_EXPANDED, true);
         }
         if (bundle.containsKey(paramCodabar) && bundle.getBoolean(paramCodabar)) {
-            settings.enableSymbology(ScanditSDK.Symbology.CODABAR);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODABAR, true);
         }
         if ((bundle.containsKey(paramQR) && bundle.getBoolean(paramQR))
                 || !bundle.containsKey(paramQR)) {
-            settings.enableSymbology(ScanditSDK.Symbology.QR);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_QR, true);
         }
         if ((bundle.containsKey(paramDatamatrix) && bundle.getBoolean(paramDatamatrix))
                 || !bundle.containsKey(paramDatamatrix)) {
-            settings.enableSymbology(ScanditSDK.Symbology.DATAMATRIX);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_DATA_MATRIX, true);
         }
         if (bundle.containsKey(paramPdf417) && bundle.getBoolean(paramPdf417)) {
-            settings.enableSymbology(ScanditSDK.Symbology.PDF417);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_PDF417, true);
         }
         if (bundle.containsKey(paramAztec) && bundle.getBoolean(paramAztec)) {
-            settings.enableSymbology(ScanditSDK.Symbology.AZTEC);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_AZTEC, true);
         }
         if (bundle.containsKey(paramMsiPlessey) && bundle.getBoolean(paramMsiPlessey)) {
-            settings.enableSymbology(ScanditSDK.Symbology.MSI_PLESSEY);
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_MSI_PLESSEY, true);
         }
-        if (bundle.containsKey(paramMsiPlesseyChecksumType)) {
+        if (bundle.containsKey(paramCode11) && bundle.getBoolean(paramCode11)) {
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_CODE11, true);
+        }
+        if (bundle.containsKey(paramMaxiCode) && bundle.getBoolean(paramMaxiCode)) {
+            settings.setSymbologyEnabled(Barcode.SYMBOLOGY_MAXICODE, true);
+        }
+        if (bundleContainsStringKey(bundle, paramMsiPlesseyChecksumType)) {
             String checksum = bundle.getString(paramMsiPlesseyChecksumType);
-            int actualChecksum = com.mirasense.scanditsdk.interfaces.ScanditSDK.CHECKSUM_MOD_10;
+            int actualChecksum = SymbologySettings.CHECKSUM_MOD_10;
             if (checksum.equals(paramMsiPlesseyChecksumTypeNone)) {
-                actualChecksum = com.mirasense.scanditsdk.interfaces.ScanditSDK.CHECKSUM_NONE;
+                actualChecksum = SymbologySettings.CHECKSUM_NONE;
             } else if (checksum.equals(paramMsiPlesseyChecksumTypeMod11)) {
-                actualChecksum = com.mirasense.scanditsdk.interfaces.ScanditSDK.CHECKSUM_MOD_11;
+                actualChecksum = SymbologySettings.CHECKSUM_MOD_11;
             } else if (checksum.equals(paramMsiPlesseyChecksumTypeMod1010)) {
-                actualChecksum = com.mirasense.scanditsdk.interfaces.ScanditSDK.CHECKSUM_MOD_1010;
+                actualChecksum = SymbologySettings.CHECKSUM_MOD_1010;
             } else if (checksum.equals(paramMsiPlesseyChecksumTypeMod1110)) {
-                actualChecksum = com.mirasense.scanditsdk.interfaces.ScanditSDK.CHECKSUM_MOD_1110;
+                actualChecksum = SymbologySettings.CHECKSUM_MOD_1110;
             }
-            settings.setMsiPlesseyChecksumType(actualChecksum);
+            SymbologySettings symbSettings = settings.getSymbologySettings(Barcode.SYMBOLOGY_MSI_PLESSEY);
+            symbSettings.setChecksums(actualChecksum);
         }
-
+        
         if (bundle.containsKey(paramInverseRecognition)) {
-            settings.enableColorInverted2dRecognition(bundle.getBoolean(paramInverseRecognition));
+            SymbologySettings symbSettingsQr = settings.getSymbologySettings(Barcode.SYMBOLOGY_QR);
+            SymbologySettings symbSettingsDm = settings.getSymbologySettings(Barcode.SYMBOLOGY_DATA_MATRIX);
+
+            symbSettingsQr.setColorInvertedEnabled(bundle.getBoolean(paramInverseRecognition));
+            symbSettingsDm.setColorInvertedEnabled(bundle.getBoolean(paramInverseRecognition));
         }
         if (bundle.containsKey(paramMicroDataMatrix)) {
-            settings.enableMicroDataMatrix(bundle.getBoolean(paramMicroDataMatrix));
+            settings.setMicroDataMatrixEnabled(bundle.getBoolean(paramMicroDataMatrix));
         }
-
+        
         if (bundle.containsKey(paramForce2D)) {
-            settings.force2dRecognition(bundle.getBoolean(paramForce2D));
+            settings.setForce2dRecognitionEnabled(bundle.getBoolean(paramForce2D));
         }
-
+        
         if (bundle.containsKey(paramCodeDuplicateFilter)) {
             settings.setCodeDuplicateFilter(bundle.getInt(paramCodeDuplicateFilter));
         }
-
-        if (bundle.containsKey(paramScanningHotSpot)) {
+        
+        if (bundleContainsStringKey(bundle, paramScanningHotSpot)) {
             String hotspot = bundle.getString(paramScanningHotSpot);
             String[] split = hotspot.split("[/]");
             if (split.length == 2) {
@@ -196,16 +227,21 @@ public class ScanditSDKParameterParser {
         }
 
         if (bundle.containsKey(paramScanningHotSpotHeight)) {
-            settings.enableRestrictedAreaScanning(true);
+            settings.setRestrictedAreaScanningEnabled(true);
             settings.setScanningHotSpotHeight((float) bundle.getDouble(paramScanningHotSpotHeight));
+        }
+
+        if (bundle.containsKey(paramZoom)) {
+            settings.setRelativeZoom(bundle.getFloat(paramZoom));
         }
 
         return settings;
     }
 
-    public static void updatePickerUIFromBundle(ScanditSDK picker, Bundle bundle) {
+    public static void updatePickerUIFromBundle(SearchBarBarcodePicker picker, Bundle bundle,
+                                                int screenWidth, int screenHeight) {
         if (bundle.containsKey(paramSearchBar)) {
-            picker.getOverlayView().showSearchBar(bundle.getBoolean(paramSearchBar));
+            picker.showSearchBar(bundle.getBoolean(paramSearchBar));
         }
         if (bundle.containsKey(paramBeep)) {
             picker.getOverlayView().setBeepEnabled(bundle.getBoolean(paramBeep));
@@ -216,64 +252,93 @@ public class ScanditSDKParameterParser {
         if (bundle.containsKey(paramTorch)) {
             picker.getOverlayView().setTorchEnabled(bundle.getBoolean(paramTorch));
         }
-        if (bundle.containsKey(paramTorchButtonPositionAndSize)) {
-            String hotspot = bundle.getString(paramTorchButtonPositionAndSize);
-            String[] split = hotspot.split("[/]");
+        if (bundleContainsStringKey(bundle, paramTorchButtonPositionAndSize)) {
+            String positionAndSize = bundle.getString(paramTorchButtonPositionAndSize);
+            String[] split = positionAndSize.split("[/]");
             if (split.length == 4) {
                 try {
                     Float x = Float.valueOf(split[0]);
                     Float y = Float.valueOf(split[1]);
                     int width = Integer.valueOf(split[2]);
                     int height = Integer.valueOf(split[3]);
-                    picker.getOverlayView().setTorchButtonPosition(x, y, width, height);
+                    picker.getOverlayView().setTorchButtonMarginsAndSize(
+                            (int) (x * dpFromPx(picker.getContext(), screenWidth)),
+                            (int) (y * dpFromPx(picker.getContext(), screenHeight)), width, height);
                 } catch (NumberFormatException e) {}
             }
         }
-
-        if (bundle.containsKey(paramCameraSwitchVisibility)) {
+        if (bundleContainsStringKey(bundle, paramTorchButtonMarginsAndSize)) {
+            String marginsAndSize = bundle.getString(paramTorchButtonMarginsAndSize);
+            String[] split = marginsAndSize.split("[/]");
+            if (split.length == 4) {
+                try {
+                    int x = Integer.valueOf(split[0]);
+                    int y = Integer.valueOf(split[1]);
+                    int width = Integer.valueOf(split[2]);
+                    int height = Integer.valueOf(split[3]);
+                    picker.getOverlayView().setTorchButtonMarginsAndSize(x, y, width, height);
+                } catch (NumberFormatException e) {}
+            }
+        }
+        
+        if (bundleContainsStringKey(bundle, paramCameraSwitchVisibility)) {
             String visibility = bundle.getString(paramCameraSwitchVisibility);
-            int actualVisibility = ScanditSDKOverlay.CAMERA_SWITCH_NEVER;
+            int actualVisibility = ScanOverlay.CAMERA_SWITCH_NEVER;
             if (visibility.equals(paramCameraSwitchVisibilityTablet)) {
-                actualVisibility = ScanditSDKOverlay.CAMERA_SWITCH_ON_TABLET;
+                actualVisibility = ScanOverlay.CAMERA_SWITCH_ON_TABLET;
             } else if (visibility.equals(paramCameraSwitchVisibilityAlways)) {
-                actualVisibility = ScanditSDKOverlay.CAMERA_SWITCH_ALWAYS;
+                actualVisibility = ScanOverlay.CAMERA_SWITCH_ALWAYS;
             }
             picker.getOverlayView().setCameraSwitchVisibility(actualVisibility);
         }
-        if (bundle.containsKey(paramCameraSwitchButtonPositionAndSize)) {
-            String hotspot = bundle.getString(paramCameraSwitchButtonPositionAndSize);
-            String[] split = hotspot.split("[/]");
+        if (bundleContainsStringKey(bundle, paramCameraSwitchButtonPositionAndSize)) {
+            String positionAndSize = bundle.getString(paramCameraSwitchButtonPositionAndSize);
+            String[] split = positionAndSize.split("[/]");
             if (split.length == 4) {
                 try {
                     Float x = Float.valueOf(split[0]);
                     Float y = Float.valueOf(split[1]);
                     int width = Integer.valueOf(split[2]);
                     int height = Integer.valueOf(split[3]);
-                    picker.getOverlayView().setCameraSwitchButtonPosition(
-                            x, y, width, height);
+                    picker.getOverlayView().setCameraSwitchButtonMarginsAndSize(
+                            (int) (x * dpFromPx(picker.getContext(), screenWidth)),
+                            (int) (y * dpFromPx(picker.getContext(), screenHeight)), width, height);
                 } catch (NumberFormatException e) {}
             }
         }
-
-        if (bundle.containsKey(paramSearchBarPlaceholderText)) {
-            picker.getOverlayView().setSearchBarPlaceholderText(
+        if (bundleContainsStringKey(bundle, paramCameraSwitchButtonMarginsAndSize)) {
+            String marginsAndSize = bundle.getString(paramCameraSwitchButtonMarginsAndSize);
+            String[] split = marginsAndSize.split("[/]");
+            if (split.length == 4) {
+                try {
+                    int x = Integer.valueOf(split[0]);
+                    int y = Integer.valueOf(split[1]);
+                    int width = Integer.valueOf(split[2]);
+                    int height = Integer.valueOf(split[3]);
+                    picker.getOverlayView().setCameraSwitchButtonMarginsAndSize(x, y, width, height);
+                } catch (NumberFormatException e) {}
+            }
+        }
+        
+        if (bundleContainsStringKey(bundle, paramSearchBarPlaceholderText)) {
+            picker.setSearchBarPlaceholderText(
                     bundle.getString(paramSearchBarPlaceholderText));
         }
-
-        if (bundle.containsKey(paramViewfinderDimension)
-                || bundle.containsKey(paramViewfinderDimension)) {
+        
+        if (bundleContainsStringKey(bundle, paramViewfinderDimension)
+            || bundleContainsStringKey(bundle, paramViewfinderSize)) {
             String hotspot = "";
             if (bundle.containsKey(paramViewfinderDimension)) {
                 hotspot = bundle.getString(paramViewfinderDimension);
             } else if (bundle.containsKey(paramViewfinderSize)) {
-                hotspot = bundle.getString(paramViewfinderDimension);
+                hotspot = bundle.getString(paramViewfinderSize);
             }
             String[] split = hotspot.split("[/]");
             if (split.length == 2) {
                 try {
                     Float width = Float.valueOf(split[0]);
                     Float height = Float.valueOf(split[1]);
-                    picker.getOverlayView().setViewfinderDimension(width, height);
+                    picker.getOverlayView().setViewfinderDimension(width, height, width, height);
                 } catch (NumberFormatException e) {}
             } else if (split.length == 4) {
                 try {
@@ -286,8 +351,8 @@ public class ScanditSDKParameterParser {
                 } catch (NumberFormatException e) {}
             }
         }
-
-        if (bundle.containsKey(paramViewfinderColor)) {
+        
+        if (bundleContainsStringKey(bundle, paramViewfinderColor)) {
             String color = bundle.getString(paramViewfinderColor);
             if (color.length() == 6) {
                 try {
@@ -301,7 +366,7 @@ public class ScanditSDKParameterParser {
                 } catch (NumberFormatException e) {}
             }
         }
-        if (bundle.containsKey(paramViewfinderDecodedColor)) {
+        if (bundleContainsStringKey(bundle, paramViewfinderDecodedColor)) {
             String color = bundle.getString(paramViewfinderDecodedColor);
             if (color.length() == 6) {
                 try {
@@ -315,22 +380,27 @@ public class ScanditSDKParameterParser {
                 } catch (NumberFormatException e) {}
             }
         }
-        if (bundle.containsKey(paramLogoOffsets)) {
-            String offsets = bundle.getString(paramLogoOffsets);
-            String[] split = offsets.split("[,]");
-            if (split.length == 4) {
-                try {
-                    Float xOffset = Float.valueOf(split[0].trim());
-                    Float yOffset = Float.valueOf(split[1].trim());
-                    Float landscapeXOffset = Float.valueOf(split[2].trim());
-                    Float landscapeYOffset = Float.valueOf(split[3].trim());
-                    picker.getOverlayView().setViewfinderDimension(
-                            xOffset, yOffset, landscapeXOffset, landscapeYOffset);
-                } catch (NumberFormatException e) {}
+        if (bundle.containsKey(paramViewfinder)) {
+            picker.getOverlayView().drawViewfinder(bundle.getBoolean(paramViewfinder));
+        }
+        
+        if (bundleContainsStringKey(bundle, paramGuiStyle)) {
+            String guiStyle = bundle.getString(paramGuiStyle);
+            if (guiStyle.equals(paramGuiStyleLaser)) {
+                picker.getOverlayView().setGuiStyle(ScanOverlay.GUI_STYLE_LASER);
+            } else {
+                picker.getOverlayView().setGuiStyle(ScanOverlay.GUI_STYLE_DEFAULT);
             }
         }
-        if (bundle.containsKey(paramZoom)) {
-            picker.setZoom(bundle.getFloat(paramZoom));
-        }
+    }
+    
+    private static boolean bundleContainsStringKey(Bundle bundle, String key) {
+        return (bundle.containsKey(key) && bundle.getString(key) != null);
+    }
+
+    public static int dpFromPx(Context context, int px) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) ((px - 0.5f) / scale);
     }
 }
+
